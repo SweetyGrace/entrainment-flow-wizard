@@ -99,7 +99,8 @@ const Registration = () => {
           fullName: 'Aravind Kumar',
           email: 'aravind@example.com',
           mobile: '+91 9876543210',
-          gender: 'Male'
+          gender: 'Male',
+          infinitheismContact: 'Admin Sarah'
         }
       });
     } else if (scenario === 'complete') {
@@ -111,6 +112,9 @@ const Registration = () => {
           gender: 'Male',
           dateOfBirth: new Date('1990-01-01'),
           city: 'Chennai',
+          infinitheismContact: 'Admin Sarah',
+          preferredRoommate: 'John Doe',
+          additionalNotes: 'Vegetarian meals preferred',
           acceptedTerms: true
         },
         paymentInfo: {
@@ -131,7 +135,8 @@ const Registration = () => {
             fullName: 'Priya Sharma',
             email: 'priya@example.com',
             mobile: '+91 9876543211',
-            gender: 'Female'
+            gender: 'Female',
+            infinitheismContact: 'Admin Raj'
           }
         });
       } else if (randomScenario === 2) {
@@ -144,6 +149,9 @@ const Registration = () => {
             gender: 'Male',
             dateOfBirth: new Date('1985-05-15'),
             city: 'Mumbai',
+            infinitheismContact: 'Admin Maya',
+            preferredRoommate: 'Best friend',
+            additionalNotes: 'Early check-in required',
             acceptedTerms: true
           },
           paymentInfo: {
@@ -152,8 +160,14 @@ const Registration = () => {
             amount: 2500
           }
         });
+      } else {
+        // New user with default infinitheism contact
+        setUserData({
+          personalInfo: {
+            infinitheismContact: 'Admin Team'
+          }
+        });
       }
-      // else remains empty for new user scenario
     }
   }, [scenario]);
 

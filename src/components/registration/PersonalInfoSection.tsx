@@ -105,7 +105,25 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 <div className="text-sm text-gray-900 font-medium">{format(personalInfo.dateOfBirth, "PPP")}</div>
               </div>
             )}
+            {personalInfo?.infinitheismContact && (
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Infinitheism Contact</Label>
+                <div className="text-sm text-gray-900 font-medium">{personalInfo.infinitheismContact}</div>
+              </div>
+            )}
+            {personalInfo?.preferredRoommate && (
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Preferred Roommate</Label>
+                <div className="text-sm text-gray-900 font-medium">{personalInfo.preferredRoommate}</div>
+              </div>
+            )}
           </div>
+          {personalInfo?.additionalNotes && (
+            <div className="space-y-2 mt-6">
+              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Additional Notes</Label>
+              <div className="text-sm text-gray-900 font-medium">{personalInfo.additionalNotes}</div>
+            </div>
+          )}
         </CardContent>
       </Card>
     );
@@ -256,7 +274,9 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             />
           </div>
           <div className="space-y-3">
-            <Label htmlFor="preferredRoommate" className="text-sm font-medium text-gray-700">Preferred Roommate</Label>
+            <Label htmlFor="preferredRoommate" className="text-sm font-medium text-gray-700">
+              Preferred Roommate <span className="text-gray-400 text-xs">(Optional)</span>
+            </Label>
             <Input
               id="preferredRoommate"
               value={personalInfo?.preferredRoommate || ''}
@@ -268,7 +288,9 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         </div>
 
         <div className="space-y-3">
-          <Label htmlFor="additionalNotes" className="text-sm font-medium text-gray-700">Additional Notes</Label>
+          <Label htmlFor="additionalNotes" className="text-sm font-medium text-gray-700">
+            Note <span className="text-gray-400 text-xs">(Optional)</span>
+          </Label>
           <Textarea
             id="additionalNotes"
             value={personalInfo?.additionalNotes || ''}
