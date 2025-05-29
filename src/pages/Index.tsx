@@ -76,7 +76,7 @@ const Index = () => {
             >
               <div className="relative">
                 <img
-                  src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+                  src="/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png"
                   alt="Entrainment'25"
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
