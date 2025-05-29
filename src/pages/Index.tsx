@@ -39,7 +39,7 @@ const Index = () => {
                 <div className="mt-8 flex justify-center">
                   <Button 
                     onClick={() => handleRegister('featured')}
-                    className="px-8 py-4 text-base md:text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                    className="px-8 py-4 text-base md:text-lg font-medium rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
                     Explore Programmes
                   </Button>
@@ -65,7 +65,7 @@ const Index = () => {
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {/* Entrainment'25 Programme */}
             <Card 
-              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group h-full flex flex-col"
               onClick={() => handleCardClick('entrainment25')}
             >
               <div className="relative">
@@ -76,15 +76,15 @@ const Index = () => {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="text-xl font-bold group-hover:text-blue-600 transition-colors">
+                <CardTitle className="text-xl font-bold">
                   Entrainment'25
                 </CardTitle>
                 <CardDescription className="text-gray-600">
                   A transformative 3-day journey of consciousness awakening with Mahatria Ra
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="flex-1 flex flex-col">
+                <div className="space-y-3 flex-1">
                   <div className="flex items-center text-sm text-gray-500">
                     <Calendar className="w-4 h-4 mr-2" />
                     <span>March 15-17, 2025</span>
@@ -108,7 +108,7 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('entrainment25');
                     }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                    className="px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
                     Register
                   </Button>
@@ -118,7 +118,7 @@ const Index = () => {
 
             {/* HDB Programme */}
             <Card 
-              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group h-full flex flex-col"
               onClick={() => handleCardClick('hdb')}
             >
               <div className="relative">
@@ -129,15 +129,15 @@ const Index = () => {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="text-xl font-bold group-hover:text-blue-600 transition-colors">
+                <CardTitle className="text-xl font-bold">
                   HDB
                 </CardTitle>
                 <CardDescription className="text-gray-600">
                   Global gathering of spiritual leaders and consciousness researchers
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="flex-1 flex flex-col">
+                <div className="space-y-3 flex-1">
                   <div className="flex items-center text-sm text-gray-500">
                     <Calendar className="w-4 h-4 mr-2" />
                     <span>April 20-22, 2025</span>
@@ -161,7 +161,7 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('hdb');
                     }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                    className="px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
                     Register
                   </Button>
@@ -171,7 +171,7 @@ const Index = () => {
 
             {/* MSD Programme */}
             <Card 
-              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group h-full flex flex-col"
               onClick={() => handleCardClick('msd')}
             >
               <div className="relative">
@@ -182,15 +182,15 @@ const Index = () => {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="text-xl font-bold group-hover:text-blue-600 transition-colors">
+                <CardTitle className="text-xl font-bold">
                   MSD
                 </CardTitle>
                 <CardDescription className="text-gray-600">
                   Silent meditation retreat for deep inner peace and clarity
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="flex-1 flex flex-col">
+                <div className="space-y-3 flex-1">
                   <div className="flex items-center text-sm text-gray-500">
                     <Calendar className="w-4 h-4 mr-2" />
                     <span>May 10-17, 2025</span>
@@ -214,7 +214,7 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('msd');
                     }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                    className="px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
                     Register
                   </Button>
