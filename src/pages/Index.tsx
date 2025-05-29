@@ -25,8 +25,8 @@ const Index = () => {
             src="/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png"
             alt="Spiritual guide"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-          <div className="relative z-10 flex items-center justify-center h-full">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30"></div>
+          <div className="relative z-10 flex items-end justify-center h-full pb-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
