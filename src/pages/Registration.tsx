@@ -9,9 +9,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Music, ArrowLeft, Edit, Upload, CheckCircle } from 'lucide-react';
+import { CalendarIcon, Music, ArrowLeft, Edit, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import RegistrationStepper from '@/components/RegistrationStepper';
 
 interface UserData {
   personalInfo?: {
@@ -572,6 +573,41 @@ const Registration = () => {
     );
   };
 
+  const getSteps = () => {
+    const dataState = getUserDataState();
+    const hasPersonalInfo = userData.personalInfo && Object.keys(userData.personalInfo).length > 4;
+    const hasPaymentInfo = userData.paymentInfo && Object.keys(userData.paymentInfo).length > 0;
+    
+    const steps = [
+      {
+        id: 1,
+        title: 'Personal Info',
+        isCompleted: hasPersonalInfo,
+        isCurrent: currentStep === 1 && !hasPersonalInfo
+      },
+      {
+        id: 2,
+        title: 'Payment',
+        isCompleted: !event.isPaid || hasPaymentInfo,
+        isCurrent: currentStep === 2 && event.isPaid && hasPersonalInfo && !hasPaymentInfo
+      },
+      {
+        id: 3,
+        title: 'Travel Info',
+        isCompleted: false,
+        isCurrent: currentStep === 3
+      },
+      {
+        id: 4,
+        title: 'Complete',
+        isCompleted: isSubmitted,
+        isCurrent: currentStep === 4
+      }
+    ];
+
+    return event.isPaid ? steps : steps.filter(step => step.id !== 2);
+  };
+
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-[#F9FBFF]">
@@ -689,7 +725,12 @@ const Registration = () => {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="text-[#52585E] hover:bg-gray-50">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-[#52585E] hover:bg-gray-50"
+              onClick={() => window.history.back()}
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
@@ -706,6 +747,13 @@ const Registration = () => {
           >
             <Music className="w-4 h-4" />
           </Button>
+        </div>
+      </div>
+
+      {/* Stepper */}
+      <div className="bg-white border-b border-gray-200 py-6">
+        <div className="max-w-4xl mx-auto px-4">
+          <RegistrationStepper steps={getSteps()} />
         </div>
       </div>
 
