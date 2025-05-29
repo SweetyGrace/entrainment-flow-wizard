@@ -25,18 +25,18 @@ const Index = () => {
             src="/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png"
             alt="Spiritual guide"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30"></div>
-          <div className="relative z-10 flex items-end justify-center h-full pb-24">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center">
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+          <div className="relative z-10 flex items-center justify-start h-full pl-8 md:pl-16 lg:pl-24">
+            <div className="max-w-2xl">
+              <div className="text-left">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
                   <span className="block">Transform Your</span>
                   <span className="block text-blue-400">Consciousness</span>
                 </h1>
-                <p className="mt-3 text-base sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+                <p className="mt-3 text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
                   Join transformative programmes that awaken your inner potential and connect you with like-minded souls on the journey of self-discovery.
                 </p>
-                <div className="mt-8 flex justify-center">
+                <div className="mt-8">
                   <Button 
                     onClick={() => handleRegister('featured')}
                     className="relative overflow-hidden px-8 py-4 text-base md:text-lg font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
