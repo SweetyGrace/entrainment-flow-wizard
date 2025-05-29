@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
@@ -746,7 +745,7 @@ const Registration = () => {
 
       {/* Navigation */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Button 
               variant="ghost" 
@@ -773,35 +772,58 @@ const Registration = () => {
         </div>
       </div>
 
-      {/* Stepper */}
-      <div className="bg-white py-8 border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-4">
-          <RegistrationStepper steps={getSteps()} />
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-3xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 mb-8">
-          {renderPersonalInfoSection()}
-          {renderPaymentInfoSection()}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex justify-center">
-          {editingSection ? (
-            <div className="text-center text-gray-600">
-              <p className="text-sm">Make your changes above and click "Save Changes"</p>
+      {/* Main Content - Side by Side Layout */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="flex gap-12">
+          {/* Left Side - Stepper */}
+          <div className="w-80 flex-shrink-0">
+            <div className="sticky top-32">
+              <RegistrationStepper steps={getSteps()} />
             </div>
-          ) : (
-            <Button 
-              onClick={handleSubmit}
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
-              disabled={!canProceedToPayment()}
-            >
-              {event.isPaid ? 'Proceed to Payment' : 'Complete Registration'}
-            </Button>
-          )}
+          </div>
+
+          {/* Right Side - Form Content */}
+          <div className="flex-1">
+            <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 mb-8">
+              {renderPersonalInfoSection()}
+              
+              {/* Terms and Conditions Checkbox */}
+              {canProceedToPayment() && event.isPaid && !userData.paymentInfo && (
+                <div className="mb-8 p-6 bg-blue-50 rounded-2xl border border-blue-100">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="termsConditions"
+                      checked={userData.personalInfo?.acceptedTerms || false}
+                      onCheckedChange={(checked) => handlePersonalInfoChange('acceptedTerms', checked)}
+                      className="mt-1"
+                    />
+                    <Label htmlFor="termsConditions" className="text-sm text-gray-700 leading-relaxed">
+                      I agree to the terms and conditions, privacy policy, and understand that this registration is subject to approval by Mahatria. I consent to the processing of my personal data for registration purposes.
+                    </Label>
+                  </div>
+                </div>
+              )}
+
+              {renderPaymentInfoSection()}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-center">
+              {editingSection ? (
+                <div className="text-center text-gray-600">
+                  <p className="text-sm">Make your changes above and click "Save Changes"</p>
+                </div>
+              ) : (
+                <Button 
+                  onClick={handleSubmit}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                  disabled={!canProceedToPayment()}
+                >
+                  {event.isPaid ? 'Proceed to Payment' : 'Complete Registration'}
+                </Button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
