@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
@@ -157,10 +156,12 @@ const Registration = () => {
     setCurrentStep(4);
   };
 
-  const renderPersonalInfoSection = (isEditing = false) => {
+  const renderPersonalInfoSection = () => {
     const dataState = getUserDataState();
+    const hasData = userData.personalInfo && Object.keys(userData.personalInfo).length > 0;
+    const isEditing = editingSection === 'personal';
     
-    if (dataState === 'complete' && !isEditing) {
+    if (hasData && !isEditing) {
       return (
         <Card className="p-6 mb-6 bg-white border border-gray-100">
           <div className="flex justify-between items-start mb-4">
@@ -175,35 +176,82 @@ const Registration = () => {
               Edit Section
             </Button>
           </div>
-          <div className="space-y-2 text-[#52585E]">
-            <p><span className="font-medium">Name:</span> {userData.personalInfo?.fullName}</p>
-            <p><span className="font-medium">Email:</span> {userData.personalInfo?.email}</p>
-            <p><span className="font-medium">Mobile:</span> {userData.personalInfo?.mobile}</p>
-            <p><span className="font-medium">Gender:</span> {userData.personalInfo?.gender}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {userData.personalInfo?.fullName && (
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">Full Name</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">{userData.personalInfo.fullName}</div>
+              </div>
+            )}
+            {userData.personalInfo?.email && (
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">Email Address</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">{userData.personalInfo.email}</div>
+              </div>
+            )}
+            {userData.personalInfo?.mobile && (
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">Mobile Number</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">{userData.personalInfo.mobile}</div>
+              </div>
+            )}
+            {userData.personalInfo?.gender && (
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">Gender</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">{userData.personalInfo.gender}</div>
+              </div>
+            )}
             {userData.personalInfo?.city && (
-              <p><span className="font-medium">City:</span> {userData.personalInfo.city}</p>
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">City</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">{userData.personalInfo.city}</div>
+              </div>
+            )}
+            {userData.personalInfo?.dateOfBirth && (
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">Date of Birth</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">{format(userData.personalInfo.dateOfBirth, "PPP")}</div>
+              </div>
             )}
           </div>
-          <div className="flex items-center mt-4 text-green-600">
-            <CheckCircle className="w-4 h-4 mr-2" />
-            <span className="text-sm">Section completed</span>
-          </div>
+          {dataState === 'complete' && (
+            <div className="flex items-center mt-4 text-green-600">
+              <CheckCircle className="w-4 h-4 mr-2" />
+              <span className="text-sm">Section completed</span>
+            </div>
+          )}
         </Card>
       );
     }
 
     return (
       <Card className="p-6 mb-6 bg-white border border-gray-100">
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-[#2D2D2D] mb-2">
-            {dataState === 'new' ? "Welcome to Entrainment'25" : "We're almost there, Aravind."}
-          </h2>
-          <p className="text-[#52585E]">
-            {dataState === 'new' 
-              ? "Let's get your journey started with some basic information." 
-              : "Just a few quick things to wrap up your profile."}
-          </p>
-        </div>
+        {isEditing && (
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-semibold text-[#2D2D2D]">Edit Personal Information</h3>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setEditingSection(null)}
+              className="border-gray-300 text-[#52585E] hover:bg-gray-50"
+            >
+              Cancel
+            </Button>
+          </div>
+        )}
+        
+        {!isEditing && (
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold text-[#2D2D2D] mb-2">
+              {dataState === 'new' ? "Welcome to Entrainment'25" : "We're almost there, Aravind."}
+            </h2>
+            <p className="text-[#52585E]">
+              {dataState === 'new' 
+                ? "Let's get your journey started with some basic information." 
+                : "Just a few quick things to wrap up your profile."}
+            </p>
+          </div>
+        )}
 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -332,17 +380,36 @@ const Registration = () => {
               I accept the terms and conditions
             </Label>
           </div>
+
+          {isEditing && (
+            <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+              <Button 
+                variant="outline"
+                onClick={() => setEditingSection(null)}
+                className="border-gray-300 text-[#52585E] hover:bg-gray-50"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => setEditingSection(null)}
+                className="bg-[#0799FF] hover:bg-blue-600"
+              >
+                Save Changes
+              </Button>
+            </div>
+          )}
         </div>
       </Card>
     );
   };
 
-  const renderPaymentInfoSection = (isEditing = false) => {
+  const renderPaymentInfoSection = () => {
     if (!event.isPaid) return null;
 
-    const dataState = getUserDataState();
+    const hasData = userData.paymentInfo && Object.keys(userData.paymentInfo).length > 0;
+    const isEditing = editingSection === 'payment';
     
-    if (dataState === 'complete' && !isEditing) {
+    if (hasData && !isEditing) {
       return (
         <Card className="p-6 mb-6 bg-white border border-gray-100">
           <div className="flex justify-between items-start mb-4">
@@ -357,10 +424,25 @@ const Registration = () => {
               Edit Section
             </Button>
           </div>
-          <div className="space-y-2 text-[#52585E]">
-            <p><span className="font-medium">Invoice Name:</span> {userData.paymentInfo?.invoiceName}</p>
-            <p><span className="font-medium">Invoice Email:</span> {userData.paymentInfo?.invoiceEmail}</p>
-            <p><span className="font-medium">Amount:</span> ₹{userData.paymentInfo?.amount}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {userData.paymentInfo?.invoiceName && (
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">Invoice Name</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">{userData.paymentInfo.invoiceName}</div>
+              </div>
+            )}
+            {userData.paymentInfo?.invoiceEmail && (
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">Invoice Email</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">{userData.paymentInfo.invoiceEmail}</div>
+              </div>
+            )}
+            {userData.paymentInfo?.amount && (
+              <div>
+                <Label className="text-[#52585E] text-sm font-medium">Amount</Label>
+                <div className="mt-1 text-[#2D2D2D] font-medium">₹{userData.paymentInfo.amount}</div>
+              </div>
+            )}
           </div>
           <div className="flex items-center mt-4 text-green-600">
             <CheckCircle className="w-4 h-4 mr-2" />
@@ -372,10 +454,26 @@ const Registration = () => {
 
     return (
       <Card className="p-6 mb-6 bg-white border border-gray-100">
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold text-[#2D2D2D] mb-2">Invoice Details</h3>
-          <p className="text-[#52585E]">We need some billing information for your registration.</p>
-        </div>
+        {isEditing && (
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-semibold text-[#2D2D2D]">Edit Invoice Details</h3>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setEditingSection(null)}
+              className="border-gray-300 text-[#52585E] hover:bg-gray-50"
+            >
+              Cancel
+            </Button>
+          </div>
+        )}
+
+        {!isEditing && (
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold text-[#2D2D2D] mb-2">Invoice Details</h3>
+            <p className="text-[#52585E]">We need some billing information for your registration.</p>
+          </div>
+        )}
 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -451,6 +549,24 @@ const Registration = () => {
               <span className="text-2xl font-semibold text-[#1C3A6A]">₹{event.amount}</span>
             </div>
           </div>
+
+          {isEditing && (
+            <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+              <Button 
+                variant="outline"
+                onClick={() => setEditingSection(null)}
+                className="border-gray-300 text-[#52585E] hover:bg-gray-50"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => setEditingSection(null)}
+                className="bg-[#0799FF] hover:bg-blue-600"
+              >
+                Save Changes
+              </Button>
+            </div>
+          )}
         </div>
       </Card>
     );
@@ -595,18 +711,15 @@ const Registration = () => {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {editingSection === 'personal' ? renderPersonalInfoSection(true) : renderPersonalInfoSection()}
-        {editingSection === 'payment' ? renderPaymentInfoSection(true) : renderPaymentInfoSection()}
+        {renderPersonalInfoSection()}
+        {renderPaymentInfoSection()}
 
         {/* Action Buttons */}
         <div className="flex justify-center space-x-4">
           {editingSection ? (
-            <Button 
-              onClick={() => setEditingSection(null)}
-              className="bg-[#0799FF] hover:bg-blue-600 px-8"
-            >
-              Save Changes
-            </Button>
+            <div className="text-center text-[#52585E]">
+              <p className="text-sm">Make your changes above and click "Save Changes"</p>
+            </div>
           ) : (
             <Button 
               onClick={handleSubmit}
