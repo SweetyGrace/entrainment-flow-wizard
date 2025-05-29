@@ -135,7 +135,7 @@ const Index = () => {
             >
               <div className="relative">
                 <img
-                  src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+                  src="/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png"
                   alt="HDB"
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
@@ -194,7 +194,7 @@ const Index = () => {
             >
               <div className="relative">
                 <img
-                  src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+                  src="/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png"
                   alt="MSD"
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
