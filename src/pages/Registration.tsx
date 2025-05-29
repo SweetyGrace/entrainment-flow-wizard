@@ -407,18 +407,6 @@ const Registration = () => {
             />
           </div>
 
-          <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100">
-            <Checkbox
-              id="terms"
-              checked={userData.personalInfo?.acceptedTerms || false}
-              onCheckedChange={(checked) => handlePersonalInfoChange('acceptedTerms', checked)}
-              className="mt-1"
-            />
-            <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
-              I accept the terms and conditions and understand that this registration is subject to approval
-            </Label>
-          </div>
-
           {isEditing && (
             <div className="flex justify-end space-x-3 pt-6 border-t border-gray-100">
               <Button 
@@ -678,7 +666,7 @@ const Registration = () => {
         {/* Banner */}
         <div className="relative h-64 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 overflow-hidden">
           <img 
-            src="/lovable-uploads/6aaa074e-3cb7-41ee-a6db-98aab03d3831.png" 
+            src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png" 
             alt="Entrainment'25 Banner" 
             className="w-full h-full object-cover opacity-90"
           />
@@ -772,7 +760,7 @@ const Registration = () => {
       {/* Banner */}
       <div className="relative h-64 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 overflow-hidden">
         <img 
-          src="/lovable-uploads/6aaa074e-3cb7-41ee-a6db-98aab03d3831.png" 
+          src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png" 
           alt="Entrainment'25 Banner" 
           className="w-full h-full object-cover opacity-90"
         />
