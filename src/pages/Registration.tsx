@@ -774,7 +774,7 @@ const Registration = () => {
 
       {/* Main Content - Side by Side Layout */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex gap-12">
+        <div className="flex gap-6">
           {/* Left Side - Stepper */}
           <div className="w-80 flex-shrink-0">
             <div className="sticky top-32">
