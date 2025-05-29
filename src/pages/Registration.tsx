@@ -776,7 +776,7 @@ const Registration = () => {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex gap-4">
           {/* Left Side - Stepper */}
-          <div className="w-64 flex-shrink-0">
+          <div className="w-48 flex-shrink-0">
             <div className="sticky top-32">
               <RegistrationStepper steps={getSteps()} />
             </div>
@@ -787,23 +787,6 @@ const Registration = () => {
             <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 mb-8">
               {renderPersonalInfoSection()}
               
-              {/* Terms and Conditions Checkbox */}
-              {canProceedToPayment() && event.isPaid && !userData.paymentInfo && (
-                <div className="mb-8 p-6 bg-blue-50 rounded-2xl border border-blue-100">
-                  <div className="flex items-start space-x-3">
-                    <Checkbox
-                      id="termsConditions"
-                      checked={userData.personalInfo?.acceptedTerms || false}
-                      onCheckedChange={(checked) => handlePersonalInfoChange('acceptedTerms', checked)}
-                      className="mt-1"
-                    />
-                    <Label htmlFor="termsConditions" className="text-sm text-gray-700 leading-relaxed">
-                      I agree to the terms and conditions, privacy policy, and understand that this registration is subject to approval by Mahatria. I consent to the processing of my personal data for registration purposes.
-                    </Label>
-                  </div>
-                </div>
-              )}
-
               {renderPaymentInfoSection()}
             </div>
 
