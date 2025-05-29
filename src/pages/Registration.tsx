@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -70,13 +69,15 @@ interface Event {
   amount?: number;
 }
 
+type RegistrationStep = 'personal' | 'registered' | 'payment' | 'complete';
+
 const Registration = () => {
   const [searchParams] = useSearchParams();
   const scenario = searchParams.get('scenario') || 'new';
   
   const [userData, setUserData] = useState<UserData>({});
   const [musicEnabled, setMusicEnabled] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [editingSection, setEditingSection] = useState<string | null>(null);
 
   // Mock event data
@@ -170,11 +171,19 @@ const Registration = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    setIsSubmitted(true);
+  const handlePersonalInfoSubmit = () => {
+    setCurrentStep('registered');
   };
 
-  const canProceedToPayment = () => {
+  const handleProceedToPayment = () => {
+    setCurrentStep('payment');
+  };
+
+  const handlePaymentSubmit = () => {
+    setCurrentStep('complete');
+  };
+
+  const canContinue = () => {
     const hasRequiredPersonalInfo = userData.personalInfo?.fullName && 
                                    userData.personalInfo?.email && 
                                    userData.personalInfo?.mobile && 
@@ -182,7 +191,147 @@ const Registration = () => {
     return hasRequiredPersonalInfo;
   };
 
-  if (isSubmitted) {
+  const canProceedToPayment = () => {
+    const hasRequiredPaymentInfo = userData.paymentInfo?.invoiceName && 
+                                  userData.paymentInfo?.invoiceEmail;
+    return hasRequiredPaymentInfo;
+  };
+
+  // Registration confirmation page
+  if (currentStep === 'registered') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <RegistrationHeader 
+          musicEnabled={musicEnabled}
+          setMusicEnabled={setMusicEnabled}
+        />
+
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <Card className="border-0 shadow-lg bg-white">
+            <CardContent className="p-8 text-center">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Programme Registered!</h2>
+              <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Congratulations! You have successfully registered for {event.name}. 
+                {event.isPaid ? " Please proceed to complete your payment to secure your spot." : " Your registration is now complete."}
+              </p>
+              
+              {/* Show registered personal info */}
+              <div className="bg-blue-50 rounded-lg p-6 mb-8 text-left max-w-md mx-auto">
+                <h3 className="font-semibold text-gray-900 mb-4">Registration Details:</h3>
+                <div className="space-y-2 text-sm">
+                  <p><span className="font-medium">Name:</span> {userData.personalInfo?.fullName}</p>
+                  <p><span className="font-medium">Email:</span> {userData.personalInfo?.email}</p>
+                  <p><span className="font-medium">Mobile:</span> {userData.personalInfo?.mobile}</p>
+                  <p><span className="font-medium">Programme:</span> {event.name}</p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                {event.isPaid && (
+                  <Button 
+                    onClick={handleProceedToPayment}
+                    className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                    style={{
+                      backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }}
+                  >
+                    <span className="relative z-10">Proceed to Payment</span>
+                  </Button>
+                )}
+                <Button 
+                  variant="outline"
+                  onClick={() => setCurrentStep('personal')}
+                  className="px-8 py-3 text-base"
+                >
+                  Edit Registration
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // Payment step
+  if (currentStep === 'payment') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <RegistrationHeader 
+          musicEnabled={musicEnabled}
+          setMusicEnabled={setMusicEnabled}
+        />
+
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="space-y-6">
+            {/* Progress indicator */}
+            <Card className="border-0 shadow-sm bg-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span className="text-green-600 font-medium">✓ Registration Complete</span>
+                  <span className="font-medium text-blue-600">Payment Details</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <PaymentInfoSection
+              paymentInfo={userData.paymentInfo}
+              onPaymentInfoChange={handlePaymentInfoChange}
+              editingSection={editingSection}
+              setEditingSection={setEditingSection}
+              eventAmount={event.amount || 0}
+              isPaid={event.isPaid}
+            />
+
+            {/* Payment action buttons */}
+            <Card className="border-0 shadow-sm bg-white">
+              <CardContent className="p-6">
+                <div className="flex justify-center space-x-4">
+                  <Button 
+                    variant="outline"
+                    onClick={() => setCurrentStep('registered')}
+                    className="px-6 py-3"
+                  >
+                    Back
+                  </Button>
+                  {editingSection ? (
+                    <div className="text-center text-gray-600">
+                      <p className="text-sm">Make your changes above and click "Save Changes"</p>
+                    </div>
+                  ) : (
+                    <Button 
+                      onClick={handlePaymentSubmit}
+                      className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                      disabled={!canProceedToPayment()}
+                      style={{
+                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                      }}
+                    >
+                      <span className="relative z-10">Complete Payment</span>
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Final success page
+  if (currentStep === 'complete') {
     return (
       <RegistrationSuccess
         event={event}
@@ -193,6 +342,7 @@ const Registration = () => {
     );
   }
 
+  // Personal information step (initial step)
   return (
     <div className="min-h-screen bg-gray-50">
       <RegistrationHeader 
@@ -208,15 +358,6 @@ const Registration = () => {
             onPersonalInfoChange={handlePersonalInfoChange}
             editingSection={editingSection}
             setEditingSection={setEditingSection}
-          />
-          
-          <PaymentInfoSection
-            paymentInfo={userData.paymentInfo}
-            onPaymentInfoChange={handlePaymentInfoChange}
-            editingSection={editingSection}
-            setEditingSection={setEditingSection}
-            eventAmount={event.amount || 0}
-            isPaid={event.isPaid}
           />
 
           {/* Terms and Conditions + Action Buttons */}
@@ -241,11 +382,17 @@ const Registration = () => {
                   </div>
                 ) : (
                   <Button 
-                    onClick={handleSubmit}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-200 rounded-lg"
-                    disabled={!canProceedToPayment()}
+                    onClick={handlePersonalInfoSubmit}
+                    className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                    disabled={!canContinue()}
+                    style={{
+                      backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }}
                   >
-                    {event.isPaid ? 'Proceed to Payment' : 'Complete Registration'}
+                    <span className="relative z-10">Continue</span>
                   </Button>
                 )}
               </div>
