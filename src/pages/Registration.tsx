@@ -11,13 +11,7 @@ import RegistrationHeader from '@/components/registration/RegistrationHeader';
 
 interface UserData {
   personalInfo?: {
-    fullName?: string;
-    gender?: string;
-    mobile?: string;
-    email?: string;
-    dateOfBirth?: Date;
     infinitheismContact?: string;
-    city?: string;
     preferredRoommate?: string;
     additionalNotes?: string;
     acceptedTerms?: boolean;
@@ -96,22 +90,13 @@ const Registration = () => {
     if (scenario === 'partial') {
       setUserData({
         personalInfo: {
-          fullName: 'Aravind Kumar',
-          email: 'aravind@example.com',
-          mobile: '+91 9876543210',
-          gender: 'Male',
-          infinitheismContact: 'Admin Sarah'
+          infinitheismContact: 'Admin Sarah',
+          preferredRoommate: 'John Doe'
         }
       });
     } else if (scenario === 'complete') {
       setUserData({
         personalInfo: {
-          fullName: 'Aravind Kumar',
-          email: 'aravind@example.com',
-          mobile: '+91 9876543210',
-          gender: 'Male',
-          dateOfBirth: new Date('1990-01-01'),
-          city: 'Chennai',
           infinitheismContact: 'Admin Sarah',
           preferredRoommate: 'John Doe',
           additionalNotes: 'Vegetarian meals preferred',
@@ -125,32 +110,22 @@ const Registration = () => {
       });
     } else {
       // For demonstrating different states without URL parameters
-      // You can modify this logic to show different scenarios
       const randomScenario = Math.floor(Math.random() * 3);
       
       if (randomScenario === 1) {
         // Partial data scenario
         setUserData({
           personalInfo: {
-            fullName: 'Priya Sharma',
-            email: 'priya@example.com',
-            mobile: '+91 9876543211',
-            gender: 'Female',
-            infinitheismContact: 'Admin Raj'
+            infinitheismContact: 'Admin Raj',
+            preferredRoommate: 'Best friend'
           }
         });
       } else if (randomScenario === 2) {
         // Complete data scenario
         setUserData({
           personalInfo: {
-            fullName: 'Raj Patel',
-            email: 'raj@example.com',
-            mobile: '+91 9876543212',
-            gender: 'Male',
-            dateOfBirth: new Date('1985-05-15'),
-            city: 'Mumbai',
             infinitheismContact: 'Admin Maya',
-            preferredRoommate: 'Best friend',
+            preferredRoommate: 'College roommate',
             additionalNotes: 'Early check-in required',
             acceptedTerms: true
           },
@@ -198,9 +173,7 @@ const Registration = () => {
   };
 
   const canContinue = () => {
-    const hasRequiredPersonalInfo = userData.personalInfo?.fullName && 
-                                   userData.personalInfo?.email && 
-                                   userData.personalInfo?.mobile && 
+    const hasRequiredPersonalInfo = userData.personalInfo?.infinitheismContact && 
                                    userData.personalInfo?.acceptedTerms;
     return hasRequiredPersonalInfo;
   };
