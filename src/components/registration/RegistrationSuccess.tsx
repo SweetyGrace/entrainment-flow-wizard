@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, Edit } from 'lucide-react';
 
 interface PersonalInfo {
-  fullName?: string;
-  email?: string;
-  mobile?: string;
+  infinitheismContact?: string;
+  preferredRoommate?: string;
+  additionalNotes?: string;
 }
 
 interface PaymentInfo {
@@ -76,9 +76,13 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
                     Personal Information
                   </h3>
                   <div className="text-sm text-gray-600 space-y-1">
-                    <p>Name: {personalInfo.fullName}</p>
-                    <p>Email: {personalInfo.email}</p>
-                    <p>Mobile: {personalInfo.mobile}</p>
+                    <p>Contact: {personalInfo.infinitheismContact}</p>
+                    {personalInfo.preferredRoommate && (
+                      <p>Roommate: {personalInfo.preferredRoommate}</p>
+                    )}
+                    {personalInfo.additionalNotes && (
+                      <p>Notes: {personalInfo.additionalNotes}</p>
+                    )}
                   </div>
                 </div>
               )}

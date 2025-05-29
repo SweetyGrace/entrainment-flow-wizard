@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -211,9 +212,10 @@ const Registration = () => {
               <div className="bg-blue-50 rounded-lg p-6 mb-8 text-left max-w-md mx-auto">
                 <h3 className="font-semibold text-gray-900 mb-4">Registration Details:</h3>
                 <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">Name:</span> {userData.personalInfo?.fullName}</p>
-                  <p><span className="font-medium">Email:</span> {userData.personalInfo?.email}</p>
-                  <p><span className="font-medium">Mobile:</span> {userData.personalInfo?.mobile}</p>
+                  <p><span className="font-medium">Contact:</span> {userData.personalInfo?.infinitheismContact}</p>
+                  {userData.personalInfo?.preferredRoommate && (
+                    <p><span className="font-medium">Roommate:</span> {userData.personalInfo.preferredRoommate}</p>
+                  )}
                   <p><span className="font-medium">Programme:</span> {event.name}</p>
                 </div>
               </div>
