@@ -1,8 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { MapPin, Calendar, Users, Clock, ArrowRight, Star, Heart } from "lucide-react";
+import { MapPin, Calendar, Users, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
@@ -12,9 +11,8 @@ const Index = () => {
     navigate(`/registration?event=${eventId}`);
   };
 
-  const handleLearnMore = (eventId: string) => {
-    // For now, just scroll to event details or show more info
-    console.log(`Learn more about event: ${eventId}`);
+  const handleCardClick = (eventId: string) => {
+    navigate(`/programme/${eventId}`);
   };
 
   return (
@@ -30,16 +28,15 @@ const Index = () => {
                   <span className="block text-blue-600 xl:inline">Consciousness</span>
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  Join transformative events that awaken your inner potential and connect you with like-minded souls on the journey of self-discovery.
+                  Join transformative programmes that awaken your inner potential and connect you with like-minded souls on the journey of self-discovery.
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
                     <Button 
                       onClick={() => handleRegister('featured')}
-                      className="w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
+                      className="w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
                     >
-                      Explore Events
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      Explore Programmes
                     </Button>
                   </div>
                 </div>
@@ -50,52 +47,41 @@ const Index = () => {
         <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <img
             className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-            src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
-            alt="Spiritual gathering"
+            src="/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png"
+            alt="Spiritual guide"
           />
         </div>
       </div>
 
-      {/* Events Section */}
+      {/* Programmes Section */}
       <div className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Upcoming Transformative Events
+              Upcoming Transformative Programmes
             </h2>
             <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
-              Discover events that will awaken your consciousness and transform your life
+              Discover programmes that will awaken your consciousness and transform your life
             </p>
           </div>
 
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {/* Entrainment'25 Event */}
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+            {/* Entrainment'25 Programme */}
+            <Card 
+              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+              onClick={() => handleCardClick('entrainment25')}
+            >
               <div className="relative">
                 <img
                   src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
                   alt="Entrainment'25"
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-blue-600 text-white">Featured</Badge>
-                </div>
-                <div className="absolute top-4 right-4">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                    <Heart className="w-4 h-4 text-red-500" />
-                  </div>
-                </div>
               </div>
               <CardHeader>
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-xl font-bold group-hover:text-blue-600 transition-colors">
-                    Entrainment'25
-                  </CardTitle>
-                  <div className="flex items-center text-yellow-500">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-sm text-gray-600 ml-1">4.9</span>
-                  </div>
-                </div>
+                <CardTitle className="text-xl font-bold group-hover:text-blue-600 transition-colors">
+                  Entrainment'25
+                </CardTitle>
                 <CardDescription className="text-gray-600">
                   A transformative 3-day journey of consciousness awakening with Mahatria Ra
                 </CardDescription>
@@ -119,55 +105,36 @@ const Index = () => {
                     <span>3 days intensive</span>
                   </div>
                 </div>
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="text-2xl font-bold text-blue-600">₹2,500</div>
-                  <div className="space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleLearnMore('entrainment25')}
-                    >
-                      Learn More
-                    </Button>
-                    <Button 
-                      size="sm"
-                      onClick={() => handleRegister('entrainment25')}
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      Register
-                    </Button>
-                  </div>
+                <div className="mt-6 flex justify-center">
+                  <Button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRegister('entrainment25');
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  >
+                    Register
+                  </Button>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Consciousness Summit 2025 */}
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+            {/* HDB Programme */}
+            <Card 
+              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+              onClick={() => handleCardClick('hdb')}
+            >
               <div className="relative">
                 <img
                   src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
-                  alt="Consciousness Summit"
+                  alt="HDB"
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-green-600 text-white">New</Badge>
-                </div>
-                <div className="absolute top-4 right-4">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                    <Heart className="w-4 h-4 text-gray-400 hover:text-red-500 transition-colors" />
-                  </div>
-                </div>
               </div>
               <CardHeader>
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-xl font-bold group-hover:text-green-600 transition-colors">
-                    Consciousness Summit 2025
-                  </CardTitle>
-                  <div className="flex items-center text-yellow-500">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-sm text-gray-600 ml-1">4.8</span>
-                  </div>
-                </div>
+                <CardTitle className="text-xl font-bold group-hover:text-blue-600 transition-colors">
+                  HDB
+                </CardTitle>
                 <CardDescription className="text-gray-600">
                   Global gathering of spiritual leaders and consciousness researchers
                 </CardDescription>
@@ -191,55 +158,36 @@ const Index = () => {
                     <span>3 days conference</span>
                   </div>
                 </div>
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="text-2xl font-bold text-green-600">₹3,500</div>
-                  <div className="space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleLearnMore('consciousness-summit')}
-                    >
-                      Learn More
-                    </Button>
-                    <Button 
-                      size="sm"
-                      onClick={() => handleRegister('consciousness-summit')}
-                      className="bg-green-600 hover:bg-green-700 text-white"
-                    >
-                      Register
-                    </Button>
-                  </div>
+                <div className="mt-6 flex justify-center">
+                  <Button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRegister('hdb');
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  >
+                    Register
+                  </Button>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Mindfulness Retreat */}
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+            {/* MSD Programme */}
+            <Card 
+              className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
+              onClick={() => handleCardClick('msd')}
+            >
               <div className="relative">
                 <img
                   src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
-                  alt="Mindfulness Retreat"
+                  alt="MSD"
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-purple-600 text-white">Popular</Badge>
-                </div>
-                <div className="absolute top-4 right-4">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-                    <Heart className="w-4 h-4 text-gray-400 hover:text-red-500 transition-colors" />
-                  </div>
-                </div>
               </div>
               <CardHeader>
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-xl font-bold group-hover:text-purple-600 transition-colors">
-                    Mindfulness Retreat
-                  </CardTitle>
-                  <div className="flex items-center text-yellow-500">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-sm text-gray-600 ml-1">4.7</span>
-                  </div>
-                </div>
+                <CardTitle className="text-xl font-bold group-hover:text-blue-600 transition-colors">
+                  MSD
+                </CardTitle>
                 <CardDescription className="text-gray-600">
                   Silent meditation retreat for deep inner peace and clarity
                 </CardDescription>
@@ -263,24 +211,16 @@ const Index = () => {
                     <span>7 days silent retreat</span>
                   </div>
                 </div>
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="text-2xl font-bold text-purple-600">₹4,200</div>
-                  <div className="space-x-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleLearnMore('mindfulness-retreat')}
-                    >
-                      Learn More
-                    </Button>
-                    <Button 
-                      size="sm"
-                      onClick={() => handleRegister('mindfulness-retreat')}
-                      className="bg-purple-600 hover:bg-purple-700 text-white"
-                    >
-                      Register
-                    </Button>
-                  </div>
+                <div className="mt-6 flex justify-center">
+                  <Button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRegister('msd');
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  >
+                    Register
+                  </Button>
                 </div>
               </CardContent>
             </Card>
