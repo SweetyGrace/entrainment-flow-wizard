@@ -1,226 +1,292 @@
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Calendar, Users, MapPin, Star } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { MapPin, Calendar, Users, Clock, ArrowRight, Star, Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const navigate = useNavigate();
 
-  const events = [
-    {
-      id: 'entrainment25',
-      name: "Entrainment'25",
-      date: "March 15-17, 2025",
-      location: "Infinitheism Headquarters",
-      description: "A transformative spiritual gathering with Mahatria",
-      attendees: 500,
-      price: 2500,
-      image: "/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
-    },
-    {
-      id: 'consciousness-summit',
-      name: "Consciousness Summit 2025",
-      date: "April 22-24, 2025",
-      location: "Mystic Valley Resort",
-      description: "Explore the depths of consciousness and spiritual awakening",
-      attendees: 350,
-      price: 3200,
-      image: "/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
-    },
-    {
-      id: 'mindfulness-retreat',
-      name: "Mindfulness Retreat",
-      date: "May 8-10, 2025",
-      location: "Serene Mountain Lodge",
-      description: "A peaceful retreat focused on mindfulness and inner peace",
-      attendees: 200,
-      price: 1800,
-      image: "/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
-    }
-  ];
+  const handleRegister = (eventId: string) => {
+    navigate(`/registration?event=${eventId}`);
+  };
 
-  const handleRegister = (eventId: string, scenario: string = 'new') => {
-    navigate(`/registration?scenario=${scenario}`);
+  const handleLearnMore = (eventId: string) => {
+    // For now, just scroll to event details or show more info
+    console.log(`Learn more about event: ${eventId}`);
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FBFF]">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="text-2xl font-bold text-[#1C3A6A]">
-                Infinitheism Events
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+            <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+              <div className="sm:text-center lg:text-left">
+                <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                  <span className="block xl:inline">Transform Your</span>{' '}
+                  <span className="block text-blue-600 xl:inline">Consciousness</span>
+                </h1>
+                <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                  Join transformative events that awaken your inner potential and connect you with like-minded souls on the journey of self-discovery.
+                </p>
+                <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                  <div className="rounded-md shadow">
+                    <Button 
+                      onClick={() => handleRegister('featured')}
+                      className="w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
+                    >
+                      Explore Events
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="text-[#52585E] hover:bg-gray-50">
-                Login
-              </Button>
-              <Button className="bg-[#0799FF] hover:bg-blue-600">
-                Sign Up
-              </Button>
-            </div>
+            </main>
           </div>
         </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#1C3A6A] to-[#0799FF] text-white py-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Transform Your Journey
-          </h1>
-          <p className="text-xl md:text-2xl opacity-90 mb-8 max-w-3xl mx-auto">
-            Join us for life-changing spiritual experiences and profound teachings with Mahatria
-          </p>
-          <Button 
-            size="lg" 
-            className="bg-white text-[#1C3A6A] hover:bg-gray-100 px-8 py-3 text-lg"
-          >
-            Explore Events
-          </Button>
+        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+          <img
+            className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
+            src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+            alt="Spiritual gathering"
+          />
         </div>
-      </section>
+      </div>
 
       {/* Events Section */}
-      <section className="py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2D2D2D] mb-4">
-              Upcoming Events
+      <div className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              Upcoming Transformative Events
             </h2>
-            <p className="text-xl text-[#52585E] max-w-2xl mx-auto">
-              Discover transformative experiences designed to elevate your consciousness and deepen your spiritual practice
+            <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+              Discover events that will awaken your consciousness and transform your life
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((event) => (
-              <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={event.image} 
-                    alt={event.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-4 right-4 bg-white rounded-full p-2">
-                    <Star className="w-5 h-5 text-yellow-500" />
+          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {/* Entrainment'25 Event */}
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+              <div className="relative">
+                <img
+                  src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+                  alt="Entrainment'25"
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-blue-600 text-white">Featured</Badge>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
+                    <Heart className="w-4 h-4 text-red-500" />
                   </div>
                 </div>
-                
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-[#2D2D2D] mb-2">{event.name}</h3>
-                  <p className="text-[#52585E] mb-4 line-clamp-2">{event.description}</p>
-                  
-                  <div className="space-y-2 mb-6">
-                    <div className="flex items-center text-sm text-[#52585E]">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      {event.date}
-                    </div>
-                    <div className="flex items-center text-sm text-[#52585E]">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      {event.location}
-                    </div>
-                    <div className="flex items-center text-sm text-[#52585E]">
-                      <Users className="w-4 h-4 mr-2" />
-                      {event.attendees} attendees
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="text-2xl font-bold text-[#1C3A6A]">
-                      ₹{event.price.toLocaleString()}
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleRegister(event.id, 'new')}
-                        className="border-[#0799FF] text-[#0799FF] hover:bg-blue-50"
-                      >
-                        Register
-                      </Button>
-                    </div>
+              </div>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <CardTitle className="text-xl font-bold group-hover:text-blue-600 transition-colors">
+                    Entrainment'25
+                  </CardTitle>
+                  <div className="flex items-center text-yellow-500">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="text-sm text-gray-600 ml-1">4.9</span>
                   </div>
                 </div>
-              </Card>
-            ))}
-          </div>
+                <CardDescription className="text-gray-600">
+                  A transformative 3-day journey of consciousness awakening with Mahatria Ra
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    <span>March 15-17, 2025</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    <span>Mysore, Karnataka</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Users className="w-4 h-4 mr-2" />
+                    <span>Limited to 500 participants</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Clock className="w-4 h-4 mr-2" />
+                    <span>3 days intensive</span>
+                  </div>
+                </div>
+                <div className="mt-6 flex items-center justify-between">
+                  <div className="text-2xl font-bold text-blue-600">₹2,500</div>
+                  <div className="space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleLearnMore('entrainment25')}
+                    >
+                      Learn More
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={() => handleRegister('entrainment25')}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      Register
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Demo Links */}
-          <div className="mt-12 text-center">
-            <div className="inline-flex bg-white rounded-lg p-1 border border-gray-200">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => handleRegister('entrainment25', 'new')}
-                className="text-[#52585E] hover:bg-gray-50"
-              >
-                New User Flow
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => handleRegister('entrainment25', 'partial')}
-                className="text-[#52585E] hover:bg-gray-50"
-              >
-                Partial Data Flow
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => handleRegister('entrainment25', 'complete')}
-                className="text-[#52585E] hover:bg-gray-50"
-              >
-                Complete Data Flow
-              </Button>
-            </div>
+            {/* Consciousness Summit 2025 */}
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+              <div className="relative">
+                <img
+                  src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+                  alt="Consciousness Summit"
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-green-600 text-white">New</Badge>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
+                    <Heart className="w-4 h-4 text-gray-400 hover:text-red-500 transition-colors" />
+                  </div>
+                </div>
+              </div>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <CardTitle className="text-xl font-bold group-hover:text-green-600 transition-colors">
+                    Consciousness Summit 2025
+                  </CardTitle>
+                  <div className="flex items-center text-yellow-500">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="text-sm text-gray-600 ml-1">4.8</span>
+                  </div>
+                </div>
+                <CardDescription className="text-gray-600">
+                  Global gathering of spiritual leaders and consciousness researchers
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    <span>April 20-22, 2025</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    <span>Rishikesh, Uttarakhand</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Users className="w-4 h-4 mr-2" />
+                    <span>Open for 1000 participants</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Clock className="w-4 h-4 mr-2" />
+                    <span>3 days conference</span>
+                  </div>
+                </div>
+                <div className="mt-6 flex items-center justify-between">
+                  <div className="text-2xl font-bold text-green-600">₹3,500</div>
+                  <div className="space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleLearnMore('consciousness-summit')}
+                    >
+                      Learn More
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={() => handleRegister('consciousness-summit')}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      Register
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Mindfulness Retreat */}
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer group">
+              <div className="relative">
+                <img
+                  src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+                  alt="Mindfulness Retreat"
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-purple-600 text-white">Popular</Badge>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
+                    <Heart className="w-4 h-4 text-gray-400 hover:text-red-500 transition-colors" />
+                  </div>
+                </div>
+              </div>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <CardTitle className="text-xl font-bold group-hover:text-purple-600 transition-colors">
+                    Mindfulness Retreat
+                  </CardTitle>
+                  <div className="flex items-center text-yellow-500">
+                    <Star className="w-4 h-4 fill-current" />
+                    <span className="text-sm text-gray-600 ml-1">4.7</span>
+                  </div>
+                </div>
+                <CardDescription className="text-gray-600">
+                  Silent meditation retreat for deep inner peace and clarity
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    <span>May 10-17, 2025</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    <span>Dharamshala, HP</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Users className="w-4 h-4 mr-2" />
+                    <span>Limited to 50 participants</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Clock className="w-4 h-4 mr-2" />
+                    <span>7 days silent retreat</span>
+                  </div>
+                </div>
+                <div className="mt-6 flex items-center justify-between">
+                  <div className="text-2xl font-bold text-purple-600">₹4,200</div>
+                  <div className="space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleLearnMore('mindfulness-retreat')}
+                    >
+                      Learn More
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={() => handleRegister('mindfulness-retreat')}
+                      className="bg-purple-600 hover:bg-purple-700 text-white"
+                    >
+                      Register
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-[#2D2D2D] text-white py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4">Infinitheism</h3>
-              <p className="text-gray-300">
-                Transforming lives through spiritual wisdom and conscious evolution.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Quick Links</h4>
-              <div className="space-y-2">
-                <a href="#" className="block text-gray-300 hover:text-white transition-colors">
-                  About Us
-                </a>
-                <a href="#" className="block text-gray-300 hover:text-white transition-colors">
-                  Events
-                </a>
-                <a href="#" className="block text-gray-300 hover:text-white transition-colors">
-                  Contact
-                </a>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Contact Info</h4>
-              <div className="space-y-2 text-gray-300">
-                <p>Email: info@infinitheism.com</p>
-                <p>Phone: +91 9876543210</p>
-                <p>Address: Infinitheism Headquarters</p>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-            <p>&copy; 2025 Infinitheism. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };
