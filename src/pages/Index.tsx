@@ -25,7 +25,7 @@ const Index = () => {
             src="/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png"
             alt="Spiritual guide"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
           <div className="relative z-10 flex items-center justify-center h-full">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center">
@@ -39,9 +39,13 @@ const Index = () => {
                 <div className="mt-8 flex justify-center">
                   <Button 
                     onClick={() => handleRegister('featured')}
-                    className="px-8 py-4 text-base md:text-lg font-medium rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="relative overflow-hidden px-8 py-4 text-base md:text-lg font-medium rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
-                    Explore Programmes
+                    <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 20" preserveAspectRatio="none">
+                      <path d="M0,10 Q25,0 50,10 T100,10 L100,20 L0,20 Z" fill="white"/>
+                      <path d="M0,15 Q25,5 50,15 T100,15 L100,20 L0,20 Z" fill="white"/>
+                    </svg>
+                    <span className="relative z-10">Explore Programmes</span>
                   </Button>
                 </div>
               </div>
@@ -76,7 +80,7 @@ const Index = () => {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="text-xl font-bold">
+                <CardTitle className="text-xl font-bold text-gray-900">
                   Entrainment'25
                 </CardTitle>
                 <CardDescription className="text-gray-600">
@@ -108,9 +112,13 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('entrainment25');
                     }}
-                    className="px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
-                    Register
+                    <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 20" preserveAspectRatio="none">
+                      <path d="M0,10 Q25,0 50,10 T100,10 L100,20 L0,20 Z" fill="white"/>
+                      <path d="M0,15 Q25,5 50,15 T100,15 L100,20 L0,20 Z" fill="white"/>
+                    </svg>
+                    <span className="relative z-10">Register</span>
                   </Button>
                 </div>
               </CardContent>
@@ -129,7 +137,7 @@ const Index = () => {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="text-xl font-bold">
+                <CardTitle className="text-xl font-bold text-gray-900">
                   HDB
                 </CardTitle>
                 <CardDescription className="text-gray-600">
@@ -161,9 +169,13 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('hdb');
                     }}
-                    className="px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
-                    Register
+                    <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 20" preserveAspectRatio="none">
+                      <path d="M0,10 Q25,0 50,10 T100,10 L100,20 L0,20 Z" fill="white"/>
+                      <path d="M0,15 Q25,5 50,15 T100,15 L100,20 L0,20 Z" fill="white"/>
+                    </svg>
+                    <span className="relative z-10">Register</span>
                   </Button>
                 </div>
               </CardContent>
@@ -182,7 +194,7 @@ const Index = () => {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="text-xl font-bold">
+                <CardTitle className="text-xl font-bold text-gray-900">
                   MSD
                 </CardTitle>
                 <CardDescription className="text-gray-600">
@@ -214,9 +226,13 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('msd');
                     }}
-                    className="px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
-                    Register
+                    <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 100 20" preserveAspectRatio="none">
+                      <path d="M0,10 Q25,0 50,10 T100,10 L100,20 L0,20 Z" fill="white"/>
+                      <path d="M0,15 Q25,5 50,15 T100,15 L100,20 L0,20 Z" fill="white"/>
+                    </svg>
+                    <span className="relative z-10">Register</span>
                   </Button>
                 </div>
               </CardContent>
