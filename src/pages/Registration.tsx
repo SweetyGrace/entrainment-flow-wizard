@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
@@ -597,7 +598,6 @@ const Registration = () => {
   };
 
   const getSteps = () => {
-    const dataState = getUserDataState();
     const hasPersonalInfo = userData.personalInfo && Object.keys(userData.personalInfo).length > 4;
     const hasPaymentInfo = userData.paymentInfo && Object.keys(userData.paymentInfo).length > 0;
     
@@ -776,7 +776,7 @@ const Registration = () => {
       {/* Stepper */}
       <div className="bg-white py-8 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4">
-          <RegistrationStepper steps={getSteps()} className="justify-start" />
+          <RegistrationStepper steps={getSteps()} />
         </div>
       </div>
 
