@@ -40,7 +40,34 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 }) => {
   const hasData = personalInfo && Object.keys(personalInfo).length > 0;
   const isEditing = editingSection === 'personal';
-  const dataState = hasData && Object.keys(personalInfo).length > 4 ? 'complete' : hasData ? 'partial' : 'new';
+  
+  // Check which fields are filled and unfilled
+  const filledFields = [];
+  const unfilledFields = [];
+  
+  const allFields = [
+    { key: 'fullName', label: 'Full Name', type: 'text' },
+    { key: 'gender', label: 'Gender', type: 'select' },
+    { key: 'mobile', label: 'Mobile Number', type: 'text' },
+    { key: 'email', label: 'Email Address', type: 'email' },
+    { key: 'dateOfBirth', label: 'Date of Birth', type: 'date' },
+    { key: 'city', label: 'City', type: 'text' },
+    { key: 'infinitheismContact', label: 'Infinitheism Contact', type: 'text' },
+    { key: 'preferredRoommate', label: 'Preferred Roommate', type: 'text', optional: true },
+    { key: 'additionalNotes', label: 'Note', type: 'textarea', optional: true }
+  ];
+  
+  if (hasData) {
+    allFields.forEach(field => {
+      if (personalInfo?.[field.key as keyof PersonalInfo]) {
+        filledFields.push(field);
+      } else {
+        unfilledFields.push(field);
+      }
+    });
+  }
+  
+  const dataState = hasData && filledFields.length > 4 ? 'complete' : hasData && filledFields.length > 0 ? 'partial' : 'new';
 
   if (hasData && !isEditing) {
     return (
@@ -68,60 +95,93 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {personalInfo?.fullName && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Full Name</Label>
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.fullName}</div>
+          {/* Show filled fields */}
+          {filledFields.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              {filledFields.map(field => (
+                <div key={field.key} className="space-y-2">
+                  <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    {field.label}
+                    {field.optional && <span className="text-gray-400 ml-1">(Optional)</span>}
+                  </Label>
+                  <div className="text-sm text-gray-900 font-medium">
+                    {field.type === 'date' && personalInfo?.[field.key as keyof PersonalInfo] instanceof Date
+                      ? format(personalInfo[field.key as keyof PersonalInfo] as Date, "PPP")
+                      : String(personalInfo?.[field.key as keyof PersonalInfo] || '')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {/* Show unfilled fields for partial data */}
+          {dataState === 'partial' && unfilledFields.length > 0 && (
+            <div className="border-t border-gray-100 pt-6">
+              <h4 className="text-sm font-medium text-gray-700 mb-4">Complete your profile</h4>
+              <div className="space-y-6">
+                {unfilledFields.map(field => (
+                  <div key={field.key} className="space-y-3">
+                    <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
+                      {field.label}
+                      {field.optional && <span className="text-gray-400 text-xs ml-1">(Optional)</span>}
+                    </Label>
+                    
+                    {field.type === 'select' && field.key === 'gender' ? (
+                      <Select value={personalInfo?.gender} onValueChange={(value) => onPersonalInfoChange('gender', value)}>
+                        <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : field.type === 'date' ? (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50",
+                              !personalInfo?.dateOfBirth && "text-gray-400"
+                            )}
+                          >
+                            <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
+                            {personalInfo?.dateOfBirth ? format(personalInfo.dateOfBirth, "PPP") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={personalInfo?.dateOfBirth}
+                            onSelect={(date) => onPersonalInfoChange('dateOfBirth', date)}
+                            initialFocus
+                            className="pointer-events-auto"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    ) : field.type === 'textarea' ? (
+                      <Textarea
+                        id={field.key}
+                        value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
+                        onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
+                        className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                        rows={3}
+                        placeholder={`Enter ${field.label.toLowerCase()}...`}
+                      />
+                    ) : (
+                      <Input
+                        id={field.key}
+                        type={field.type}
+                        value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
+                        onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
+                        className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                        placeholder={`Enter your ${field.label.toLowerCase()}`}
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
-            )}
-            {personalInfo?.email && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Email Address</Label>
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.email}</div>
-              </div>
-            )}
-            {personalInfo?.mobile && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Mobile Number</Label>
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.mobile}</div>
-              </div>
-            )}
-            {personalInfo?.gender && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Gender</Label>
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.gender}</div>
-              </div>
-            )}
-            {personalInfo?.city && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">City</Label>
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.city}</div>
-              </div>
-            )}
-            {personalInfo?.dateOfBirth && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Date of Birth</Label>
-                <div className="text-sm text-gray-900 font-medium">{format(personalInfo.dateOfBirth, "PPP")}</div>
-              </div>
-            )}
-            {personalInfo?.infinitheismContact && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Infinitheism Contact</Label>
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.infinitheismContact}</div>
-              </div>
-            )}
-            {personalInfo?.preferredRoommate && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Preferred Roommate</Label>
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.preferredRoommate}</div>
-              </div>
-            )}
-          </div>
-          {personalInfo?.additionalNotes && (
-            <div className="space-y-2 mt-6">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Additional Notes</Label>
-              <div className="text-sm text-gray-900 font-medium">{personalInfo.additionalNotes}</div>
             </div>
           )}
         </CardContent>
@@ -161,7 +221,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             </div>
             <div>
               <CardTitle className="text-lg font-medium text-gray-900">
-                {dataState === 'new' ? "Welcome to Entrainment'25" : "We're almost there, Aravind."}
+                {dataState === 'new' ? "Welcome to Entrainment'25" : "We're almost there!"}
               </CardTitle>
               <p className="text-sm text-gray-500 mt-1">
                 {dataState === 'new' 
