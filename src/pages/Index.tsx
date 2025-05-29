@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Calendar, Users, Clock } from "lucide-react";
@@ -7,9 +8,15 @@ import { useEffect, useRef, useState } from "react";
 const Index = () => {
   const navigate = useNavigate();
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
+  const [bannerVisible, setBannerVisible] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    // Trigger banner animation on mount
+    const timer = setTimeout(() => {
+      setBannerVisible(true);
+    }, 100);
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -29,7 +36,10 @@ const Index = () => {
       if (ref) observer.observe(ref);
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
   }, []);
 
   const handleRegister = (eventId: string) => {
@@ -86,7 +96,11 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
           <div className="relative z-10 flex items-center justify-start h-full pl-8 md:pl-16 lg:pl-24">
             <div className="max-w-2xl">
-              <div className="text-left">
+              <div className={`text-left transition-all duration-1000 ease-out ${
+                bannerVisible 
+                  ? 'translate-y-0 opacity-100' 
+                  : 'translate-y-8 opacity-0'
+              }`}>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
                   <span className="block">Transform Your</span>
                   <span className="block text-blue-400">Consciousness</span>
