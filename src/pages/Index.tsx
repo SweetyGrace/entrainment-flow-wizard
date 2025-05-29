@@ -89,7 +89,11 @@ const Index = () => {
       <div className="relative overflow-hidden">
         <div className="relative h-screen">
           <img
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
+              bannerVisible 
+                ? 'scale-100 opacity-100' 
+                : 'scale-105 opacity-80'
+            }`}
             src="/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png"
             alt="Spiritual guide"
           />
@@ -156,11 +160,11 @@ const Index = () => {
                 }}
                 onClick={() => handleCardClick(programme.id)}
               >
-                <div className="relative">
+                <div className="relative overflow-hidden">
                   <img
                     src={programme.image}
                     alt={programme.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-48 object-cover transition-all duration-500 ease-out group-hover:scale-110"
                   />
                 </div>
                 <CardHeader>
