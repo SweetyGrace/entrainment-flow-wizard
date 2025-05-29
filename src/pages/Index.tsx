@@ -18,6 +18,26 @@ const Index = () => {
       attendees: 500,
       price: 2500,
       image: "/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+    },
+    {
+      id: 'consciousness-summit',
+      name: "Consciousness Summit 2025",
+      date: "April 22-24, 2025",
+      location: "Mystic Valley Resort",
+      description: "Explore the depths of consciousness and spiritual awakening",
+      attendees: 350,
+      price: 3200,
+      image: "/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
+    },
+    {
+      id: 'mindfulness-retreat',
+      name: "Mindfulness Retreat",
+      date: "May 8-10, 2025",
+      location: "Serene Mountain Lodge",
+      description: "A peaceful retreat focused on mindfulness and inner peace",
+      attendees: 200,
+      price: 1800,
+      image: "/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png"
     }
   ];
 
