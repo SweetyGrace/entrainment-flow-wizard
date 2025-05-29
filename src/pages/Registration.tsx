@@ -678,9 +678,9 @@ const Registration = () => {
         {/* Banner */}
         <div className="relative h-64 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 overflow-hidden">
           <img 
-            src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png" 
+            src="/lovable-uploads/6aaa074e-3cb7-41ee-a6db-98aab03d3831.png" 
             alt="Entrainment'25 Banner" 
-            className="w-full h-full object-cover opacity-20"
+            className="w-full h-full object-cover opacity-90"
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center text-white">
@@ -772,9 +772,9 @@ const Registration = () => {
       {/* Banner */}
       <div className="relative h-64 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 overflow-hidden">
         <img 
-          src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png" 
+          src="/lovable-uploads/6aaa074e-3cb7-41ee-a6db-98aab03d3831.png" 
           alt="Entrainment'25 Banner" 
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-90"
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white">
@@ -830,22 +830,38 @@ const Registration = () => {
             {renderPersonalInfoSection()}
             {renderPaymentInfoSection()}
 
-            {/* Action Buttons */}
-            <div className="flex justify-center">
-              {editingSection ? (
-                <div className="text-center text-gray-600">
-                  <p className="text-sm">Make your changes above and click "Save Changes"</p>
+            {/* Terms and Conditions + Action Buttons */}
+            <Card className="mb-6 border-0 shadow-sm bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mb-6">
+                  <Checkbox
+                    id="terms"
+                    checked={userData.personalInfo?.acceptedTerms || false}
+                    onCheckedChange={(checked) => handlePersonalInfoChange('acceptedTerms', checked)}
+                    className="mt-1"
+                  />
+                  <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
+                    I accept the terms and conditions and understand that this registration is subject to approval
+                  </Label>
                 </div>
-              ) : (
-                <Button 
-                  onClick={handleSubmit}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-200"
-                  disabled={!canProceedToPayment()}
-                >
-                  {event.isPaid ? 'Proceed to Payment' : 'Complete Registration'}
-                </Button>
-              )}
-            </div>
+
+                <div className="flex justify-center">
+                  {editingSection ? (
+                    <div className="text-center text-gray-600">
+                      <p className="text-sm">Make your changes above and click "Save Changes"</p>
+                    </div>
+                  ) : (
+                    <Button 
+                      onClick={handleSubmit}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                      disabled={!canProceedToPayment()}
+                    >
+                      {event.isPaid ? 'Proceed to Payment' : 'Complete Registration'}
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
