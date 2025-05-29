@@ -774,9 +774,9 @@ const Registration = () => {
 
       {/* Main Content - Side by Side Layout */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex gap-6">
+        <div className="flex gap-4">
           {/* Left Side - Stepper */}
-          <div className="w-80 flex-shrink-0">
+          <div className="w-64 flex-shrink-0">
             <div className="sticky top-32">
               <RegistrationStepper steps={getSteps()} />
             </div>
