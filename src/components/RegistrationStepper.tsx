@@ -23,25 +23,25 @@ const RegistrationStepper: React.FC<RegistrationStepperProps> = ({ steps, classN
           <div className="flex flex-col items-center">
             <div
               className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-200",
+                "w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300",
                 step.isCompleted
-                  ? "bg-[#0799FF] border-[#0799FF] text-white"
+                  ? "bg-blue-600 border-blue-600 text-white shadow-md"
                   : step.isCurrent
-                  ? "bg-white border-[#0799FF] text-[#0799FF]"
+                  ? "bg-white border-blue-600 text-blue-600 shadow-md"
                   : "bg-gray-100 border-gray-300 text-gray-500"
               )}
             >
               {step.isCompleted ? (
-                <CheckCircle className="w-5 h-5" />
+                <CheckCircle className="w-6 h-6" />
               ) : (
-                <span className="text-sm font-medium">{step.id}</span>
+                <span className="text-sm font-semibold">{step.id}</span>
               )}
             </div>
             <span
               className={cn(
-                "mt-2 text-xs font-medium",
+                "mt-3 text-sm font-medium",
                 step.isCompleted || step.isCurrent
-                  ? "text-[#2D2D2D]"
+                  ? "text-gray-900"
                   : "text-gray-500"
               )}
             >
@@ -51,8 +51,8 @@ const RegistrationStepper: React.FC<RegistrationStepperProps> = ({ steps, classN
           {index < steps.length - 1 && (
             <div
               className={cn(
-                "flex-1 h-0.5 mx-2 transition-colors duration-200",
-                step.isCompleted ? "bg-[#0799FF]" : "bg-gray-300"
+                "flex-1 h-0.5 mx-4 transition-colors duration-300",
+                step.isCompleted ? "bg-blue-600" : "bg-gray-300"
               )}
             />
           )}
