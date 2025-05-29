@@ -39,7 +39,7 @@ const Index = () => {
                 <div className="mt-8 flex justify-center">
                   <Button 
                     onClick={() => handleRegister('featured')}
-                    className="relative overflow-hidden px-8 py-4 text-base md:text-lg font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                    className="relative overflow-hidden px-8 py-4 text-base md:text-lg font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
                     style={{
                       backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
                       backgroundSize: 'cover',
@@ -114,7 +114,7 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('entrainment25');
                     }}
-                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
                     style={{
                       backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
                       backgroundSize: 'cover',
@@ -173,7 +173,7 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('hdb');
                     }}
-                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
                     style={{
                       backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
                       backgroundSize: 'cover',
@@ -232,7 +232,7 @@ const Index = () => {
                       e.stopPropagation();
                       handleRegister('msd');
                     }}
-                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                    className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
                     style={{
                       backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
                       backgroundSize: 'cover',
