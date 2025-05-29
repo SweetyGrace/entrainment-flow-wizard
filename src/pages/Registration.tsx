@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,7 +11,13 @@ import RegistrationHeader from '@/components/registration/RegistrationHeader';
 
 interface UserData {
   personalInfo?: {
+    fullName?: string;
+    gender?: string;
+    mobile?: string;
+    email?: string;
+    dateOfBirth?: Date;
     infinitheismContact?: string;
+    city?: string;
     preferredRoommate?: string;
     additionalNotes?: string;
     acceptedTerms?: boolean;
@@ -91,13 +96,22 @@ const Registration = () => {
     if (scenario === 'partial') {
       setUserData({
         personalInfo: {
-          infinitheismContact: 'Admin Sarah',
-          preferredRoommate: 'John Doe'
+          fullName: 'Aravind Kumar',
+          email: 'aravind@example.com',
+          mobile: '+91 9876543210',
+          gender: 'Male',
+          infinitheismContact: 'Admin Sarah'
         }
       });
     } else if (scenario === 'complete') {
       setUserData({
         personalInfo: {
+          fullName: 'Aravind Kumar',
+          email: 'aravind@example.com',
+          mobile: '+91 9876543210',
+          gender: 'Male',
+          dateOfBirth: new Date('1990-01-01'),
+          city: 'Chennai',
           infinitheismContact: 'Admin Sarah',
           preferredRoommate: 'John Doe',
           additionalNotes: 'Vegetarian meals preferred',
@@ -111,22 +125,32 @@ const Registration = () => {
       });
     } else {
       // For demonstrating different states without URL parameters
+      // You can modify this logic to show different scenarios
       const randomScenario = Math.floor(Math.random() * 3);
       
       if (randomScenario === 1) {
         // Partial data scenario
         setUserData({
           personalInfo: {
-            infinitheismContact: 'Admin Raj',
-            preferredRoommate: 'Best friend'
+            fullName: 'Priya Sharma',
+            email: 'priya@example.com',
+            mobile: '+91 9876543211',
+            gender: 'Female',
+            infinitheismContact: 'Admin Raj'
           }
         });
       } else if (randomScenario === 2) {
         // Complete data scenario
         setUserData({
           personalInfo: {
+            fullName: 'Raj Patel',
+            email: 'raj@example.com',
+            mobile: '+91 9876543212',
+            gender: 'Male',
+            dateOfBirth: new Date('1985-05-15'),
+            city: 'Mumbai',
             infinitheismContact: 'Admin Maya',
-            preferredRoommate: 'College roommate',
+            preferredRoommate: 'Best friend',
             additionalNotes: 'Early check-in required',
             acceptedTerms: true
           },
@@ -174,7 +198,9 @@ const Registration = () => {
   };
 
   const canContinue = () => {
-    const hasRequiredPersonalInfo = userData.personalInfo?.infinitheismContact && 
+    const hasRequiredPersonalInfo = userData.personalInfo?.fullName && 
+                                   userData.personalInfo?.email && 
+                                   userData.personalInfo?.mobile && 
                                    userData.personalInfo?.acceptedTerms;
     return hasRequiredPersonalInfo;
   };
@@ -212,10 +238,9 @@ const Registration = () => {
               <div className="bg-blue-50 rounded-lg p-6 mb-8 text-left max-w-md mx-auto">
                 <h3 className="font-semibold text-gray-900 mb-4">Registration Details:</h3>
                 <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">Contact:</span> {userData.personalInfo?.infinitheismContact}</p>
-                  {userData.personalInfo?.preferredRoommate && (
-                    <p><span className="font-medium">Roommate:</span> {userData.personalInfo.preferredRoommate}</p>
-                  )}
+                  <p><span className="font-medium">Name:</span> {userData.personalInfo?.fullName}</p>
+                  <p><span className="font-medium">Email:</span> {userData.personalInfo?.email}</p>
+                  <p><span className="font-medium">Mobile:</span> {userData.personalInfo?.mobile}</p>
                   <p><span className="font-medium">Programme:</span> {event.name}</p>
                 </div>
               </div>
