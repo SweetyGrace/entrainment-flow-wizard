@@ -17,7 +17,7 @@ interface RegistrationStepperProps {
 
 const RegistrationStepper: React.FC<RegistrationStepperProps> = ({ steps, className }) => {
   return (
-    <div className={cn("flex items-center justify-between w-full max-w-2xl mx-auto", className)}>
+    <div className={cn("flex items-center w-full max-w-2xl", className)}>
       {steps.map((step, index) => (
         <React.Fragment key={step.id}>
           <div className="flex flex-col items-center">

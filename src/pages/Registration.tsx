@@ -157,6 +157,14 @@ const Registration = () => {
     setCurrentStep(4);
   };
 
+  const canProceedToPayment = () => {
+    const hasRequiredPersonalInfo = userData.personalInfo?.fullName && 
+                                   userData.personalInfo?.email && 
+                                   userData.personalInfo?.mobile && 
+                                   userData.personalInfo?.acceptedTerms;
+    return hasRequiredPersonalInfo;
+  };
+
   const renderPersonalInfoSection = () => {
     const dataState = getUserDataState();
     const hasData = userData.personalInfo && Object.keys(userData.personalInfo).length > 0;
@@ -218,12 +226,6 @@ const Registration = () => {
               </div>
             )}
           </div>
-          {dataState === 'complete' && (
-            <div className="flex items-center mt-6 p-3 bg-green-50 rounded-lg border border-green-200">
-              <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-              <span className="text-sm font-medium text-green-700">Section completed</span>
-            </div>
-          )}
         </div>
       );
     }
@@ -461,10 +463,6 @@ const Registration = () => {
                 <div className="text-gray-900 font-medium">₹{userData.paymentInfo.amount}</div>
               </div>
             )}
-          </div>
-          <div className="flex items-center mt-6 p-3 bg-green-50 rounded-lg border border-green-200">
-            <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-            <span className="text-sm font-medium text-green-700">Section completed</span>
           </div>
         </div>
       );
@@ -778,7 +776,7 @@ const Registration = () => {
       {/* Stepper */}
       <div className="bg-white py-8 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4">
-          <RegistrationStepper steps={getSteps()} />
+          <RegistrationStepper steps={getSteps()} className="justify-start" />
         </div>
       </div>
 
@@ -799,7 +797,7 @@ const Registration = () => {
             <Button 
               onClick={handleSubmit}
               className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
-              disabled={!userData.personalInfo?.acceptedTerms}
+              disabled={!canProceedToPayment()}
             >
               {event.isPaid ? 'Proceed to Payment' : 'Complete Registration'}
             </Button>
