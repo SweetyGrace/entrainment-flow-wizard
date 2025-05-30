@@ -50,164 +50,174 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
   
+  // Check for missing required fields
+  const hasRequiredFields = paymentInfo?.invoiceName && 
+                           paymentInfo?.invoiceEmail &&
+                           paymentInfo?.address;
+  
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
     const titleCaseLabels = {
-      'INVOICE NAME': 'Invoice name',
-      'INVOICE EMAIL': 'Invoice email',
-      'GST REGISTERED': 'GST registered',
-      'GSTIN': 'GSTIN',
-      'TDS PERCENT': 'TDS percent',
-      'ADDRESS': 'Address',
-      'AMOUNT': 'Amount'
+      'invoiceName': 'Invoice name',
+      'invoiceEmail': 'Invoice email',
+      'gstRegistered': 'GST registered',
+      'gstin': 'GSTIN',
+      'tdsPercent': 'TDS percent',
+      'address': 'Address',
+      'amount': 'Amount'
     };
     
-    return titleCaseLabels[label] || label.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    return titleCaseLabels[label] || label;
   };
-
-  // Check which fields are filled and unfilled
-  const filledFields = [];
-  const unfilledFields = [];
-  
-  const allFields = [
-    { key: 'invoiceName', label: 'INVOICE NAME', type: 'text' },
-    { key: 'invoiceEmail', label: 'INVOICE EMAIL', type: 'email' },
-    { key: 'gstRegistered', label: 'GST REGISTERED', type: 'boolean' },
-    { key: 'gstin', label: 'GSTIN', type: 'text', conditional: true },
-    { key: 'tdsPercent', label: 'TDS PERCENT', type: 'text', conditional: true },
-    { key: 'address', label: 'ADDRESS', type: 'textarea' }
-  ];
-  
-  if (hasData) {
-    allFields.forEach(field => {
-      if (field.conditional && !paymentInfo?.gstRegistered) return;
-      if (paymentInfo?.[field.key as keyof PaymentInfo]) {
-        filledFields.push(field);
-      } else {
-        unfilledFields.push(field);
-      }
-    });
-  }
 
   if (hasData && !isEditing) {
     return (
-      <>
-        {/* Filled Fields Section */}
-        {filledFields.length > 0 && (
-          <Card className="mb-6 border-0 shadow-sm bg-white">
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-lg font-medium text-gray-900">
-                    Review the details and update anything that needs realignment — <button 
-                      onClick={() => setEditingSection('payment')}
-                      className="text-blue-600 hover:text-blue-700 underline"
-                    >
-                      click here to edit
-                    </button>
-                  </CardTitle>
-                  
-                  {/* Column Layout Toggle */}
-                  <div className="flex items-center gap-2 mt-3">
-                    <span className="text-sm text-gray-500">View:</span>
-                    <Button
-                      variant={columnLayout === 2 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setColumnLayout(2)}
-                      className="h-7 px-3 text-xs rounded-full"
-                    >
-                      2 Columns
-                    </Button>
-                    <Button
-                      variant={columnLayout === 3 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setColumnLayout(3)}
-                      className="h-7 px-3 text-xs rounded-full"
-                    >
-                      3 Columns
-                    </Button>
-                  </div>
-                </div>
+      <Card className="mb-6 border-0 shadow-sm bg-white">
+        <CardHeader className="pb-4">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              {/* Only show title if all required fields are filled */}
+              {hasRequiredFields && (
+                <CardTitle className="text-lg font-medium text-gray-900 mb-3">
+                  Review the details and update anything that needs realignment — <button 
+                    onClick={() => setEditingSection('payment')}
+                    className="text-blue-600 hover:text-blue-700 underline"
+                  >
+                    click here to edit
+                  </button>
+                </CardTitle>
+              )}
+              
+              {/* Column Layout Toggle */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">View:</span>
+                <Button
+                  variant={columnLayout === 2 ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setColumnLayout(2)}
+                  className="h-7 px-3 text-xs rounded-full"
+                >
+                  2 Columns
+                </Button>
+                <Button
+                  variant={columnLayout === 3 ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setColumnLayout(3)}
+                  className="h-7 px-3 text-xs rounded-full"
+                >
+                  3 Columns
+                </Button>
               </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                {filledFields.map(field => (
-                  <div key={field.key} className="space-y-2">
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      {formatFieldLabel(field.label)}
-                    </Label>
-                    <div className="text-sm text-gray-900 font-medium">
-                      {field.type === 'boolean' 
-                        ? (paymentInfo?.[field.key as keyof PaymentInfo] ? 'Yes' : 'No')
-                        : field.key === 'amount' 
-                        ? `₹${paymentInfo?.[field.key as keyof PaymentInfo]}`
-                        : String(paymentInfo?.[field.key as keyof PaymentInfo] || '')}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+            {/* Show all fields with their current values or input fields if empty */}
+            <div className="space-y-3">
+              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                {formatFieldLabel('invoiceName')}
+              </Label>
+              {paymentInfo?.invoiceName ? (
+                <div className="text-sm text-gray-900 font-medium">{paymentInfo.invoiceName}</div>
+              ) : (
+                <Input
+                  value=""
+                  onChange={(e) => onPaymentInfoChange('invoiceName', e.target.value)}
+                  className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  placeholder="Enter name for invoice"
+                />
+              )}
+            </div>
 
-        {/* Unfilled Fields Section */}
-        {unfilledFields.length > 0 && (
-          <Card className="mb-6 border-0 shadow-sm bg-white">
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-lg font-medium text-gray-900">
-                    Please fill the missing fields
-                  </CardTitle>
+            <div className="space-y-3">
+              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                {formatFieldLabel('invoiceEmail')}
+              </Label>
+              {paymentInfo?.invoiceEmail ? (
+                <div className="text-sm text-gray-900 font-medium">{paymentInfo.invoiceEmail}</div>
+              ) : (
+                <Input
+                  type="email"
+                  value=""
+                  onChange={(e) => onPaymentInfoChange('invoiceEmail', e.target.value)}
+                  className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  placeholder="Enter email for invoice"
+                />
+              )}
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                {formatFieldLabel('gstRegistered')}
+              </Label>
+              <div className="flex items-center space-x-3">
+                <Checkbox
+                  checked={paymentInfo?.gstRegistered || false}
+                  onCheckedChange={(checked) => onPaymentInfoChange('gstRegistered', checked)}
+                />
+                <span className="text-sm text-gray-700">
+                  {paymentInfo?.gstRegistered ? 'Yes' : 'No'}
+                </span>
+              </div>
+            </div>
+
+            {/* GST conditional fields */}
+            {paymentInfo?.gstRegistered && (
+              <>
+                <div className="space-y-3">
+                  <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    {formatFieldLabel('gstin')}
+                  </Label>
+                  {paymentInfo?.gstin ? (
+                    <div className="text-sm text-gray-900 font-medium">{paymentInfo.gstin}</div>
+                  ) : (
+                    <Input
+                      value=""
+                      onChange={(e) => onPaymentInfoChange('gstin', e.target.value)}
+                      className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      placeholder="Enter GSTIN"
+                    />
+                  )}
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                {unfilledFields.map(field => (
-                  <div key={field.key} className="space-y-3">
-                    <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
-                      {formatFieldLabel(field.label)}
-                    </Label>
-                    
-                    {field.type === 'textarea' ? (
-                      <Textarea
-                        id={field.key}
-                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
-                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
-                        className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
-                        rows={3}
-                        placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
-                      />
-                    ) : field.type === 'boolean' ? (
-                      <div className="flex items-center space-x-3">
-                        <Checkbox
-                          id={field.key}
-                          checked={paymentInfo?.[field.key as keyof PaymentInfo] as boolean || false}
-                          onCheckedChange={(checked) => onPaymentInfoChange(field.key, checked)}
-                        />
-                        <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
-                          {formatFieldLabel(field.label)}
-                        </Label>
-                      </div>
-                    ) : (
-                      <Input
-                        id={field.key}
-                        type={field.type}
-                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
-                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
-                        className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}`}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </>
+
+                <div className="space-y-3">
+                  <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    {formatFieldLabel('tdsPercent')}
+                  </Label>
+                  {paymentInfo?.tdsPercent ? (
+                    <div className="text-sm text-gray-900 font-medium">{paymentInfo.tdsPercent}</div>
+                  ) : (
+                    <Input
+                      value=""
+                      onChange={(e) => onPaymentInfoChange('tdsPercent', e.target.value)}
+                      className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      placeholder="Enter TDS percentage"
+                    />
+                  )}
+                </div>
+              </>
+            )}
+
+            <div className="space-y-3 col-span-full">
+              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                {formatFieldLabel('address')}
+              </Label>
+              {paymentInfo?.address ? (
+                <div className="text-sm text-gray-900 font-medium">{paymentInfo.address}</div>
+              ) : (
+                <Textarea
+                  value=""
+                  onChange={(e) => onPaymentInfoChange('address', e.target.value)}
+                  className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                  rows={3}
+                  placeholder="Enter your complete address..."
+                />
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -220,7 +230,8 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           </div>
         )}
 
-        {!isEditing && (
+        {/* Only show section title if we have complete data or no data at all */}
+        {!isEditing && (!hasData || hasRequiredFields) && (
           <div>
             <CardTitle className="text-lg font-medium text-gray-900">Invoice details</CardTitle>
           </div>
