@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { formatFieldLabel } from './PaymentFieldUtils';
+import { convertToInputValue } from '../FieldValueUtils';
 
 interface PaymentInfo {
   invoiceName?: string;
@@ -43,7 +44,7 @@ const MissingFieldsCard: React.FC<MissingFieldsCardProps> = ({
       case 'address':
         return (
           <Textarea
-            value={currentValue || ""}
+            value={convertToInputValue(currentValue)}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
             className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
             rows={3}
@@ -54,7 +55,7 @@ const MissingFieldsCard: React.FC<MissingFieldsCardProps> = ({
         return (
           <Input
             type={field === 'invoiceEmail' ? 'email' : 'text'}
-            value={currentValue || ""}
+            value={convertToInputValue(currentValue)}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
             className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
