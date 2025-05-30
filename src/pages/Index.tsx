@@ -1,11 +1,10 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { MapPin, Calendar, Users, Clock, CalendarDays, Timer, ArrowUpRight, IndianRupee } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
+import ProgramCard from "@/components/ProgramCard";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -56,7 +55,7 @@ const Index = () => {
     navigate(`/programme/${eventId}`);
   };
 
-  // Carousel images for the hero section (removed first image)
+  // Carousel images for the hero section
   const carouselImages = [
     {
       src: "/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png",
@@ -79,7 +78,7 @@ const Index = () => {
       id: 'entrainment25',
       title: 'Entrainment\'25',
       description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra',
-      image: '/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png',
+      image: '/lovable-uploads/9ab8d9d5-b3d5-48b9-9ded-a8154359fc3b.png',
       dates: 'Wed, 18 Sept to\nSat, 21 Sept 2025',
       checkIn: '04:00 p.m. to 09:00 p.m.\non Wed, 18 Sept 2025',
       checkOut: 'Latest by 02:00 p.m.\non Sat, 21 Sept 2025',
@@ -125,18 +124,9 @@ const Index = () => {
     }
   ];
 
-  const formatTextWithMahatriaRed = (text: string) => {
-    const parts = text.split(/(Mahatria)/gi);
-    return parts.map((part, index) => 
-      part.toLowerCase() === 'mahatria' ? (
-        <span key={index} className="text-red-500">{part}</span>
-      ) : part
-    );
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Hero Section with Carousel - Reduced to 50vh height */}
+      {/* Hero Section with Carousel */}
       <div className="hero-banner-container relative overflow-hidden">
         <div className="hero-carousel-wrapper relative h-[50vh]">
           <Carousel 
@@ -212,127 +202,36 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="programmes-list mt-12 space-y-8">
+          <div className="programmes-list mt-12 space-y-12">
             {programmes.map((programme, index) => (
-              <Card 
+              <div
                 key={programme.id}
                 ref={(el) => cardRefs.current[index] = el}
                 data-card-index={index}
-                className={`programme-card programme-card-${programme.id} overflow-hidden hover:shadow-lg transition-all duration-700 cursor-pointer group transform ${
+                className={`transform transition-all duration-700 ${
                   visibleCards.has(index) 
                     ? 'translate-y-0 opacity-100' 
                     : 'translate-y-8 opacity-0'
-                } bg-white border border-gray-200 rounded-2xl`}
+                }`}
                 style={{
                   transitionDelay: `${index * 200}ms`
                 }}
-                onClick={() => handleCardClick(programme.id)}
               >
-                {/* Header with image and title */}
-                <div className="programme-card-header relative h-48 overflow-hidden">
-                  <img
-                    src={programme.image}
-                    alt={programme.title}
-                    className="programme-card-image w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110"
-                  />
-                  <div className="programme-card-overlay absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  <div className="programme-card-title-container absolute top-6 left-1/2 transform -translate-x-1/2">
-                    <div className="text-center">
-                      <h1 className="programme-card-title text-4xl font-light text-white tracking-wide">
-                        en<span className="text-red-500">trainment</span>
-                        <span className="text-blue-400 text-2xl">24</span>
-                      </h1>
-                      <div className="programme-card-dots flex justify-center mt-2">
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content Grid */}
-                <CardContent className="programme-card-content p-8">
-                  <div className="programme-info-grid grid grid-cols-1 md:grid-cols-4 gap-8">
-                    {/* Program Dates */}
-                    <div className="programme-info-item programme-dates text-center">
-                      <div className="programme-info-icon mb-4">
-                        <CalendarDays className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
-                      </div>
-                      <h3 className="programme-info-title font-semibold text-gray-900 text-lg mb-3">Program Dates</h3>
-                      <p className="programme-info-text text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-                        {programme.dates}
-                      </p>
-                    </div>
-
-                    {/* Check-in Time */}
-                    <div className="programme-info-item programme-checkin text-center">
-                      <div className="programme-info-icon mb-4">
-                        <Timer className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
-                      </div>
-                      <h3 className="programme-info-title font-semibold text-gray-900 text-lg mb-3">Check-in-Time</h3>
-                      <p className="programme-info-text text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-                        {programme.checkIn}
-                      </p>
-                    </div>
-
-                    {/* Check-out Time */}
-                    <div className="programme-info-item programme-checkout text-center">
-                      <div className="programme-info-icon mb-4">
-                        <ArrowUpRight className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
-                      </div>
-                      <h3 className="programme-info-title font-semibold text-gray-900 text-lg mb-3">Check-out-Time</h3>
-                      <p className="programme-info-text text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-                        {programme.checkOut}
-                      </p>
-                    </div>
-
-                    {/* Investment */}
-                    <div className="programme-info-item programme-investment text-center">
-                      <div className="programme-info-icon mb-4">
-                        <div className="w-8 h-8 mx-auto border-2 border-gray-600 rounded flex items-center justify-center">
-                          <IndianRupee className="w-4 h-4 text-gray-600 stroke-1" />
-                        </div>
-                      </div>
-                      <h3 className="programme-info-title font-semibold text-gray-900 text-lg mb-3">Investment</h3>
-                      <p className="programme-info-text text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-                        {programme.investment}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Venue Information */}
-                  <div className="programme-venue-section mt-8 pt-6 border-t border-gray-100">
-                    <p className="programme-venue-text text-gray-600 text-sm leading-relaxed">
-                      <span className="font-medium">Venue:</span> {programme.venue}
-                    </p>
-                    <p className="programme-note-text text-gray-500 text-xs mt-2 italic">
-                      {programme.note}
-                    </p>
-                  </div>
-
-                  {/* Register Button */}
-                  <div className="programme-cta-section mt-6 flex justify-center">
-                    <Button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRegister(programme.id);
-                      }}
-                      className="programme-register-button relative overflow-hidden px-8 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                      style={{
-                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                      }}
-                    >
-                      <span className="relative z-10">register now</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                <ProgramCard
+                  id={programme.id}
+                  title={programme.title}
+                  description={programme.description}
+                  backgroundImage={programme.image}
+                  dates={programme.dates}
+                  checkIn={programme.checkIn}
+                  checkOut={programme.checkOut}
+                  investment={programme.investment}
+                  venue={programme.venue}
+                  note={programme.note}
+                  onRegister={handleRegister}
+                  onClick={handleCardClick}
+                />
+              </div>
             ))}
           </div>
         </div>
