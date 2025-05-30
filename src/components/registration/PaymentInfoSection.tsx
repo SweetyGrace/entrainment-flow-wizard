@@ -44,6 +44,48 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
   
+  // Convert field labels to title case
+  const formatFieldLabel = (label: string) => {
+    // Handle acronyms that should stay uppercase
+    const acronyms = ['ID', 'DOB', 'GST', 'TDS'];
+    
+    const words = label.split(' ');
+    return words.map((word, index) => {
+      if (acronyms.includes(word.toUpperCase())) {
+        return word.toUpperCase();
+      }
+      if (index === 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+      return word.toLowerCase();
+    }).join(' ');
+  };
+
+  // Check which fields are filled and unfilled
+  const filledFields = [];
+  const unfilledFields = [];
+  
+  const allFields = [
+    { key: 'invoiceName', label: 'INVOICE NAME', type: 'text' },
+    { key: 'invoiceEmail', label: 'INVOICE EMAIL', type: 'email' },
+    { key: 'amount', label: 'AMOUNT', type: 'number' },
+    { key: 'gstRegistered', label: 'GST REGISTERED', type: 'boolean' },
+    { key: 'gstin', label: 'GSTIN', type: 'text', conditional: true },
+    { key: 'tdsPercent', label: 'TDS PERCENT', type: 'text', conditional: true },
+    { key: 'address', label: 'ADDRESS', type: 'textarea' }
+  ];
+  
+  if (hasData) {
+    allFields.forEach(field => {
+      if (field.conditional && !paymentInfo?.gstRegistered) return;
+      if (paymentInfo?.[field.key as keyof PaymentInfo]) {
+        filledFields.push(field);
+      } else {
+        unfilledFields.push(field);
+      }
+    });
+  }
+
   if (hasData && !isEditing) {
     return (
       <Card className="mb-6 border-0 shadow-sm bg-white">
@@ -57,7 +99,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
               variant="ghost" 
               size="sm"
               onClick={() => setEditingSection('payment')}
-              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md ml-4"
+              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
             >
               <Edit className="w-4 h-4 mr-1" />
               edit
@@ -65,26 +107,64 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           </div>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {paymentInfo?.invoiceName && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Invoice name</Label>
-                <div className="text-sm text-gray-900 font-medium">{paymentInfo.invoiceName}</div>
+          {/* Show filled fields */}
+          {filledFields.length > 0 && (
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-4">Completed information</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                {filledFields.map(field => (
+                  <div key={field.key} className="space-y-2">
+                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                      {formatFieldLabel(field.label)}
+                    </Label>
+                    <div className="text-sm text-gray-900 font-medium">
+                      {field.type === 'boolean' 
+                        ? (paymentInfo?.[field.key as keyof PaymentInfo] ? 'Yes' : 'No')
+                        : field.key === 'amount' 
+                        ? `₹${paymentInfo?.[field.key as keyof PaymentInfo]}`
+                        : String(paymentInfo?.[field.key as keyof PaymentInfo] || '')}
+                    </div>
+                  </div>
+                ))}
               </div>
-            )}
-            {paymentInfo?.invoiceEmail && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Invoice email</Label>
-                <div className="text-sm text-gray-900 font-medium">{paymentInfo.invoiceEmail}</div>
+            </div>
+          )}
+
+          {/* Show unfilled fields for partial data */}
+          {unfilledFields.length > 0 && (
+            <div className="border-t border-gray-100 pt-6">
+              <h4 className="text-sm font-medium text-gray-700 mb-4">Missing information</h4>
+              <div className="space-y-6">
+                {unfilledFields.map(field => (
+                  <div key={field.key} className="space-y-3">
+                    <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
+                      {formatFieldLabel(field.label)}
+                    </Label>
+                    
+                    {field.type === 'textarea' ? (
+                      <Textarea
+                        id={field.key}
+                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
+                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
+                        className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                        rows={3}
+                        placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
+                      />
+                    ) : (
+                      <Input
+                        id={field.key}
+                        type={field.type}
+                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
+                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
+                        className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                        placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}`}
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
-            )}
-            {paymentInfo?.amount && (
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Amount</Label>
-                <div className="text-sm text-gray-900 font-medium">₹{paymentInfo.amount}</div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     );
@@ -103,7 +183,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
               variant="ghost" 
               size="sm"
               onClick={() => setEditingSection(null)}
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md ml-4"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md"
             >
               cancel
             </Button>
@@ -209,9 +289,15 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             </Button>
             <Button 
               onClick={() => setEditingSection(null)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+              className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+              style={{
+                backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
             >
-              save changes
+              <span className="relative z-10">save changes</span>
             </Button>
           </div>
         )}

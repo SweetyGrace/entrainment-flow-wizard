@@ -117,7 +117,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               variant="ghost" 
               size="sm"
               onClick={() => setEditingSection('personal')}
-              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md ml-4"
+              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
             >
               <Edit className="w-4 h-4 mr-1" />
               edit
@@ -237,7 +237,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               variant="ghost" 
               size="sm"
               onClick={() => setEditingSection(null)}
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md ml-4"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md"
             >
               cancel
             </Button>
@@ -397,9 +397,15 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             </Button>
             <Button 
               onClick={() => setEditingSection(null)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+              className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+              style={{
+                backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
             >
-              save changes
+              <span className="relative z-10">save changes</span>
             </Button>
           </div>
         )}

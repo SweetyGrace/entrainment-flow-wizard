@@ -1,18 +1,9 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Music } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { ArrowLeft } from 'lucide-react';
 
-interface RegistrationHeaderProps {
-  musicEnabled: boolean;
-  setMusicEnabled: (enabled: boolean) => void;
-}
-
-const RegistrationHeader: React.FC<RegistrationHeaderProps> = ({
-  musicEnabled,
-  setMusicEnabled
-}) => {
+const RegistrationHeader: React.FC = () => {
   return (
     <>
       {/* Banner */}
@@ -41,21 +32,10 @@ const RegistrationHeader: React.FC<RegistrationHeaderProps> = ({
               onClick={() => window.history.back()}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+              back
             </Button>
             <span className="text-gray-900 font-medium">Registration</span>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setMusicEnabled(!musicEnabled)}
-            className={cn(
-              "text-gray-600 hover:bg-gray-100",
-              musicEnabled && "text-blue-600 bg-blue-50"
-            )}
-          >
-            <Music className="w-4 h-4" />
-          </Button>
         </div>
       </div>
     </>

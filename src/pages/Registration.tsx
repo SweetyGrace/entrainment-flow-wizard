@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -78,7 +77,6 @@ const Registration = () => {
   const scenario = searchParams.get('scenario') || 'new';
   
   const [userData, setUserData] = useState<UserData>({});
-  const [musicEnabled, setMusicEnabled] = useState(false);
   const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [editingSection, setEditingSection] = useState<string | null>(null);
 
@@ -217,10 +215,7 @@ const Registration = () => {
   if (currentStep === 'registered') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <RegistrationHeader 
-          musicEnabled={musicEnabled}
-          setMusicEnabled={setMusicEnabled}
-        />
+        <RegistrationHeader />
 
         <div className="max-w-4xl mx-auto px-4 py-8">
           <Card className="border-0 shadow-lg bg-white">
@@ -281,23 +276,10 @@ const Registration = () => {
   if (currentStep === 'payment') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <RegistrationHeader 
-          musicEnabled={musicEnabled}
-          setMusicEnabled={setMusicEnabled}
-        />
+        <RegistrationHeader />
 
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="space-y-6">
-            {/* Progress indicator */}
-            <Card className="border-0 shadow-sm bg-white">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between text-sm text-gray-600">
-                  <span className="text-green-600 font-medium">✓ registration complete</span>
-                  <span className="font-medium text-blue-600">payment details</span>
-                </div>
-              </CardContent>
-            </Card>
-
             <PaymentInfoSection
               paymentInfo={userData.paymentInfo}
               onPaymentInfoChange={handlePaymentInfoChange}
@@ -361,10 +343,7 @@ const Registration = () => {
   // Personal information step (initial step)
   return (
     <div className="min-h-screen bg-gray-50">
-      <RegistrationHeader 
-        musicEnabled={musicEnabled}
-        setMusicEnabled={setMusicEnabled}
-      />
+      <RegistrationHeader />
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
