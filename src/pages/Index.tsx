@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
@@ -147,10 +148,10 @@ const Index = () => {
                       src={image.src}
                       alt={image.alt}
                     />
-                    <div className="hero-overlay absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
-                    <div className="hero-content relative z-10 flex items-center justify-end h-full pr-8 md:pr-16 lg:pr-24">
+                    <div className="hero-overlay absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+                    <div className="hero-content relative z-10 flex items-center justify-start h-full pl-8 md:pl-16 lg:pl-24">
                       <div className="hero-text-container max-w-2xl">
-                        <div className={`text-right transition-all duration-1000 ease-out ${
+                        <div className={`text-left transition-all duration-1000 ease-out ${
                           bannerVisible 
                             ? 'translate-y-0 opacity-100' 
                             : 'translate-y-8 opacity-0'
