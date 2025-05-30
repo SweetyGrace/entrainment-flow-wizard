@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
@@ -78,7 +77,7 @@ const Index = () => {
       id: 'entrainment25',
       title: 'Entrainment\'25',
       description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra',
-      image: '/lovable-uploads/9ab8d9d5-b3d5-48b9-9ded-a8154359fc3b.png',
+      image: '/lovable-uploads/7648de7d-d1af-4fec-b3cd-b2b81614552d.png',
       dates: 'Wed, 18 Sept to\nSat, 21 Sept 2025',
       checkIn: '04:00 p.m. to 09:00 p.m.\non Wed, 18 Sept 2025',
       checkOut: 'Latest by 02:00 p.m.\non Sat, 21 Sept 2025',
