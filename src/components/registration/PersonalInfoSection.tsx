@@ -54,15 +54,23 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   const hasMeaningfulData = personalInfo && Object.keys(personalInfo).some(key => 
     key !== 'infinitheismContact' && personalInfo[key as keyof PersonalInfo]
   );
-  
-  // Check for missing required fields
-  const hasRequiredFields = personalInfo?.fullName && 
-                           personalInfo?.email && 
-                           personalInfo?.mobile && 
-                           personalInfo?.gender &&
-                           personalInfo?.dateOfBirth &&
-                           personalInfo?.city &&
-                           personalInfo?.infinitheismContact;
+
+  // Define all fields
+  const allFields = [
+    'fullName', 'gender', 'mobile', 'email', 'dateOfBirth', 
+    'city', 'infinitheismContact', 'preferredRoommate', 'additionalNotes'
+  ];
+
+  // Separate filled and empty fields
+  const filledFields = allFields.filter(field => 
+    personalInfo?.[field as keyof PersonalInfo] && 
+    personalInfo[field as keyof PersonalInfo] !== ''
+  );
+
+  const emptyFields = allFields.filter(field => 
+    !personalInfo?.[field as keyof PersonalInfo] || 
+    personalInfo[field as keyof PersonalInfo] === ''
+  );
 
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
@@ -81,230 +89,175 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     return titleCaseLabels[label] || label;
   };
 
-  // If has data and not editing, show review mode
+  const renderFieldValue = (field: string, value: any) => {
+    if (field === 'dateOfBirth' && value) {
+      return format(value, "PPP");
+    }
+    return value;
+  };
+
+  const renderEmptyFieldInput = (field: string) => {
+    switch (field) {
+      case 'gender':
+        return (
+          <Select value="" onValueChange={(value) => onPersonalInfoChange(field, value)}>
+            <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Male">Male</SelectItem>
+              <SelectItem value="Female">Female</SelectItem>
+            </SelectContent>
+          </Select>
+        );
+      case 'dateOfBirth':
+        return (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50 text-gray-400"
+              >
+                <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
+                Pick a date
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={undefined}
+                onSelect={(date) => onPersonalInfoChange(field, date)}
+                initialFocus
+                className="pointer-events-auto"
+              />
+            </PopoverContent>
+          </Popover>
+        );
+      case 'additionalNotes':
+        return (
+          <Textarea
+            value=""
+            onChange={(e) => onPersonalInfoChange(field, e.target.value)}
+            className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+            rows={3}
+            placeholder="Any special requirements or notes..."
+          />
+        );
+      default:
+        return (
+          <Input
+            type={field === 'email' ? 'email' : 'text'}
+            value=""
+            onChange={(e) => onPersonalInfoChange(field, e.target.value)}
+            className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            placeholder={`Enter your ${formatFieldLabel(field).toLowerCase()}`}
+          />
+        );
+    }
+  };
+
+  // If has data and not editing, show segregated sections
   if (hasMeaningfulData && !isEditing) {
     return (
-      <Card className="mb-6 border-0 shadow-sm bg-white">
-        <CardHeader className="pb-6">
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              {/* Always show the review title when in review mode */}
-              <CardTitle className="text-lg font-medium text-gray-900 mb-3">
-                Review the details and update anything that needs realignment — <button 
-                  onClick={() => setEditingSection('personal')}
-                  className="text-blue-600 hover:text-blue-700 underline"
-                >
-                  click here to edit
-                </button>
-              </CardTitle>
-              
-              {/* Column Layout Toggle */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">View:</span>
-                <Button
-                  variant={columnLayout === 2 ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setColumnLayout(2)}
-                  className="h-7 px-3 text-xs rounded-full"
-                >
-                  2 Columns
-                </Button>
-                <Button
-                  variant={columnLayout === 3 ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setColumnLayout(3)}
-                  className="h-7 px-3 text-xs rounded-full"
-                >
-                  3 Columns
-                </Button>
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-            {/* Show all fields with their current values or input fields if empty */}
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('fullName')}
-              </Label>
-              {personalInfo?.fullName ? (
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.fullName}</div>
-              ) : (
-                <Input
-                  value=""
-                  onChange={(e) => onPersonalInfoChange('fullName', e.target.value)}
-                  className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  placeholder="Enter your full name"
-                />
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('gender')}
-              </Label>
-              {personalInfo?.gender ? (
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.gender}</div>
-              ) : (
-                <Select value="" onValueChange={(value) => onPersonalInfoChange('gender', value)}>
-                  <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                    <SelectValue placeholder="Select gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Male">Male</SelectItem>
-                    <SelectItem value="Female">Female</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('mobile')}
-              </Label>
-              {personalInfo?.mobile ? (
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.mobile}</div>
-              ) : (
-                <Input
-                  value=""
-                  onChange={(e) => onPersonalInfoChange('mobile', e.target.value)}
-                  className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  placeholder="Enter your mobile number"
-                />
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('email')}
-              </Label>
-              {personalInfo?.email ? (
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.email}</div>
-              ) : (
-                <Input
-                  type="email"
-                  value=""
-                  onChange={(e) => onPersonalInfoChange('email', e.target.value)}
-                  className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  placeholder="Enter your email address"
-                />
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('dateOfBirth')}
-              </Label>
-              {personalInfo?.dateOfBirth ? (
-                <div className="text-sm text-gray-900 font-medium">
-                  {format(personalInfo.dateOfBirth, "PPP")}
-                </div>
-              ) : (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50 text-gray-400"
+      <div className="space-y-6">
+        {/* Pre-filled Fields Section */}
+        {filledFields.length > 0 && (
+          <Card className="border-0 shadow-sm bg-white">
+            <CardHeader className="pb-4">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <CardTitle className="text-lg font-medium text-gray-900 mb-3">
+                    Review the details and update anything that needs realignment — <button 
+                      onClick={() => setEditingSection('personal')}
+                      className="text-blue-600 hover:text-blue-700 underline"
                     >
-                      <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
-                      Pick a date
+                      click here to edit
+                    </button>
+                  </CardTitle>
+                  
+                  {/* Column Layout Toggle */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">View:</span>
+                    <Button
+                      variant={columnLayout === 2 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(2)}
+                      className="h-7 px-3 text-xs rounded-full"
+                    >
+                      2 Columns
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={undefined}
-                      onSelect={(date) => onPersonalInfoChange('dateOfBirth', date)}
-                      initialFocus
-                      className="pointer-events-auto"
-                    />
-                  </PopoverContent>
-                </Popover>
-              )}
-            </div>
+                    <Button
+                      variant={columnLayout === 3 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(3)}
+                      className="h-7 px-3 text-xs rounded-full"
+                    >
+                      3 Columns
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+                {filledFields.map((field) => (
+                  <div key={field} className="space-y-3">
+                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                      {formatFieldLabel(field)}
+                    </Label>
+                    <div className="text-sm text-gray-900 font-medium">
+                      {renderFieldValue(field, personalInfo?.[field as keyof PersonalInfo])}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('city')}
-              </Label>
-              {personalInfo?.city ? (
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.city}</div>
-              ) : (
-                <Input
-                  value=""
-                  onChange={(e) => onPersonalInfoChange('city', e.target.value)}
-                  className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  placeholder="Enter your city"
-                />
-              )}
-            </div>
+        {/* Missing Fields Section */}
+        {emptyFields.length > 0 && (
+          <Card className="border-0 shadow-sm bg-white">
+            <CardHeader className="pb-6">
+              <CardTitle className="text-lg font-medium text-gray-900">
+                Please fill the missing fields
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+                {emptyFields.map((field) => (
+                  <div key={field} className="space-y-3">
+                    <Label className="text-sm font-medium text-gray-700">
+                      {formatFieldLabel(field)}
+                      {(field === 'preferredRoommate' || field === 'additionalNotes') && (
+                        <span className="text-gray-400 text-xs"> (Optional)</span>
+                      )}
+                    </Label>
+                    {renderEmptyFieldInput(field)}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('infinitheismContact')}
+        {/* T&C Checkbox - Always show at bottom */}
+        <Card className="border-0 shadow-sm bg-white">
+          <CardContent className="p-4">
+            <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100">
+              <Checkbox
+                id="terms"
+                checked={personalInfo?.acceptedTerms || false}
+                onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
+                className="mt-1"
+              />
+              <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
+                I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
               </Label>
-              {personalInfo?.infinitheismContact ? (
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.infinitheismContact}</div>
-              ) : (
-                <Input
-                  value=""
-                  onChange={(e) => onPersonalInfoChange('infinitheismContact', e.target.value)}
-                  className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  placeholder="Enter contact name"
-                />
-              )}
             </div>
-
-            {/* Optional fields */}
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('preferredRoommate')} <span className="text-gray-400 text-xs">(Optional)</span>
-              </Label>
-              {personalInfo?.preferredRoommate ? (
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.preferredRoommate}</div>
-              ) : (
-                <Input
-                  value=""
-                  onChange={(e) => onPersonalInfoChange('preferredRoommate', e.target.value)}
-                  className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  placeholder="Enter roommate preference"
-                />
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                {formatFieldLabel('additionalNotes')} <span className="text-gray-400 text-xs">(Optional)</span>
-              </Label>
-              {personalInfo?.additionalNotes ? (
-                <div className="text-sm text-gray-900 font-medium">{personalInfo.additionalNotes}</div>
-              ) : (
-                <Textarea
-                  value=""
-                  onChange={(e) => onPersonalInfoChange('additionalNotes', e.target.value)}
-                  className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
-                  rows={3}
-                  placeholder="Any special requirements or notes..."
-                />
-              )}
-            </div>
-          </div>
-          
-          {/* T&C Checkbox */}
-          <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
-            <Checkbox
-              id="terms"
-              checked={personalInfo?.acceptedTerms || false}
-              onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
-              className="mt-1"
-            />
-            <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
-              I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
-            </Label>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
@@ -315,15 +268,6 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           <div>
             <CardTitle className="text-lg font-medium text-gray-900">
               {personalInfo?.fullName ? `Edit ${personalInfo.fullName}'s information` : 'Edit Personal Information'}
-            </CardTitle>
-          </div>
-        )}
-        
-        {/* Show section title only when we have meaningful data */}
-        {!isEditing && hasMeaningfulData && (
-          <div>
-            <CardTitle className="text-lg font-medium text-gray-900">
-              "Welcome to Entrainment'25"
             </CardTitle>
           </div>
         )}
