@@ -32,26 +32,33 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   onRegister,
   onClick
 }) => {
+  // Helper function to format text with line breaks
+  const formatText = (text: string) => {
+    return text.split('\n').map((line, index) => (
+      <div key={index}>{line}</div>
+    ));
+  };
+
   return (
     <div 
-      className="program-card-container relative cursor-pointer group"
+      className="program-card-wrapper cursor-pointer group border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
       onClick={() => onClick(id)}
     >
       {/* Background Image */}
-      <div className="program-card-background relative h-64 rounded-t-2xl overflow-hidden">
+      <div className="program-card-background relative h-64 overflow-hidden">
         <img
           src={backgroundImage}
           alt={title}
-          className="w-full h-full object-cover opacity-40 saturate-50 transition-all duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover opacity-70 transition-all duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-white/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-white/70"></div>
       </div>
 
       {/* Main Card Content - Overlapping */}
-      <div className="program-card-main-content relative -mt-20 mx-6 mb-4">
+      <div className="program-card-main-content relative -mt-20 mx-6">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-          {/* Four Column Grid */}
-          <div className="program-info-grid grid grid-cols-4 gap-0">
+          {/* Four Column Grid with Dividers */}
+          <div className="program-info-grid relative grid grid-cols-4 gap-0">
             {/* Program Dates */}
             <div className="program-info-column flex flex-col items-center text-center px-4">
               <div className="program-icon mb-3">
@@ -59,12 +66,11 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               </div>
               <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Program Dates</h3>
               <div className="program-info-text text-slate-600 text-xs leading-relaxed">
-                <div>Wed, 18 Sept to</div>
-                <div>Sat, 21 Sept 2024</div>
+                {formatText(dates)}
               </div>
             </div>
 
-            {/* Vertical Divider */}
+            {/* Vertical Divider 1 */}
             <div className="absolute left-1/4 top-0 bottom-0 w-px bg-gray-200"></div>
 
             {/* Check-in Time */}
@@ -74,12 +80,11 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               </div>
               <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Check-in-Time</h3>
               <div className="program-info-text text-slate-600 text-xs leading-relaxed">
-                <div>04:00 p.m. to 09:00 p.m.</div>
-                <div>on Wed, 18 Sept 2024</div>
+                {formatText(checkIn)}
               </div>
             </div>
 
-            {/* Vertical Divider */}
+            {/* Vertical Divider 2 */}
             <div className="absolute left-2/4 top-0 bottom-0 w-px bg-gray-200"></div>
 
             {/* Check-out Time */}
@@ -89,42 +94,50 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               </div>
               <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Check-out-Time</h3>
               <div className="program-info-text text-slate-600 text-xs leading-relaxed">
-                <div>Latest by 02:00 p.m.</div>
-                <div>on Sat, 21 Sept 2024</div>
+                {formatText(checkOut)}
               </div>
             </div>
 
-            {/* Vertical Divider */}
+            {/* Vertical Divider 3 */}
             <div className="absolute left-3/4 top-0 bottom-0 w-px bg-gray-200"></div>
 
             {/* Investment */}
             <div className="program-info-column flex flex-col items-center text-center px-4">
               <div className="program-icon mb-3">
-                <div className="w-6 h-6 border-2 border-slate-600 rounded flex items-center justify-center">
-                  <IndianRupee className="w-3 h-3 text-slate-600 stroke-1" />
-                </div>
+                {investment === 'No Waiting List' || investment === 'Free Program' ? (
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    <div className="w-3 h-3 bg-slate-600 rounded-full"></div>
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 border-2 border-slate-600 rounded flex items-center justify-center">
+                    <IndianRupee className="w-3 h-3 text-slate-600 stroke-1" />
+                  </div>
+                )}
               </div>
               <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Investment</h3>
               <div className="program-info-text text-slate-600 text-xs leading-relaxed">
-                <div>INR 49,000/-</div>
-                <div>(plus GST 18%)</div>
+                {investment === 'No Waiting List' || investment === 'Free Program' ? (
+                  <div>{investment}</div>
+                ) : (
+                  formatText(investment)
+                )}
               </div>
             </div>
           </div>
         </div>
 
         {/* Light Blue-Gray Bar */}
-        <div className="program-venue-bar bg-slate-100 rounded-b-xl px-6 py-4 flex justify-between items-center text-xs">
+        <div className="program-venue-bar bg-slate-100 rounded-b-xl px-6 py-4 flex justify-between items-center text-xs -mt-px">
           <div className="venue-text text-slate-600">
-            <span className="font-medium">Venue:</span> Leonia Holistic Destination, Bommaraspet, shameerpet, Ranga Reddy District, Hyderabad 500078.
+            <span className="font-medium">Venue:</span> {venue}
           </div>
           <div className="note-text text-slate-500 italic">
-            *Early check-in and Late check-out not available
+            {note}
           </div>
         </div>
 
         {/* Register Button */}
-        <div className="program-register-container flex justify-center mt-6">
+        <div className="program-register-container flex justify-center mt-6 mb-4">
           <Button 
             onClick={(e) => {
               e.stopPropagation();
