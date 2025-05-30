@@ -23,17 +23,18 @@ const RegistrationHeader: React.FC = () => {
 
       {/* Navigation */}
       <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center space-x-3">
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100 p-2"
               onClick={() => window.history.back()}
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              back
+              <ArrowLeft className="w-4 h-4" />
             </Button>
+            <span className="text-gray-600 font-medium text-sm">back</span>
+            <div className="w-px h-4 bg-gray-300 mx-2"></div>
             <span className="text-gray-900 font-medium">Registration</span>
           </div>
         </div>

@@ -313,6 +313,19 @@ const Registration = () => {
     return variations[index];
   };
 
+  // Generate personalized title for invoice details
+  const generateInvoicePersonalizedTitle = (fullName: string) => {
+    const variations = [
+      `${fullName}, let's complete your billing details`,
+      `${fullName}, we need a few more payment details`,
+      `${fullName}, finish your invoice information`,
+      `${fullName}, let's complete your payment setup`
+    ];
+    
+    const index = fullName.length % variations.length;
+    return variations[index];
+  };
+
   // Awaiting approval screen
   if (currentStep === 'awaiting-approval') {
     return (
@@ -327,11 +340,23 @@ const Registration = () => {
 
   // Invoice details step (for paid programs)
   if (currentStep === 'invoice') {
+    const hasPersonalizedTitle = userData.personalInfo?.fullName;
+
     return (
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Personalized Title (outside of section) */}
+          {hasPersonalizedTitle && (
+            <div className="mb-6">
+              <h1 className="text-2xl font-semibold text-gray-900">
+                {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
+              </h1>
+              <p className="text-gray-600 mt-1">Complete your billing information</p>
+            </div>
+          )}
+
           <div className="flex gap-8">
             {/* Main Content */}
             <div className="flex-1 max-w-4xl">
@@ -344,43 +369,36 @@ const Registration = () => {
                   eventAmount={event.amount || 0}
                   isPaid={event.isPaid}
                   hideAmountField={true}
+                  showPersonalizedTitle={false}
                 />
 
-                {/* Invoice action buttons */}
-                <Card className="border-0 shadow-sm bg-white">
-                  <CardContent className="p-6">
-                    <div className="flex justify-center space-x-4">
-                      <Button 
-                        variant="outline"
-                        onClick={() => setCurrentStep('personal')}
-                        className="px-6 py-3"
-                      >
-                        back
-                      </Button>
-                      {editingSection ? (
-                        <div className="text-center text-gray-600">
-                          <p className="text-sm">Make your changes above and click "save changes"</p>
-                        </div>
-                      ) : (
-                        <Button 
-                          onClick={handleInvoiceSubmit}
-                          className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                          disabled={!canProceedToPayment()}
-                          style={{
-                            backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
-                          }}
-                        >
-                          <span className="relative z-10">
-                            {event.requiresApproval ? 'submit for approval' : 'proceed to payment'}
-                          </span>
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Invoice action buttons - standalone button */}
+                {!editingSection && (
+                  <div className="flex justify-center space-x-4">
+                    <Button 
+                      variant="outline"
+                      onClick={() => setCurrentStep('personal')}
+                      className="px-6 py-3"
+                    >
+                      back
+                    </Button>
+                    <Button 
+                      onClick={handleInvoiceSubmit}
+                      className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                      disabled={!canProceedToPayment()}
+                      style={{
+                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                      }}
+                    >
+                      <span className="relative z-10">
+                        {event.requiresApproval ? 'submit for approval' : 'proceed to payment'}
+                      </span>
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -396,6 +414,8 @@ const Registration = () => {
 
   // Payment step
   if (currentStep === 'payment') {
+    const hasPersonalizedTitle = userData.personalInfo?.fullName;
+
     return (
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
@@ -416,6 +436,16 @@ const Registration = () => {
             </Card>
           )}
 
+          {/* Personalized Title (outside of section) */}
+          {hasPersonalizedTitle && !userData.registrationStatus && (
+            <div className="mb-6">
+              <h1 className="text-2xl font-semibold text-gray-900">
+                {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
+              </h1>
+              <p className="text-gray-600 mt-1">Complete your payment details</p>
+            </div>
+          )}
+
           <div className="flex gap-8">
             {/* Main Content */}
             <div className="flex-1 max-w-4xl">
@@ -428,41 +458,34 @@ const Registration = () => {
                   eventAmount={event.amount || 0}
                   isPaid={event.isPaid}
                   hideAmountField={true}
+                  showPersonalizedTitle={false}
                 />
 
-                {/* Payment action buttons */}
-                <Card className="border-0 shadow-sm bg-white">
-                  <CardContent className="p-6">
-                    <div className="flex justify-center space-x-4">
-                      <Button 
-                        variant="outline"
-                        onClick={() => setCurrentStep('invoice')}
-                        className="px-6 py-3"
-                      >
-                        back
-                      </Button>
-                      {editingSection ? (
-                        <div className="text-center text-gray-600">
-                          <p className="text-sm">Make your changes above and click "save changes"</p>
-                        </div>
-                      ) : (
-                        <Button 
-                          onClick={handlePaymentSubmit}
-                          className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                          disabled={!canProceedToPayment()}
-                          style={{
-                            backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
-                          }}
-                        >
-                          <span className="relative z-10">complete payment</span>
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Payment action buttons - standalone button */}
+                {!editingSection && (
+                  <div className="flex justify-center space-x-4">
+                    <Button 
+                      variant="outline"
+                      onClick={() => setCurrentStep('invoice')}
+                      className="px-6 py-3"
+                    >
+                      back
+                    </Button>
+                    <Button 
+                      onClick={handlePaymentSubmit}
+                      className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                      disabled={!canProceedToPayment()}
+                      style={{
+                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                      }}
+                    >
+                      <span className="relative z-10">complete payment</span>
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -521,29 +544,25 @@ const Registration = () => {
                 eventRequiresApproval={event.requiresApproval}
               />
 
-              {/* Action Buttons - Only show if not editing and no missing fields */}
+              {/* Action Buttons - standalone button */}
               {!editingSection && (
-                <Card className="border-0 shadow-sm bg-white">
-                  <CardContent className="p-6">
-                    <div className="flex justify-center">
-                      <Button 
-                        onClick={handlePersonalInfoSubmit}
-                        className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                        disabled={!canContinue()}
-                        style={{
-                          backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat'
-                        }}
-                      >
-                        <span className="relative z-10">
-                          {!event.isPaid && !event.requiresApproval ? 'confirm & register' : 'continue'}
-                        </span>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="flex justify-center">
+                  <Button 
+                    onClick={handlePersonalInfoSubmit}
+                    className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                    disabled={!canContinue()}
+                    style={{
+                      backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat'
+                    }}
+                  >
+                    <span className="relative z-10">
+                      {!event.isPaid && !event.requiresApproval ? 'confirm & register' : 'continue'}
+                    </span>
+                  </Button>
+                </div>
               )}
             </div>
           </div>

@@ -1,16 +1,12 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Edit } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
+import { Edit } from 'lucide-react';
 
 interface PaymentInfo {
   invoiceName?: string;
@@ -34,6 +30,7 @@ interface PaymentInfoSectionProps {
   eventAmount: number;
   isPaid: boolean;
   hideAmountField?: boolean;
+  showPersonalizedTitle?: boolean;
 }
 
 const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
@@ -43,29 +40,15 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   setEditingSection,
   eventAmount,
   isPaid,
-  hideAmountField = false
+  hideAmountField = false,
+  showPersonalizedTitle = true
 }) => {
+  const [tempFormData, setTempFormData] = useState<PaymentInfo>({});
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
   
-  // Generate personalized title for missing payment information
-  const generateMissingPaymentTitle = (invoiceName?: string) => {
-    if (invoiceName) {
-      const variations = [
-        `${invoiceName}, complete your billing details`,
-        `${invoiceName}, we need a few more payment details`,
-        `${invoiceName}, finish your invoice information`,
-        `${invoiceName}, let's complete your payment setup`
-      ];
-      const index = invoiceName.length % variations.length;
-      return variations[index];
-    }
-    return 'Missing billing information';
-  };
-  
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
-    // Map of field keys to proper title case labels
     const titleCaseLabels = {
       'INVOICE NAME': 'Invoice name',
       'INVOICE EMAIL': 'Invoice email',
@@ -86,7 +69,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const allFields = [
     { key: 'invoiceName', label: 'INVOICE NAME', type: 'text' },
     { key: 'invoiceEmail', label: 'INVOICE EMAIL', type: 'email' },
-    { key: 'amount', label: 'AMOUNT', type: 'number' },
     { key: 'gstRegistered', label: 'GST REGISTERED', type: 'boolean' },
     { key: 'gstin', label: 'GSTIN', type: 'text', conditional: true },
     { key: 'tdsPercent', label: 'TDS PERCENT', type: 'text', conditional: true },
@@ -103,6 +85,19 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
       }
     });
   }
+
+  const handleTempChange = (field: string, value: any) => {
+    setTempFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveChanges = () => {
+    // Save all temp changes to actual data
+    Object.keys(tempFormData).forEach(field => {
+      onPaymentInfoChange(field, tempFormData[field as keyof PaymentInfo]);
+    });
+    setTempFormData({});
+    setEditingSection(null);
+  };
 
   if (hasData && !isEditing) {
     return (
@@ -156,20 +151,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <CardTitle className="text-lg font-medium text-gray-900">
-                      {generateMissingPaymentTitle(paymentInfo?.invoiceName)}
-                    </CardTitle>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setEditingSection('payment')}
-                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
-                    >
-                      <Edit className="w-4 h-4 mr-1" />
-                      edit
-                    </Button>
-                  </div>
+                  <CardTitle className="text-lg font-medium text-gray-900">
+                    Please fill the missing fields
+                  </CardTitle>
                   <p className="text-sm text-gray-500 mt-1">Complete your invoice details</p>
                 </div>
               </div>
@@ -185,24 +169,51 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                     {field.type === 'textarea' ? (
                       <Textarea
                         id={field.key}
-                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
-                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
+                        value={tempFormData?.[field.key as keyof PaymentInfo] as string || paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
+                        onChange={(e) => handleTempChange(field.key, e.target.value)}
                         className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
                         rows={3}
                         placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
                       />
+                    ) : field.type === 'boolean' ? (
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id={field.key}
+                          checked={tempFormData?.[field.key as keyof PaymentInfo] as boolean || paymentInfo?.[field.key as keyof PaymentInfo] as boolean || false}
+                          onCheckedChange={(checked) => handleTempChange(field.key, checked)}
+                        />
+                        <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
+                          {formatFieldLabel(field.label)}
+                        </Label>
+                      </div>
                     ) : (
                       <Input
                         id={field.key}
                         type={field.type}
-                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
-                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
+                        value={tempFormData?.[field.key as keyof PaymentInfo] as string || paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
+                        onChange={(e) => handleTempChange(field.key, e.target.value)}
                         className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                         placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}`}
                       />
                     )}
                   </div>
                 ))}
+              </div>
+
+              {/* Save Changes Button */}
+              <div className="flex justify-end pt-6 border-t border-gray-100">
+                <Button 
+                  onClick={handleSaveChanges}
+                  className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                  style={{
+                    backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                  }}
+                >
+                  <span className="relative z-10">save changes</span>
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -313,15 +324,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             placeholder="Enter your complete address..."
           />
         </div>
-
-        {!hideAmountField && (
-          <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">Total amount:</span>
-              <span className="text-2xl font-semibold text-blue-600">₹{eventAmount}</span>
-            </div>
-          </div>
-        )}
 
         {isEditing && (
           <div className="flex justify-end space-x-3 pt-6 border-t border-gray-100">
