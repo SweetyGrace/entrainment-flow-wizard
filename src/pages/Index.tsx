@@ -137,8 +137,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Hero Section with Carousel - Reduced to 50vh height */}
-      <div className="relative overflow-hidden">
-        <div className="relative h-[50vh]">
+      <div className="hero-banner-container relative overflow-hidden">
+        <div className="hero-carousel-wrapper relative h-[50vh]">
           <Carousel 
             plugins={[plugin.current]}
             className="w-full h-full"
@@ -148,9 +148,9 @@ const Index = () => {
             <CarouselContent className="-ml-0">
               {carouselImages.map((image, index) => (
                 <CarouselItem key={index} className="pl-0">
-                  <div className="relative h-[50vh]">
+                  <div className="carousel-slide relative h-[50vh]">
                     <img
-                      className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
+                      className={`hero-image absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
                         bannerVisible 
                           ? 'scale-100 opacity-100' 
                           : 'scale-105 opacity-80'
@@ -158,25 +158,25 @@ const Index = () => {
                       src={image.src}
                       alt={image.alt}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
-                    <div className="relative z-10 flex items-center justify-end h-full pr-8 md:pr-16 lg:pr-24">
-                      <div className="max-w-2xl">
+                    <div className="hero-overlay absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
+                    <div className="hero-content relative z-10 flex items-center justify-end h-full pr-8 md:pr-16 lg:pr-24">
+                      <div className="hero-text-container max-w-2xl">
                         <div className={`text-right transition-all duration-1000 ease-out ${
                           bannerVisible 
                             ? 'translate-y-0 opacity-100' 
                             : 'translate-y-8 opacity-0'
                         }`}>
-                          <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
+                          <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
                             <span className="block">{image.title}</span>
                             <span className="block text-blue-400">{image.subtitle}</span>
                           </h1>
-                          <p className="mt-3 text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
+                          <p className="hero-description mt-3 text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
                             {image.description}
                           </p>
-                          <div className="mt-8">
+                          <div className="hero-cta-container mt-8">
                             <Button 
                               onClick={() => handleRegister('featured')}
-                              className="relative overflow-hidden px-12 py-6 text-lg md:text-xl font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                              className="hero-cta-button relative overflow-hidden px-12 py-6 text-lg md:text-xl font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
                               style={{
                                 backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
                                 backgroundSize: 'cover',
@@ -201,24 +201,24 @@ const Index = () => {
       </div>
 
       {/* Programmes Section */}
-      <div className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+      <div className="programmes-section py-16 bg-gray-50">
+        <div className="programmes-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="programmes-header text-center">
+            <h2 className="programmes-title text-3xl font-extrabold text-gray-900 sm:text-4xl">
               Upcoming Transformative Programmes
             </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+            <p className="programmes-subtitle mt-4 max-w-2xl mx-auto text-xl text-gray-500">
               Discover programmes that will awaken your consciousness and transform your life
             </p>
           </div>
 
-          <div className="mt-12 space-y-8">
+          <div className="programmes-list mt-12 space-y-8">
             {programmes.map((programme, index) => (
               <Card 
                 key={programme.id}
                 ref={(el) => cardRefs.current[index] = el}
                 data-card-index={index}
-                className={`overflow-hidden hover:shadow-lg transition-all duration-700 cursor-pointer group transform ${
+                className={`programme-card programme-card-${programme.id} overflow-hidden hover:shadow-lg transition-all duration-700 cursor-pointer group transform ${
                   visibleCards.has(index) 
                     ? 'translate-y-0 opacity-100' 
                     : 'translate-y-8 opacity-0'
@@ -229,20 +229,20 @@ const Index = () => {
                 onClick={() => handleCardClick(programme.id)}
               >
                 {/* Header with image and title */}
-                <div className="relative h-48 overflow-hidden">
+                <div className="programme-card-header relative h-48 overflow-hidden">
                   <img
                     src={programme.image}
                     alt={programme.title}
-                    className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110"
+                    className="programme-card-image w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
+                  <div className="programme-card-overlay absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div className="programme-card-title-container absolute top-6 left-1/2 transform -translate-x-1/2">
                     <div className="text-center">
-                      <h1 className="text-4xl font-light text-white tracking-wide">
+                      <h1 className="programme-card-title text-4xl font-light text-white tracking-wide">
                         en<span className="text-red-500">trainment</span>
                         <span className="text-blue-400 text-2xl">24</span>
                       </h1>
-                      <div className="flex justify-center mt-2">
+                      <div className="programme-card-dots flex justify-center mt-2">
                         <div className="flex space-x-1">
                           <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                           <div className="w-2 h-2 bg-red-500 rounded-full"></div>
@@ -254,73 +254,73 @@ const Index = () => {
                 </div>
 
                 {/* Content Grid */}
-                <CardContent className="p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <CardContent className="programme-card-content p-8">
+                  <div className="programme-info-grid grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Program Dates */}
-                    <div className="text-center">
-                      <div className="mb-4">
+                    <div className="programme-info-item programme-dates text-center">
+                      <div className="programme-info-icon mb-4">
                         <CalendarDays className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Program Dates</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                      <h3 className="programme-info-title font-semibold text-gray-900 text-lg mb-3">Program Dates</h3>
+                      <p className="programme-info-text text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                         {programme.dates}
                       </p>
                     </div>
 
                     {/* Check-in Time */}
-                    <div className="text-center">
-                      <div className="mb-4">
+                    <div className="programme-info-item programme-checkin text-center">
+                      <div className="programme-info-icon mb-4">
                         <Timer className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Check-in-Time</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                      <h3 className="programme-info-title font-semibold text-gray-900 text-lg mb-3">Check-in-Time</h3>
+                      <p className="programme-info-text text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                         {programme.checkIn}
                       </p>
                     </div>
 
                     {/* Check-out Time */}
-                    <div className="text-center">
-                      <div className="mb-4">
+                    <div className="programme-info-item programme-checkout text-center">
+                      <div className="programme-info-icon mb-4">
                         <ArrowUpRight className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Check-out-Time</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                      <h3 className="programme-info-title font-semibold text-gray-900 text-lg mb-3">Check-out-Time</h3>
+                      <p className="programme-info-text text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                         {programme.checkOut}
                       </p>
                     </div>
 
                     {/* Investment */}
-                    <div className="text-center">
-                      <div className="mb-4">
+                    <div className="programme-info-item programme-investment text-center">
+                      <div className="programme-info-icon mb-4">
                         <div className="w-8 h-8 mx-auto border-2 border-gray-600 rounded flex items-center justify-center">
                           <IndianRupee className="w-4 h-4 text-gray-600 stroke-1" />
                         </div>
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Investment</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                      <h3 className="programme-info-title font-semibold text-gray-900 text-lg mb-3">Investment</h3>
+                      <p className="programme-info-text text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                         {programme.investment}
                       </p>
                     </div>
                   </div>
 
                   {/* Venue Information */}
-                  <div className="mt-8 pt-6 border-t border-gray-100">
-                    <p className="text-gray-600 text-sm leading-relaxed">
+                  <div className="programme-venue-section mt-8 pt-6 border-t border-gray-100">
+                    <p className="programme-venue-text text-gray-600 text-sm leading-relaxed">
                       <span className="font-medium">Venue:</span> {programme.venue}
                     </p>
-                    <p className="text-gray-500 text-xs mt-2 italic">
+                    <p className="programme-note-text text-gray-500 text-xs mt-2 italic">
                       {programme.note}
                     </p>
                   </div>
 
                   {/* Register Button */}
-                  <div className="mt-6 flex justify-center">
+                  <div className="programme-cta-section mt-6 flex justify-center">
                     <Button 
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRegister(programme.id);
                       }}
-                      className="relative overflow-hidden px-8 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                      className="programme-register-button relative overflow-hidden px-8 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
                       style={{
                         backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
                         backgroundSize: 'cover',
