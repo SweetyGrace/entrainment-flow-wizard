@@ -29,8 +29,8 @@ interface PaymentInfoSectionProps {
   isPaid: boolean;
   hideAmountField?: boolean;
   showPersonalizedTitle?: boolean;
-  columnLayout: 2 | 3;
-  setColumnLayout: (layout: 2 | 3) => void;
+  columnLayout: 1 | 2 | 3;
+  setColumnLayout: (layout: 1 | 2 | 3) => void;
   onSaveChanges: () => void;
 }
 
@@ -65,10 +65,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     return titleCaseLabels[label] || label.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  // Check which fields are filled and unfilled
-  const filledFields = [];
-  const unfilledFields = [];
-  
+  // All form fields - no dynamic movement
   const allFields = [
     { key: 'invoiceName', label: 'INVOICE NAME', type: 'text' },
     { key: 'invoiceEmail', label: 'INVOICE EMAIL', type: 'email' },
@@ -77,137 +74,91 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     { key: 'tdsPercent', label: 'TDS PERCENT', type: 'text', conditional: true },
     { key: 'address', label: 'ADDRESS', type: 'textarea' }
   ];
-  
-  if (hasData) {
-    allFields.forEach(field => {
-      if (field.conditional && !paymentInfo?.gstRegistered) return;
-      if (paymentInfo?.[field.key as keyof PaymentInfo]) {
-        filledFields.push(field);
-      } else {
-        unfilledFields.push(field);
-      }
-    });
-  }
+
+  const getGridColumns = () => {
+    switch (columnLayout) {
+      case 1:
+        return 'grid-cols-1';
+      case 2:
+        return 'grid-cols-1 md:grid-cols-2';
+      case 3:
+        return 'grid-cols-1 md:grid-cols-3';
+      default:
+        return 'grid-cols-1 md:grid-cols-2';
+    }
+  };
 
   if (hasData && !isEditing) {
     return (
-      <>
-        {/* Filled Fields Section */}
-        {filledFields.length > 0 && (
-          <Card className="mb-6 border-0 shadow-sm bg-white">
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-lg font-medium text-gray-900">
-                    Review the details and update anything that needs realignment — <button 
-                      onClick={() => setEditingSection('payment')}
-                      className="text-blue-600 hover:text-blue-700 underline"
-                    >
-                      click here to edit
-                    </button>
-                  </CardTitle>
-                  
-                  {/* Column Layout Toggle */}
-                  <div className="flex items-center gap-2 mt-3">
-                    <span className="text-sm text-gray-500">View:</span>
-                    <Button
-                      variant={columnLayout === 2 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setColumnLayout(2)}
-                      className="h-7 px-3 text-xs rounded-full"
-                    >
-                      2 Columns
-                    </Button>
-                    <Button
-                      variant={columnLayout === 3 ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setColumnLayout(3)}
-                      className="h-7 px-3 text-xs rounded-full"
-                    >
-                      3 Columns
-                    </Button>
+      <Card className="mb-6 border-0 shadow-sm bg-white">
+        <CardHeader className="pb-4">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <CardTitle className="text-lg font-medium text-gray-900">
+                Review the details and update anything that needs realignment — <button 
+                  onClick={() => setEditingSection('payment')}
+                  className="text-blue-600 hover:text-blue-700 underline"
+                >
+                  click here to edit
+                </button>
+              </CardTitle>
+              
+              {/* Column Layout Toggle */}
+              <div className="flex items-center gap-2 mt-3">
+                <span className="text-sm text-gray-500">View:</span>
+                <Button
+                  variant={columnLayout === 1 ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setColumnLayout(1)}
+                  className="h-7 px-3 text-xs rounded-full"
+                >
+                  1 Column
+                </Button>
+                <Button
+                  variant={columnLayout === 2 ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setColumnLayout(2)}
+                  className="h-7 px-3 text-xs rounded-full"
+                >
+                  2 Columns
+                </Button>
+                <Button
+                  variant={columnLayout === 3 ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setColumnLayout(3)}
+                  className="h-7 px-3 text-xs rounded-full"
+                >
+                  3 Columns
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className={`grid ${getGridColumns()} gap-6`}>
+            {allFields.map(field => {
+              if (field.conditional && !paymentInfo?.gstRegistered) return null;
+              const value = paymentInfo?.[field.key as keyof PaymentInfo];
+              
+              return (
+                <div key={field.key} className="space-y-2">
+                  <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    {formatFieldLabel(field.label)}
+                  </Label>
+                  <div className="text-sm text-gray-900 font-medium">
+                    {field.type === 'boolean' 
+                      ? (value ? 'Yes' : 'No')
+                      : field.key === 'amount' 
+                      ? `₹${value}`
+                      : value ? String(value) : 
+                        <span className="text-gray-400 italic">Not provided</span>}
                   </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                {filledFields.map(field => (
-                  <div key={field.key} className="space-y-2">
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                      {formatFieldLabel(field.label)}
-                    </Label>
-                    <div className="text-sm text-gray-900 font-medium">
-                      {field.type === 'boolean' 
-                        ? (paymentInfo?.[field.key as keyof PaymentInfo] ? 'Yes' : 'No')
-                        : field.key === 'amount' 
-                        ? `₹${paymentInfo?.[field.key as keyof PaymentInfo]}`
-                        : String(paymentInfo?.[field.key as keyof PaymentInfo] || '')}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Unfilled Fields Section */}
-        {unfilledFields.length > 0 && (
-          <Card className="mb-6 border-0 shadow-sm bg-white">
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-lg font-medium text-gray-900">
-                    Please fill the missing fields
-                  </CardTitle>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                {unfilledFields.map(field => (
-                  <div key={field.key} className="space-y-3">
-                    <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
-                      {formatFieldLabel(field.label)}
-                    </Label>
-                    
-                    {field.type === 'textarea' ? (
-                      <Textarea
-                        id={field.key}
-                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
-                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
-                        className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
-                        rows={3}
-                        placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
-                      />
-                    ) : field.type === 'boolean' ? (
-                      <div className="flex items-center space-x-3">
-                        <Checkbox
-                          id={field.key}
-                          checked={paymentInfo?.[field.key as keyof PaymentInfo] as boolean || false}
-                          onCheckedChange={(checked) => onPaymentInfoChange(field.key, checked)}
-                        />
-                        <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
-                          {formatFieldLabel(field.label)}
-                        </Label>
-                      </div>
-                    ) : (
-                      <Input
-                        id={field.key}
-                        type={field.type}
-                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
-                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
-                        className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}`}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
