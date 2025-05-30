@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -57,7 +56,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     return variations[index];
   };
 
-  // Convert field labels to title case
+  // Convert field labels to proper title case (first letter capital, rest lowercase)
   const formatFieldLabel = (label: string) => {
     // Handle acronyms that should stay uppercase
     const acronyms = ['ID', 'DOB', 'GST', 'TDS'];
@@ -104,33 +103,32 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
   if (hasData && !isEditing) {
     return (
-      <Card className="mb-6 border-0 shadow-sm bg-white">
-        <CardHeader className="pb-4">
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <CardTitle className="text-lg font-medium text-gray-900">
-                  {personalInfo?.fullName ? generatePersonalizedTitle(personalInfo.fullName) : 'Personal Information'}
-                </CardTitle>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => setEditingSection('personal')}
-                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
-                >
-                  <Edit className="w-4 h-4 mr-1" />
-                  edit
-                </Button>
+      <>
+        {/* Filled Fields Section */}
+        {filledFields.length > 0 && (
+          <Card className="mb-6 border-0 shadow-sm bg-white">
+            <CardHeader className="pb-4">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <CardTitle className="text-lg font-medium text-gray-900">
+                      {personalInfo?.fullName ? generatePersonalizedTitle(personalInfo.fullName) : 'Personal Information'}
+                    </CardTitle>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setEditingSection('personal')}
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      edit
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">Your basic details</p>
+                </div>
               </div>
-              <p className="text-sm text-gray-500 mt-1">Your basic details</p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
-          {/* Show filled fields */}
-          {filledFields.length > 0 && (
-            <div className="mb-8">
-              <h4 className="text-sm font-medium text-gray-700 mb-4">Completed information</h4>
+            </CardHeader>
+            <CardContent className="pt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filledFields.map(field => (
                   <div key={field.key} className="space-y-2">
@@ -146,13 +144,33 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-          
-          {/* Show unfilled fields for partial data */}
-          {unfilledFields.length > 0 && (
-            <div className="border-t border-gray-100 pt-6">
-              <h4 className="text-sm font-medium text-gray-700 mb-4">Missing information</h4>
+            </CardContent>
+          </Card>
+        )}
+        
+        {/* Unfilled Fields Section */}
+        {unfilledFields.length > 0 && (
+          <Card className="mb-6 border-0 shadow-sm bg-white">
+            <CardHeader className="pb-4">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <CardTitle className="text-lg font-medium text-gray-900">Missing information</CardTitle>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setEditingSection('personal')}
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      edit
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">Complete your profile</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
               <div className="space-y-6">
                 {unfilledFields.map(field => (
                   <div key={field.key} className="space-y-3">
@@ -217,10 +235,10 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        )}
+      </>
     );
   }
 
