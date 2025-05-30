@@ -17,11 +17,11 @@ const TopNavigation: React.FC = () => {
             />
           </div>
 
-          {/* Center: Three Red Dots - Absolutely positioned to center of screen */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-1">
-            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+          {/* Center: Three Red Dots - Absolutely positioned to center of screen with increased size */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-1.5">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
           </div>
 
           {/* Right: Notification Bell and User Avatar */}

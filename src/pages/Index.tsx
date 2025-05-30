@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -56,15 +55,8 @@ const Index = () => {
     navigate(`/programme/${eventId}`);
   };
 
-  // Carousel images for the hero section
+  // Carousel images for the hero section (removed first image)
   const carouselImages = [
-    {
-      src: "/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png",
-      alt: "Spiritual guide meditation",
-      title: "Transform Your",
-      subtitle: "Consciousness",
-      description: "Join transformative programmes that awaken your inner potential and connect you with like-minded souls on the journey of self-discovery."
-    },
     {
       src: "/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png",
       alt: "Spiritual awakening",
@@ -81,6 +73,7 @@ const Index = () => {
     }
   ];
 
+  // ... keep existing code (programmes array and formatTextWithMahatriaRed function)
   const programmes = [
     {
       id: 'entrainment25',
@@ -135,9 +128,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Hero Section with Carousel */}
+      {/* Hero Section with Carousel - Reduced to 50vh height */}
       <div className="relative overflow-hidden">
-        <div className="relative h-screen">
+        <div className="relative h-[50vh]">
           <Carousel 
             plugins={[plugin.current]}
             className="w-full h-full"
@@ -147,7 +140,7 @@ const Index = () => {
             <CarouselContent className="-ml-0">
               {carouselImages.map((image, index) => (
                 <CarouselItem key={index} className="pl-0">
-                  <div className="relative h-screen">
+                  <div className="relative h-[50vh]">
                     <img
                       className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
                         bannerVisible 
