@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -143,7 +144,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         {/* Filled Fields Section */}
         {filledFields.length > 0 && (
           <Card className="mb-6 border-0 shadow-sm bg-white">
-            <CardHeader className="pb-4">
+            <CardHeader className="pb-6">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
@@ -160,7 +161,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       edit
                     </Button>
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">Your basic details</p>
+                  <p className="text-sm text-gray-500 mt-3">Your basic details</p>
                 </div>
               </div>
             </CardHeader>

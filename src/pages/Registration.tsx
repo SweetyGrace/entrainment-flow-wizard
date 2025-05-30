@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -341,6 +340,7 @@ const Registration = () => {
 
   // Invoice details step (for paid programs)
   if (currentStep === 'invoice') {
+    // Show personalized title if user has a full name
     const hasPersonalizedTitle = userData.personalInfo?.fullName;
 
     return (
@@ -359,9 +359,9 @@ const Registration = () => {
           )}
 
           <div className="flex items-start gap-8">
-            {/* Main Content - Full Width */}
-            <div className="flex-1">
-              <div className="max-w-4xl mx-auto space-y-6">
+            {/* Main Content - Center Aligned with Max Width */}
+            <div className="flex-1 flex justify-center">
+              <div className="w-full max-w-4xl space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
                   onPaymentInfoChange={handlePaymentInfoChange}
@@ -417,6 +417,7 @@ const Registration = () => {
 
   // Payment step
   if (currentStep === 'payment') {
+    // Show personalized title if user has a full name
     const hasPersonalizedTitle = userData.personalInfo?.fullName;
 
     return (
@@ -435,9 +436,9 @@ const Registration = () => {
           )}
 
           <div className="flex items-start gap-8">
-            {/* Main Content - Full Width */}
-            <div className="flex-1">
-              <div className="max-w-4xl mx-auto space-y-6">
+            {/* Main Content - Center Aligned with Max Width */}
+            <div className="flex-1 flex justify-center">
+              <div className="w-full max-w-4xl space-y-6">
                 {/* Show approval success message if coming from approved state */}
                 {userData.registrationStatus === 'approved' && (
                   <Card className="mb-6 border-0 shadow-sm bg-green-50 border-green-200">
@@ -517,8 +518,8 @@ const Registration = () => {
   }
 
   // Personal information step (initial step)
-  const hasData = userData.personalInfo && Object.keys(userData.personalInfo).length > 0;
-  const hasPersonalizedTitle = userData.personalInfo?.fullName && hasData;
+  // Show personalized title if user has a full name, regardless of other data
+  const hasPersonalizedTitle = userData.personalInfo?.fullName;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -536,9 +537,9 @@ const Registration = () => {
         )}
 
         <div className="flex items-start gap-8">
-          {/* Main Content - Full Width */}
-          <div className="flex-1">
-            <div className="max-w-4xl mx-auto space-y-6">
+          {/* Main Content - Center Aligned with Max Width */}
+          <div className="flex-1 flex justify-center">
+            <div className="w-full max-w-4xl space-y-6">
               <PersonalInfoSection
                 personalInfo={userData.personalInfo}
                 onPersonalInfoChange={handlePersonalInfoChange}
