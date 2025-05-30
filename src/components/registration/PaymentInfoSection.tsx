@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -96,11 +97,14 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   };
 
   const renderEmptyFieldInput = (field: string) => {
+    const fieldValue = paymentInfo?.[field as keyof PaymentInfo];
+    const stringValue = typeof fieldValue === 'string' ? fieldValue : '';
+
     switch (field) {
       case 'address':
         return (
           <Textarea
-            value={paymentInfo?.[field as keyof PaymentInfo] || ""}
+            value={stringValue}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
             className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
             rows={3}
@@ -111,7 +115,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         return (
           <Input
             type={field === 'invoiceEmail' ? 'email' : 'text'}
-            value={paymentInfo?.[field as keyof PaymentInfo] || ""}
+            value={stringValue}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
             className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
