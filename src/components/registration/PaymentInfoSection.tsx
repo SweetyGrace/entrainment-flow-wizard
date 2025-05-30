@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { format } from 'date-fns';
 
 interface PaymentInfo {
   invoiceName?: string;
@@ -81,6 +81,13 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     };
     
     return titleCaseLabels[label] || label;
+  };
+
+  const renderFieldValue = (field: string, value: any) => {
+    if (field === 'handoverDate' && value instanceof Date) {
+      return format(value, "PPP");
+    }
+    return value;
   };
 
   const renderEmptyFieldInput = (field: string) => {
@@ -175,7 +182,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                       {formatFieldLabel(field)}
                     </Label>
                     <div className="text-sm text-gray-900 font-medium">
-                      {paymentInfo?.[field as keyof PaymentInfo]}
+                      {renderFieldValue(field, paymentInfo?.[field as keyof PaymentInfo])}
                     </div>
                   </div>
                 ))}
