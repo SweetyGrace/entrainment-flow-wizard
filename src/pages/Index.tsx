@@ -83,6 +83,15 @@ const Index = () => {
     }
   ];
 
+  const formatTextWithMahatriaRed = (text: string) => {
+    const parts = text.split(/(Mahatria)/gi);
+    return parts.map((part, index) => 
+      part.toLowerCase() === 'mahatria' ? (
+        <span key={index} className="text-red-500">{part}</span>
+      ) : part
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Hero Section */}
@@ -97,10 +106,10 @@ const Index = () => {
             src="/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png"
             alt="Spiritual guide"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
-          <div className="relative z-10 flex items-center justify-start h-full pl-8 md:pl-16 lg:pl-24">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
+          <div className="relative z-10 flex items-center justify-end h-full pr-8 md:pr-16 lg:pr-24">
             <div className="max-w-2xl">
-              <div className={`text-left transition-all duration-1000 ease-out ${
+              <div className={`text-right transition-all duration-1000 ease-out ${
                 bannerVisible 
                   ? 'translate-y-0 opacity-100' 
                   : 'translate-y-8 opacity-0'
@@ -115,7 +124,7 @@ const Index = () => {
                 <div className="mt-8">
                   <Button 
                     onClick={() => handleRegister('featured')}
-                    className="relative overflow-hidden px-8 py-4 text-base md:text-lg font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                    className="relative overflow-hidden px-12 py-6 text-lg md:text-xl font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
                     style={{
                       backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
                       backgroundSize: 'cover',
@@ -123,7 +132,7 @@ const Index = () => {
                       backgroundRepeat: 'no-repeat'
                     }}
                   >
-                    <span className="relative z-10">Explore Programmes</span>
+                    <span className="relative z-10">explore programmes</span>
                   </Button>
                 </div>
               </div>
@@ -144,7 +153,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="mt-12 space-y-8">
+          <div className="mt-12 space-y-8 2xl:grid 2xl:grid-cols-2 2xl:gap-8 2xl:space-y-0">
             {programmes.map((programme, index) => (
               <Card 
                 key={programme.id}
@@ -174,7 +183,7 @@ const Index = () => {
                         {programme.title}
                       </CardTitle>
                       <CardDescription className="text-gray-600">
-                        {programme.description}
+                        {formatTextWithMahatriaRed(programme.description)}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="flex-1 flex flex-col">
@@ -210,7 +219,7 @@ const Index = () => {
                             backgroundRepeat: 'no-repeat'
                           }}
                         >
-                          <span className="relative z-10">Register</span>
+                          <span className="relative z-10">register</span>
                         </Button>
                       </div>
                     </CardContent>
