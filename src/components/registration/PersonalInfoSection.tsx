@@ -101,10 +101,12 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   };
 
   const renderEmptyFieldInput = (field: string) => {
+    const currentValue = personalInfo?.[field as keyof PersonalInfo];
+    
     switch (field) {
       case 'gender':
         return (
-          <Select value="" onValueChange={(value) => onPersonalInfoChange(field, value)}>
+          <Select value={currentValue || ""} onValueChange={(value) => onPersonalInfoChange(field, value)}>
             <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
               <SelectValue placeholder="Select gender" />
             </SelectTrigger>
@@ -119,7 +121,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           <div className="space-y-3">
             <Label className="text-sm font-medium text-gray-700">Date of Birth</Label>
             <BirthDatePicker
-              value={undefined}
+              value={currentValue as Date}
               onChange={(date) => onPersonalInfoChange(field, date)}
             />
           </div>
@@ -127,7 +129,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       case 'additionalNotes':
         return (
           <Textarea
-            value=""
+            value={currentValue || ""}
             onChange={(e) => onPersonalInfoChange(field, e.target.value)}
             className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
             rows={3}
@@ -138,7 +140,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         return (
           <Input
             type={field === 'email' ? 'email' : 'text'}
-            value=""
+            value={currentValue || ""}
             onChange={(e) => onPersonalInfoChange(field, e.target.value)}
             className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             placeholder={`Enter your ${formatFieldLabel(field).toLowerCase()}`}

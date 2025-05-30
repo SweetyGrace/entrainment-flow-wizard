@@ -37,11 +37,13 @@ const MissingFieldsCard: React.FC<MissingFieldsCardProps> = ({
   onPaymentInfoChange
 }) => {
   const renderEmptyFieldInput = (field: string) => {
+    const currentValue = paymentInfo?.[field as keyof PaymentInfo];
+    
     switch (field) {
       case 'address':
         return (
           <Textarea
-            value=""
+            value={currentValue || ""}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
             className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
             rows={3}
@@ -52,7 +54,7 @@ const MissingFieldsCard: React.FC<MissingFieldsCardProps> = ({
         return (
           <Input
             type={field === 'invoiceEmail' ? 'email' : 'text'}
-            value=""
+            value={currentValue || ""}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
             className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
