@@ -1,8 +1,8 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { MapPin, Calendar, Users, Clock, CalendarDays, Timer, ArrowUpRight, IndianRupee } from "lucide-react";
+import { Calendar, Clock, ArrowUp, Banknote } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
@@ -56,7 +56,7 @@ const Index = () => {
     navigate(`/programme/${eventId}`);
   };
 
-  // Carousel images for the hero section (removed first image)
+  // Carousel images for the hero section
   const carouselImages = [
     {
       src: "/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png",
@@ -79,10 +79,10 @@ const Index = () => {
       id: 'entrainment25',
       title: 'Entrainment\'25',
       description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra',
-      image: '/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png',
-      dates: 'Wed, 18 Sept to\nSat, 21 Sept 2025',
-      checkIn: '04:00 p.m. to 09:00 p.m.\non Wed, 18 Sept 2025',
-      checkOut: 'Latest by 02:00 p.m.\non Sat, 21 Sept 2025',
+      image: '/lovable-uploads/eb251cb9-6cc7-4d1a-80f3-9eefe54a1dd0.png',
+      dates: 'Wed, 18 Sept to\nSat, 21 Sept 2024',
+      checkIn: '04:00 p.m. to 09:00 p.m.\non Wed, 18 Sept 2024',
+      checkOut: 'Latest by 02:00 p.m.\non Sat, 21 Sept 2024',
       investment: 'INR 49,000/-\n(plus GST 18%)',
       venue: 'Leonia Holistic Destination, Bommaraspet, shameerpet, Ranga Reddy District, Hyderabad 500078.',
       note: '*Early check-in and Late check-out not available'
@@ -91,7 +91,7 @@ const Index = () => {
       id: 'hdb',
       title: 'HDB',
       description: 'Global gathering of spiritual leaders and consciousness researchers',
-      image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
+      image: '/lovable-uploads/eb251cb9-6cc7-4d1a-80f3-9eefe54a1dd0.png',
       dates: 'Thu, 20 Apr to\nSun, 22 Apr 2025',
       checkIn: '03:00 p.m. to 08:00 p.m.\non Thu, 20 Apr 2025',
       checkOut: 'Latest by 01:00 p.m.\non Sun, 22 Apr 2025',
@@ -103,7 +103,7 @@ const Index = () => {
       id: 'msd',
       title: 'MSD',
       description: 'Silent meditation retreat for deep inner peace and clarity',
-      image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
+      image: '/lovable-uploads/eb251cb9-6cc7-4d1a-80f3-9eefe54a1dd0.png',
       dates: 'Sat, 10 May to\nSat, 17 May 2025',
       checkIn: '02:00 p.m. to 07:00 p.m.\non Sat, 10 May 2025',
       checkOut: 'Latest by 12:00 p.m.\non Sat, 17 May 2025',
@@ -115,7 +115,7 @@ const Index = () => {
       id: 'tat',
       title: 'TAT',
       description: 'Transformative awareness training for personal growth and mindfulness',
-      image: '/lovable-uploads/9915522c-4120-403c-9834-f100e5676ef4.png',
+      image: '/lovable-uploads/eb251cb9-6cc7-4d1a-80f3-9eefe54a1dd0.png',
       dates: 'Fri, 5 Jun to\nSun, 7 Jun 2025',
       checkIn: '05:00 p.m. to 10:00 p.m.\non Fri, 5 Jun 2025',
       checkOut: 'Latest by 03:00 p.m.\non Sun, 7 Jun 2025',
@@ -125,18 +125,9 @@ const Index = () => {
     }
   ];
 
-  const formatTextWithMahatriaRed = (text: string) => {
-    const parts = text.split(/(Mahatria)/gi);
-    return parts.map((part, index) => 
-      part.toLowerCase() === 'mahatria' ? (
-        <span key={index} className="text-red-500">{part}</span>
-      ) : part
-    );
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Hero Section with Carousel - Reduced to 50vh height */}
+      {/* Hero Section with Carousel */}
       <div className="relative overflow-hidden">
         <div className="relative h-[50vh]">
           <Carousel 
@@ -222,46 +213,31 @@ const Index = () => {
                   visibleCards.has(index) 
                     ? 'translate-y-0 opacity-100' 
                     : 'translate-y-8 opacity-0'
-                } bg-white border border-gray-200 rounded-2xl`}
+                } bg-white border border-gray-200 rounded-2xl max-w-4xl mx-auto`}
                 style={{
                   transitionDelay: `${index * 200}ms`
                 }}
                 onClick={() => handleCardClick(programme.id)}
               >
-                {/* Header with image and title */}
-                <div className="relative h-48 overflow-hidden">
+                {/* Header Image */}
+                <div className="relative h-64 overflow-hidden rounded-t-2xl">
                   <img
                     src={programme.image}
                     alt={programme.title}
                     className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                  <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
-                    <div className="text-center">
-                      <h1 className="text-4xl font-light text-white tracking-wide">
-                        en<span className="text-red-500">trainment</span>
-                        <span className="text-blue-400 text-2xl">24</span>
-                      </h1>
-                      <div className="flex justify-center mt-2">
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
-                {/* Content Grid */}
+                {/* Content */}
                 <CardContent className="p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                  {/* Info Grid - 4 columns */}
+                  <div className="grid grid-cols-4 gap-6 mb-8">
                     {/* Program Dates */}
                     <div className="text-center">
-                      <div className="mb-4">
-                        <CalendarDays className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
+                      <div className="mb-4 flex justify-center">
+                        <Calendar className="w-8 h-8 text-gray-600 stroke-1" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Program Dates</h3>
+                      <h3 className="font-semibold text-gray-900 text-base mb-3">Program Dates</h3>
                       <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                         {programme.dates}
                       </p>
@@ -269,10 +245,10 @@ const Index = () => {
 
                     {/* Check-in Time */}
                     <div className="text-center">
-                      <div className="mb-4">
-                        <Timer className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
+                      <div className="mb-4 flex justify-center">
+                        <Clock className="w-8 h-8 text-gray-600 stroke-1" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Check-in-Time</h3>
+                      <h3 className="font-semibold text-gray-900 text-base mb-3">Check-in-Time</h3>
                       <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                         {programme.checkIn}
                       </p>
@@ -280,10 +256,10 @@ const Index = () => {
 
                     {/* Check-out Time */}
                     <div className="text-center">
-                      <div className="mb-4">
-                        <ArrowUpRight className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
+                      <div className="mb-4 flex justify-center">
+                        <ArrowUp className="w-8 h-8 text-gray-600 stroke-1" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Check-out-Time</h3>
+                      <h3 className="font-semibold text-gray-900 text-base mb-3">Check-out-Time</h3>
                       <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                         {programme.checkOut}
                       </p>
@@ -291,12 +267,10 @@ const Index = () => {
 
                     {/* Investment */}
                     <div className="text-center">
-                      <div className="mb-4">
-                        <div className="w-8 h-8 mx-auto border-2 border-gray-600 rounded flex items-center justify-center">
-                          <IndianRupee className="w-4 h-4 text-gray-600 stroke-1" />
-                        </div>
+                      <div className="mb-4 flex justify-center">
+                        <Banknote className="w-8 h-8 text-gray-600 stroke-1" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Investment</h3>
+                      <h3 className="font-semibold text-gray-900 text-base mb-3">Investment</h3>
                       <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                         {programme.investment}
                       </p>
@@ -304,31 +278,25 @@ const Index = () => {
                   </div>
 
                   {/* Venue Information */}
-                  <div className="mt-8 pt-6 border-t border-gray-100">
+                  <div className="mb-6">
                     <p className="text-gray-600 text-sm leading-relaxed">
                       <span className="font-medium">Venue:</span> {programme.venue}
                     </p>
-                    <p className="text-gray-500 text-xs mt-2 italic">
+                    <p className="text-gray-500 text-xs mt-2 italic text-right">
                       {programme.note}
                     </p>
                   </div>
 
                   {/* Register Button */}
-                  <div className="mt-6 flex justify-center">
+                  <div className="flex justify-center">
                     <Button 
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRegister(programme.id);
                       }}
-                      className="relative overflow-hidden px-8 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                      style={{
-                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                      }}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-3 rounded-full font-medium transition-all duration-300 shadow-lg"
                     >
-                      <span className="relative z-10">register now</span>
+                      register
                     </Button>
                   </div>
                 </CardContent>
