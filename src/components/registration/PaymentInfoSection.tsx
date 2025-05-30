@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,9 +51,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
 
-  // Capture initial field state only once when component mounts
-  const initialFieldState = React.useMemo(() => {
-    if (!paymentInfo) return { preFilledFields: [], missingFields: [] };
+  // Capture initial field state only once when component mounts - this is the key fix
+  const [initialFieldState] = React.useState(() => {
+    if (!paymentInfo) return { preFilledFields: [], missingFields: ['invoiceName', 'invoiceEmail', 'address'] };
     
     const baseFields = ['invoiceName', 'invoiceEmail', 'address'];
     const gstFields = paymentInfo.gstRegistered ? ['gstin', 'tdsPercent'] : [];
@@ -68,9 +67,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     const missingFields = allFields.filter(field => !preFilledFields.includes(field));
     
     return { preFilledFields, missingFields };
-  }, []); // Empty dependency array - only calculate once on mount
+  });
 
-  // Static field assignments based on initial state
+  // Use the captured initial state - never update these
   const staticPreFilledFields = initialFieldState.preFilledFields;
   const staticMissingFields = initialFieldState.missingFields;
 
