@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -347,19 +348,19 @@ const Registration = () => {
         <RegistrationHeader />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Personalized Title */}
+          {hasPersonalizedTitle && (
+            <div className="mb-8">
+              <h1 className="text-2xl font-semibold text-gray-900">
+                {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
+              </h1>
+              <p className="text-gray-600 mt-2">Complete your billing information</p>
+            </div>
+          )}
+
           <div className="flex items-start gap-8">
             {/* Main Content */}
             <div className="flex-1 max-w-2xl">
-              {/* Personalized Title */}
-              {hasPersonalizedTitle && (
-                <div className="mb-8">
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
-                  </h1>
-                  <p className="text-gray-600 mt-2">Complete your billing information</p>
-                </div>
-              )}
-
               <div className="space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
@@ -374,7 +375,7 @@ const Registration = () => {
 
                 {/* Action buttons */}
                 {!editingSection && (
-                  <div className="flex justify-center space-x-4 pt-6">
+                  <div className="flex justify-start space-x-4 pt-6">
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentStep('personal')}
@@ -404,7 +405,7 @@ const Registration = () => {
 
             {/* Event Details Sidebar */}
             <div className="w-80 flex-shrink-0">
-              <div className="sticky top-8">
+              <div className="sticky top-24">
                 <EventDetailsSection eventName={event.name} isCompact={true} />
               </div>
             </div>
@@ -423,6 +424,16 @@ const Registration = () => {
         <RegistrationHeader />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Personalized Title */}
+          {hasPersonalizedTitle && !userData.registrationStatus && (
+            <div className="mb-8">
+              <h1 className="text-2xl font-semibold text-gray-900">
+                {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
+              </h1>
+              <p className="text-gray-600 mt-2">Complete your payment details</p>
+            </div>
+          )}
+
           <div className="flex items-start gap-8">
             {/* Main Content */}
             <div className="flex-1 max-w-2xl">
@@ -441,16 +452,6 @@ const Registration = () => {
                 </Card>
               )}
 
-              {/* Personalized Title */}
-              {hasPersonalizedTitle && !userData.registrationStatus && (
-                <div className="mb-8">
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
-                  </h1>
-                  <p className="text-gray-600 mt-2">Complete your payment details</p>
-                </div>
-              )}
-
               <div className="space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
@@ -465,7 +466,7 @@ const Registration = () => {
 
                 {/* Action buttons */}
                 {!editingSection && (
-                  <div className="flex justify-center space-x-4 pt-6">
+                  <div className="flex justify-start space-x-4 pt-6">
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentStep('invoice')}
@@ -493,7 +494,7 @@ const Registration = () => {
 
             {/* Event Details Sidebar */}
             <div className="w-80 flex-shrink-0">
-              <div className="sticky top-8">
+              <div className="sticky top-24">
                 <EventDetailsSection eventName={event.name} isCompact={true} />
               </div>
             </div>
@@ -524,19 +525,19 @@ const Registration = () => {
       <RegistrationHeader />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Personalized Title */}
+        {hasPersonalizedTitle && (
+          <div className="mb-8">
+            <h1 className="text-2xl font-semibold text-gray-900">
+              {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
+            </h1>
+            <p className="text-gray-600 mt-2">Review and complete your registration details</p>
+          </div>
+        )}
+
         <div className="flex items-start gap-8">
           {/* Main Content */}
           <div className="flex-1 max-w-2xl">
-            {/* Personalized Title */}
-            {hasPersonalizedTitle && (
-              <div className="mb-8">
-                <h1 className="text-2xl font-semibold text-gray-900">
-                  {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
-                </h1>
-                <p className="text-gray-600 mt-2">Review and complete your registration details</p>
-              </div>
-            )}
-
             <div className="space-y-6">
               <PersonalInfoSection
                 personalInfo={userData.personalInfo}
@@ -549,7 +550,7 @@ const Registration = () => {
 
               {/* Action Buttons */}
               {!editingSection && (
-                <div className="flex justify-center pt-6">
+                <div className="flex justify-start pt-6">
                   <Button 
                     onClick={handlePersonalInfoSubmit}
                     className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
@@ -572,7 +573,7 @@ const Registration = () => {
 
           {/* Event Details Sidebar */}
           <div className="w-80 flex-shrink-0">
-            <div className="sticky top-8">
+            <div className="sticky top-24">
               <EventDetailsSection eventName={event.name} isCompact={true} />
             </div>
           </div>
