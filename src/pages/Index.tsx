@@ -1,7 +1,8 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { MapPin, Calendar, Users, Clock } from "lucide-react";
+import { MapPin, Calendar, Users, Clock, CalendarDays, Timer, ArrowUpRight, IndianRupee } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
@@ -73,47 +74,54 @@ const Index = () => {
     }
   ];
 
-  // ... keep existing code (programmes array and formatTextWithMahatriaRed function)
   const programmes = [
     {
       id: 'entrainment25',
       title: 'Entrainment\'25',
-      description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra (Paid Program)',
+      description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra',
       image: '/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png',
-      date: 'March 15-17, 2025',
-      location: 'Mysore, Karnataka',
-      participants: 'Limited to 500 participants',
-      duration: '3 days intensive'
+      dates: 'Wed, 18 Sept to\nSat, 21 Sept 2025',
+      checkIn: '04:00 p.m. to 09:00 p.m.\non Wed, 18 Sept 2025',
+      checkOut: 'Latest by 02:00 p.m.\non Sat, 21 Sept 2025',
+      investment: 'INR 49,000/-\n(plus GST 18%)',
+      venue: 'Leonia Holistic Destination, Bommaraspet, shameerpet, Ranga Reddy District, Hyderabad 500078.',
+      note: '*Early check-in and Late check-out not available'
     },
     {
       id: 'hdb',
       title: 'HDB',
-      description: 'Global gathering of spiritual leaders and consciousness researchers (Paid + Approval Required)',
+      description: 'Global gathering of spiritual leaders and consciousness researchers',
       image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
-      date: 'April 20-22, 2025',
-      location: 'Rishikesh, Uttarakhand',
-      participants: 'Open for 1000 participants',
-      duration: '3 days conference'
+      dates: 'Thu, 20 Apr to\nSun, 22 Apr 2025',
+      checkIn: '03:00 p.m. to 08:00 p.m.\non Thu, 20 Apr 2025',
+      checkOut: 'Latest by 01:00 p.m.\non Sun, 22 Apr 2025',
+      investment: 'INR 35,000/-\n(plus GST 18%)',
+      venue: 'Rishikesh Retreat Center, Rishikesh, Uttarakhand 249304.',
+      note: '*Approval required for participation'
     },
     {
       id: 'msd',
       title: 'MSD',
-      description: 'Silent meditation retreat for deep inner peace and clarity (No Waiting List)',
+      description: 'Silent meditation retreat for deep inner peace and clarity',
       image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
-      date: 'May 10-17, 2025',
-      location: 'Dharamshala, HP',
-      participants: 'Limited to 50 participants',
-      duration: '7 days silent retreat'
+      dates: 'Sat, 10 May to\nSat, 17 May 2025',
+      checkIn: '02:00 p.m. to 07:00 p.m.\non Sat, 10 May 2025',
+      checkOut: 'Latest by 12:00 p.m.\non Sat, 17 May 2025',
+      investment: 'No Waiting List',
+      venue: 'Dharamshala Meditation Center, Dharamshala, Himachal Pradesh 176215.',
+      note: '*Limited to 50 participants'
     },
     {
       id: 'tat',
       title: 'TAT',
-      description: 'Transformative awareness training for personal growth and mindfulness (Free Program)',
+      description: 'Transformative awareness training for personal growth and mindfulness',
       image: '/lovable-uploads/9915522c-4120-403c-9834-f100e5676ef4.png',
-      date: 'June 5-7, 2025',
-      location: 'Pune, Maharashtra',
-      participants: 'Open for 200 participants',
-      duration: '3 days workshop'
+      dates: 'Fri, 5 Jun to\nSun, 7 Jun 2025',
+      checkIn: '05:00 p.m. to 10:00 p.m.\non Fri, 5 Jun 2025',
+      checkOut: 'Latest by 03:00 p.m.\non Sun, 7 Jun 2025',
+      investment: 'Free Program',
+      venue: 'Pune Convention Center, Pune, Maharashtra 411028.',
+      note: '*Open for 200 participants'
     }
   ];
 
@@ -204,7 +212,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="mt-12 space-y-8 2xl:grid 2xl:grid-cols-2 2xl:gap-8 2xl:space-y-0">
+          <div className="mt-12 space-y-8">
             {programmes.map((programme, index) => (
               <Card 
                 key={programme.id}
@@ -214,68 +222,116 @@ const Index = () => {
                   visibleCards.has(index) 
                     ? 'translate-y-0 opacity-100' 
                     : 'translate-y-8 opacity-0'
-                }`}
+                } bg-white border border-gray-200 rounded-2xl`}
                 style={{
                   transitionDelay: `${index * 200}ms`
                 }}
                 onClick={() => handleCardClick(programme.id)}
               >
-                <div className="flex flex-col md:flex-row">
-                  <div className="relative overflow-hidden md:w-80 md:flex-shrink-0">
-                    <img
-                      src={programme.image}
-                      alt={programme.title}
-                      className="w-full h-48 md:h-full object-cover transition-all duration-500 ease-out group-hover:scale-110"
-                    />
-                  </div>
-                  <div className="flex-1 flex flex-col">
-                    <CardHeader>
-                      <CardTitle className="text-xl font-bold text-gray-900">
-                        {programme.title}
-                      </CardTitle>
-                      <CardDescription className="text-gray-600">
-                        {formatTextWithMahatriaRed(programme.description)}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-1 flex flex-col">
-                      <div className="space-y-3 flex-1">
-                        <div className="flex items-center text-sm text-gray-500">
-                          <Calendar className="w-4 h-4 mr-2" />
-                          <span>{programme.date}</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-500">
-                          <MapPin className="w-4 h-4 mr-2" />
-                          <span>{programme.location}</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-500">
-                          <Users className="w-4 h-4 mr-2" />
-                          <span>{programme.participants}</span>
-                        </div>
-                        <div className="flex items-center text-sm text-gray-500">
-                          <Clock className="w-4 h-4 mr-2" />
-                          <span>{programme.duration}</span>
+                {/* Header with image and title */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={programme.image}
+                    alt={programme.title}
+                    className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div className="absolute top-6 left-1/2 transform -translate-x-1/2">
+                    <div className="text-center">
+                      <h1 className="text-4xl font-light text-white tracking-wide">
+                        en<span className="text-red-500">trainment</span>
+                        <span className="text-blue-400 text-2xl">24</span>
+                      </h1>
+                      <div className="flex justify-center mt-2">
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                         </div>
                       </div>
-                      <div className="mt-6 flex justify-start md:justify-end">
-                        <Button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRegister(programme.id);
-                          }}
-                          className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                          style={{
-                            backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat'
-                          }}
-                        >
-                          <span className="relative z-10">register</span>
-                        </Button>
-                      </div>
-                    </CardContent>
+                    </div>
                   </div>
                 </div>
+
+                {/* Content Grid */}
+                <CardContent className="p-8">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    {/* Program Dates */}
+                    <div className="text-center">
+                      <div className="mb-4">
+                        <CalendarDays className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
+                      </div>
+                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Program Dates</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                        {programme.dates}
+                      </p>
+                    </div>
+
+                    {/* Check-in Time */}
+                    <div className="text-center">
+                      <div className="mb-4">
+                        <Timer className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
+                      </div>
+                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Check-in-Time</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                        {programme.checkIn}
+                      </p>
+                    </div>
+
+                    {/* Check-out Time */}
+                    <div className="text-center">
+                      <div className="mb-4">
+                        <ArrowUpRight className="w-8 h-8 mx-auto text-gray-600 stroke-1" />
+                      </div>
+                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Check-out-Time</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                        {programme.checkOut}
+                      </p>
+                    </div>
+
+                    {/* Investment */}
+                    <div className="text-center">
+                      <div className="mb-4">
+                        <div className="w-8 h-8 mx-auto border-2 border-gray-600 rounded flex items-center justify-center">
+                          <IndianRupee className="w-4 h-4 text-gray-600 stroke-1" />
+                        </div>
+                      </div>
+                      <h3 className="font-semibold text-gray-900 text-lg mb-3">Investment</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                        {programme.investment}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Venue Information */}
+                  <div className="mt-8 pt-6 border-t border-gray-100">
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      <span className="font-medium">Venue:</span> {programme.venue}
+                    </p>
+                    <p className="text-gray-500 text-xs mt-2 italic">
+                      {programme.note}
+                    </p>
+                  </div>
+
+                  {/* Register Button */}
+                  <div className="mt-6 flex justify-center">
+                    <Button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRegister(programme.id);
+                      }}
+                      className="relative overflow-hidden px-8 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                      style={{
+                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                      }}
+                    >
+                      <span className="relative z-10">register now</span>
+                    </Button>
+                  </div>
+                </CardContent>
               </Card>
             ))}
           </div>
