@@ -92,26 +92,28 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         <CardHeader className="pb-4">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <CardTitle className="text-lg font-medium text-gray-900">Invoice details</CardTitle>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-lg font-medium text-gray-900">Invoice details</CardTitle>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setEditingSection('payment')}
+                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
+                >
+                  <Edit className="w-4 h-4 mr-1" />
+                  edit
+                </Button>
+              </div>
               <p className="text-sm text-gray-500 mt-1">Your billing information</p>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setEditingSection('payment')}
-              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
-            >
-              <Edit className="w-4 h-4 mr-1" />
-              edit
-            </Button>
           </div>
         </CardHeader>
         <CardContent className="pt-0">
           {/* Show filled fields */}
           {filledFields.length > 0 && (
-            <div>
+            <div className="mb-8">
               <h4 className="text-sm font-medium text-gray-700 mb-4">Completed information</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filledFields.map(field => (
                   <div key={field.key} className="space-y-2">
                     <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
@@ -176,17 +178,19 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         {isEditing && (
           <div className="flex justify-between items-center">
             <div className="flex-1">
-              <CardTitle className="text-lg font-medium text-gray-900">Edit invoice details</CardTitle>
+              <div className="flex items-center gap-3">
+                <CardTitle className="text-lg font-medium text-gray-900">Edit invoice details</CardTitle>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setEditingSection(null)}
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md"
+                >
+                  cancel
+                </Button>
+              </div>
               <p className="text-sm text-gray-500 mt-1">Update your billing information</p>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setEditingSection(null)}
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md"
-            >
-              cancel
-            </Button>
           </div>
         )}
 
