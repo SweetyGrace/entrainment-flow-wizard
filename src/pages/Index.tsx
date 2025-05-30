@@ -144,13 +144,13 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 space-y-8">
             {programmes.map((programme, index) => (
               <Card 
                 key={programme.id}
                 ref={(el) => cardRefs.current[index] = el}
                 data-card-index={index}
-                className={`overflow-hidden hover:shadow-lg transition-all duration-700 cursor-pointer group h-full flex flex-col transform ${
+                className={`overflow-hidden hover:shadow-lg transition-all duration-700 cursor-pointer group transform ${
                   visibleCards.has(index) 
                     ? 'translate-y-0 opacity-100' 
                     : 'translate-y-8 opacity-0'
@@ -160,58 +160,62 @@ const Index = () => {
                 }}
                 onClick={() => handleCardClick(programme.id)}
               >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={programme.image}
-                    alt={programme.title}
-                    className="w-full h-48 object-cover transition-all duration-500 ease-out group-hover:scale-110"
-                  />
+                <div className="flex flex-col md:flex-row">
+                  <div className="relative overflow-hidden md:w-80 md:flex-shrink-0">
+                    <img
+                      src={programme.image}
+                      alt={programme.title}
+                      className="w-full h-48 md:h-full object-cover transition-all duration-500 ease-out group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    <CardHeader>
+                      <CardTitle className="text-xl font-bold text-gray-900">
+                        {programme.title}
+                      </CardTitle>
+                      <CardDescription className="text-gray-600">
+                        {programme.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-1 flex flex-col">
+                      <div className="space-y-3 flex-1">
+                        <div className="flex items-center text-sm text-gray-500">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          <span>{programme.date}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          <span>{programme.location}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <Users className="w-4 h-4 mr-2" />
+                          <span>{programme.participants}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <Clock className="w-4 h-4 mr-2" />
+                          <span>{programme.duration}</span>
+                        </div>
+                      </div>
+                      <div className="mt-6 flex justify-start md:justify-end">
+                        <Button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRegister(programme.id);
+                          }}
+                          className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                          style={{
+                            backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                          }}
+                        >
+                          <span className="relative z-10">Register</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </div>
                 </div>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-gray-900">
-                    {programme.title}
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
-                    {programme.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1 flex flex-col">
-                  <div className="space-y-3 flex-1">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      <span>{programme.date}</span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      <span>{programme.location}</span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Users className="w-4 h-4 mr-2" />
-                      <span>{programme.participants}</span>
-                    </div>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Clock className="w-4 h-4 mr-2" />
-                      <span>{programme.duration}</span>
-                    </div>
-                  </div>
-                  <div className="mt-6 flex justify-center">
-                    <Button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRegister(programme.id);
-                      }}
-                      className="relative overflow-hidden px-6 py-3 font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                      style={{
-                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                      }}
-                    >
-                      <span className="relative z-10">Register</span>
-                    </Button>
-                  </div>
-                </CardContent>
               </Card>
             ))}
           </div>
