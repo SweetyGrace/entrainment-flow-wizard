@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
 import BirthDatePicker from '@/components/ui/birth-date-picker';
-import { convertToInputValue } from './FieldValueUtils';
 
 interface PersonalInfo {
   fullName?: string;
@@ -53,7 +53,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     key !== 'infinitheismContact' && personalInfo[key as keyof PersonalInfo]
   );
 
-  // Static field definitions - computed once based on initial data, never changes
+  // Static field definitions - fields are assigned based on initial data state
   const staticPreFilledFields = React.useMemo(() => {
     if (!personalInfo) return [];
     
@@ -66,7 +66,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       personalInfo[field as keyof PersonalInfo] && 
       personalInfo[field as keyof PersonalInfo] !== ''
     );
-  }, []);
+  }, [personalInfo?.fullName, personalInfo?.gender, personalInfo?.mobile, personalInfo?.email, personalInfo?.dateOfBirth, personalInfo?.city, personalInfo?.infinitheismContact, personalInfo?.preferredRoommate, personalInfo?.additionalNotes]);
 
   const staticMissingFields = React.useMemo(() => {
     const allFields = [
@@ -80,14 +80,14 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
     const titleCaseLabels = {
-      'fullName': 'Full Name',
+      'fullName': 'Full name',
       'gender': 'Gender',
-      'mobile': 'Mobile Number',
-      'email': 'Email Address',
-      'dateOfBirth': 'Date of Birth',
+      'mobile': 'Mobile number',
+      'email': 'Email address',
+      'dateOfBirth': 'Date of birth',
       'city': 'City',
-      'infinitheismContact': 'Infinitheism Contact',
-      'preferredRoommate': 'Preferred Roommate',
+      'infinitheismContact': 'Infinitheism contact',
+      'preferredRoommate': 'Preferred roommate',
       'additionalNotes': 'Note'
     };
     
@@ -102,12 +102,10 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   };
 
   const renderEmptyFieldInput = (field: string) => {
-    const currentValue = personalInfo?.[field as keyof PersonalInfo];
-    
     switch (field) {
       case 'gender':
         return (
-          <Select value={convertToInputValue(currentValue)} onValueChange={(value) => onPersonalInfoChange(field, value)}>
+          <Select value="" onValueChange={(value) => onPersonalInfoChange(field, value)}>
             <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
               <SelectValue placeholder="Select gender" />
             </SelectTrigger>
@@ -119,18 +117,15 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         );
       case 'dateOfBirth':
         return (
-          <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700">Date of Birth</Label>
-            <BirthDatePicker
-              value={currentValue as Date}
-              onChange={(date) => onPersonalInfoChange(field, date)}
-            />
-          </div>
+          <BirthDatePicker
+            value={undefined}
+            onChange={(date) => onPersonalInfoChange(field, date)}
+          />
         );
       case 'additionalNotes':
         return (
           <Textarea
-            value={convertToInputValue(currentValue)}
+            value=""
             onChange={(e) => onPersonalInfoChange(field, e.target.value)}
             className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
             rows={3}
@@ -141,7 +136,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         return (
           <Input
             type={field === 'email' ? 'email' : 'text'}
-            value={convertToInputValue(currentValue)}
+            value=""
             onChange={(e) => onPersonalInfoChange(field, e.target.value)}
             className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             placeholder={`Enter your ${formatFieldLabel(field).toLowerCase()}`}
@@ -150,201 +145,66 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     }
   };
 
-  // STATE 1: EDITING MODE - Show all fields in one unified form
-  if (isEditing) {
-    return (
-      <Card className="mb-6 border-0 shadow-sm bg-blue-50 border-blue-200">
-        <CardHeader className="pb-6">
-          <CardTitle className="text-lg font-medium text-gray-900">
-            {personalInfo?.fullName ? `Edit ${personalInfo.fullName}'s information` : 'Edit Personal Information'}
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">Full name</Label>
-              <Input
-                id="fullName"
-                value={personalInfo?.fullName || ''}
-                onChange={(e) => onPersonalInfoChange('fullName', e.target.value)}
-                className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter your full name"
-              />
-            </div>
-            <div className="space-y-3">
-              <Label htmlFor="gender" className="text-sm font-medium text-gray-700">Gender</Label>
-              <Select value={personalInfo?.gender} onValueChange={(value) => onPersonalInfoChange('gender', value)}>
-                <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                  <SelectValue placeholder="Select gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Male">Male</SelectItem>
-                  <SelectItem value="Female">Female</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label htmlFor="mobile" className="text-sm font-medium text-gray-700">Mobile number</Label>
-              <Input
-                id="mobile"
-                value={personalInfo?.mobile || ''}
-                onChange={(e) => onPersonalInfoChange('mobile', e.target.value)}
-                className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter your mobile number"
-              />
-            </div>
-            <div className="space-y-3">
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={personalInfo?.email || ''}
-                onChange={(e) => onPersonalInfoChange('email', e.target.value)}
-                className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter your email address"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">Date of Birth</Label>
-              <BirthDatePicker
-                value={personalInfo?.dateOfBirth}
-                onChange={(date) => onPersonalInfoChange('dateOfBirth', date)}
-              />
-            </div>
-            <div className="space-y-3">
-              <Label htmlFor="city" className="text-sm font-medium text-gray-700">City</Label>
-              <Input
-                id="city"
-                value={personalInfo?.city || ''}
-                onChange={(e) => onPersonalInfoChange('city', e.target.value)}
-                className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter your city"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label htmlFor="infinitheismContact" className="text-sm font-medium text-gray-700">Infinitheism contact</Label>
-              <Input
-                id="infinitheismContact"
-                value={personalInfo?.infinitheismContact || ''}
-                onChange={(e) => onPersonalInfoChange('infinitheismContact', e.target.value)}
-                className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter contact name"
-              />
-            </div>
-            <div className="space-y-3">
-              <Label htmlFor="preferredRoommate" className="text-sm font-medium text-gray-700">
-                Preferred roommate <span className="text-gray-400 text-xs">(Optional)</span>
-              </Label>
-              <Input
-                id="preferredRoommate"
-                value={personalInfo?.preferredRoommate || ''}
-                onChange={(e) => onPersonalInfoChange('preferredRoommate', e.target.value)}
-                className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter roommate preference"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <Label htmlFor="additionalNotes" className="text-sm font-medium text-gray-700">
-              Note <span className="text-gray-400 text-xs">(Optional)</span>
-            </Label>
-            <Textarea
-              id="additionalNotes"
-              value={personalInfo?.additionalNotes || ''}
-              onChange={(e) => onPersonalInfoChange('additionalNotes', e.target.value)}
-              className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
-              rows={3}
-              placeholder="Any special requirements or notes..."
-            />
-          </div>
-
-          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-100">
-            <Button 
-              variant="outline"
-              onClick={() => setEditingSection(null)}
-              className="px-6 rounded-full"
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={onSaveChanges}
-              className="px-6 rounded-full"
-            >
-              Save Changes
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  // STATE 2: VIEW MODE - Show pre-filled fields only (if any exist)
-  if (hasMeaningfulData && staticPreFilledFields.length > 0) {
+  // If has data and not editing, show segregated sections
+  if (hasMeaningfulData && !isEditing) {
     return (
       <div className="space-y-6">
-        <Card className="border-0 shadow-sm bg-white">
-          <CardHeader className="pb-4">
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <CardTitle className="text-lg font-medium text-gray-900 mb-3">
-                  Review the details and update anything that needs realignment — <button 
-                    onClick={() => setEditingSection('personal')}
-                    className="text-blue-600 hover:text-blue-700 underline"
-                  >
-                    click here to edit
-                  </button>
-                </CardTitle>
-                
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500">View:</span>
-                  <Button
-                    variant={columnLayout === 2 ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setColumnLayout(2)}
-                    className="h-7 px-3 text-xs rounded-full"
-                  >
-                    2 Columns
-                  </Button>
-                  <Button
-                    variant={columnLayout === 3 ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setColumnLayout(3)}
-                    className="h-7 px-3 text-xs rounded-full"
-                  >
-                    3 Columns
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-              {staticPreFilledFields.map((field) => (
-                <div key={field} className="space-y-3">
-                  <Label className="text-sm font-medium text-gray-600">
-                    {formatFieldLabel(field)}
-                  </Label>
-                  <div className="text-sm text-gray-900 font-medium">
-                    {renderFieldValue(field, personalInfo?.[field as keyof PersonalInfo])}
+        {/* Pre-filled Fields Section */}
+        {staticPreFilledFields.length > 0 && (
+          <Card className="border-0 shadow-sm bg-white">
+            <CardHeader className="pb-4">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <CardTitle className="text-lg font-medium text-gray-900 mb-3">
+                    Review the details and update anything that needs realignment — <button 
+                      onClick={() => setEditingSection('personal')}
+                      className="text-blue-600 hover:text-blue-700 underline"
+                    >
+                      click here to edit
+                    </button>
+                  </CardTitle>
+                  
+                  {/* Column Layout Toggle */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">View:</span>
+                    <Button
+                      variant={columnLayout === 2 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(2)}
+                      className="h-7 px-3 text-xs rounded-full"
+                    >
+                      2 Columns
+                    </Button>
+                    <Button
+                      variant={columnLayout === 3 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(3)}
+                      className="h-7 px-3 text-xs rounded-full"
+                    >
+                      3 Columns
+                    </Button>
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+                {staticPreFilledFields.map((field) => (
+                  <div key={field} className="space-y-3">
+                    <Label className="text-sm font-medium text-gray-600">
+                      {formatFieldLabel(field)}
+                    </Label>
+                    <div className="text-sm text-gray-900 font-medium">
+                      {renderFieldValue(field, personalInfo?.[field as keyof PersonalInfo])}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-        {/* STATE 3: COMPLETION MODE - Show missing fields only (if any exist) */}
+        {/* Missing Fields Section */}
         {staticMissingFields.length > 0 && (
           <Card className="border-0 shadow-sm bg-white">
             <CardHeader className="pb-6">
@@ -356,14 +216,12 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
                 {staticMissingFields.map((field) => (
                   <div key={field} className="space-y-3">
-                    {field !== 'dateOfBirth' && (
-                      <Label className="text-sm font-medium text-gray-700">
-                        {formatFieldLabel(field)}
-                        {(field === 'preferredRoommate' || field === 'additionalNotes') && (
-                          <span className="text-gray-400 text-xs"> (Optional)</span>
-                        )}
-                      </Label>
-                    )}
+                    <Label className="text-sm font-medium text-gray-700">
+                      {formatFieldLabel(field)}
+                      {(field === 'preferredRoommate' || field === 'additionalNotes') && (
+                        <span className="text-gray-400 text-xs"> (Optional)</span>
+                      )}
+                    </Label>
                     {renderEmptyFieldInput(field)}
                   </div>
                 ))}
@@ -392,46 +250,143 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     );
   }
 
-  // STATE 4: FIRST TIME/EMPTY STATE - Show all fields as missing
   return (
-    <Card className="mb-6 border-0 shadow-sm bg-white">
+    <Card className={`mb-6 border-0 shadow-sm ${isEditing ? 'bg-blue-50 border-blue-200' : 'bg-white'}`}>
       <CardHeader className="pb-6">
-        <CardTitle className="text-lg font-medium text-gray-900">
-          Complete your personal information
-        </CardTitle>
+        {isEditing && (
+          <div>
+            <CardTitle className="text-lg font-medium text-gray-900">
+              {personalInfo?.fullName ? `Edit ${personalInfo.fullName}'s information` : 'Edit Personal Information'}
+            </CardTitle>
+          </div>
+        )}
       </CardHeader>
+
       <CardContent className="space-y-6">
-        <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-          {['fullName', 'gender', 'mobile', 'email', 'dateOfBirth', 'city', 'infinitheismContact', 'preferredRoommate', 'additionalNotes'].map((field) => (
-            <div key={field} className="space-y-3">
-              {field !== 'dateOfBirth' && (
-                <Label className="text-sm font-medium text-gray-700">
-                  {formatFieldLabel(field)}
-                  {(field === 'preferredRoommate' || field === 'additionalNotes') && (
-                    <span className="text-gray-400 text-xs"> (Optional)</span>
-                  )}
-                </Label>
-              )}
-              {renderEmptyFieldInput(field)}
-            </div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">Full name</Label>
+            <Input
+              id="fullName"
+              value={personalInfo?.fullName || ''}
+              onChange={(e) => onPersonalInfoChange('fullName', e.target.value)}
+              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="Enter your full name"
+            />
+          </div>
+          <div className="space-y-3">
+            <Label htmlFor="gender" className="text-sm font-medium text-gray-700">Gender</Label>
+            <Select value={personalInfo?.gender} onValueChange={(value) => onPersonalInfoChange('gender', value)}>
+              <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Male">Male</SelectItem>
+                <SelectItem value="Female">Female</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <Card className="border-0 shadow-sm bg-white mt-6">
-          <CardContent className="p-4">
-            <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100">
-              <Checkbox
-                id="terms"
-                checked={personalInfo?.acceptedTerms || false}
-                onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
-                className="mt-1"
-              />
-              <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
-                I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
-              </Label>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <Label htmlFor="mobile" className="text-sm font-medium text-gray-700">Mobile number</Label>
+            <Input
+              id="mobile"
+              value={personalInfo?.mobile || ''}
+              onChange={(e) => onPersonalInfoChange('mobile', e.target.value)}
+              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="Enter your mobile number"
+            />
+          </div>
+          <div className="space-y-3">
+            <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email address</Label>
+            <Input
+              id="email"
+              type="email"
+              value={personalInfo?.email || ''}
+              onChange={(e) => onPersonalInfoChange('email', e.target.value)}
+              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="Enter your email address"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <BirthDatePicker
+              value={personalInfo?.dateOfBirth}
+              onChange={(date) => onPersonalInfoChange('dateOfBirth', date)}
+            />
+          </div>
+          <div className="space-y-3">
+            <Label htmlFor="city" className="text-sm font-medium text-gray-700">City</Label>
+            <Input
+              id="city"
+              value={personalInfo?.city || ''}
+              onChange={(e) => onPersonalInfoChange('city', e.target.value)}
+              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="Enter your city"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3">
+            <Label htmlFor="infinitheismContact" className="text-sm font-medium text-gray-700">Infinitheism contact</Label>
+            <Input
+              id="infinitheismContact"
+              value={personalInfo?.infinitheismContact || ''}
+              onChange={(e) => onPersonalInfoChange('infinitheismContact', e.target.value)}
+              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="Enter contact name"
+            />
+          </div>
+          <div className="space-y-3">
+            <Label htmlFor="preferredRoommate" className="text-sm font-medium text-gray-700">
+              Preferred roommate <span className="text-gray-400 text-xs">(Optional)</span>
+            </Label>
+            <Input
+              id="preferredRoommate"
+              value={personalInfo?.preferredRoommate || ''}
+              onChange={(e) => onPersonalInfoChange('preferredRoommate', e.target.value)}
+              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              placeholder="Enter roommate preference"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="additionalNotes" className="text-sm font-medium text-gray-700">
+            Note <span className="text-gray-400 text-xs">(Optional)</span>
+          </Label>
+          <Textarea
+            id="additionalNotes"
+            value={personalInfo?.additionalNotes || ''}
+            onChange={(e) => onPersonalInfoChange('additionalNotes', e.target.value)}
+            className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+            rows={3}
+            placeholder="Any special requirements or notes..."
+          />
+        </div>
+
+        {isEditing && (
+          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-100">
+            <Button 
+              variant="outline"
+              onClick={() => setEditingSection(null)}
+              className="px-6 rounded-full"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={onSaveChanges}
+              className="px-6 rounded-full"
+            >
+              Save Changes
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
