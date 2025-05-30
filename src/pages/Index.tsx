@@ -1,15 +1,21 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { MapPin, Calendar, Users, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import Autoplay from "embla-carousel-autoplay";
 
 const Index = () => {
   const navigate = useNavigate();
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
   const [bannerVisible, setBannerVisible] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const plugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
 
   useEffect(() => {
     // Trigger banner animation on mount
@@ -49,6 +55,31 @@ const Index = () => {
   const handleCardClick = (eventId: string) => {
     navigate(`/programme/${eventId}`);
   };
+
+  // Carousel images for the hero section
+  const carouselImages = [
+    {
+      src: "/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png",
+      alt: "Spiritual guide meditation",
+      title: "Transform Your",
+      subtitle: "Consciousness",
+      description: "Join transformative programmes that awaken your inner potential and connect you with like-minded souls on the journey of self-discovery."
+    },
+    {
+      src: "/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png",
+      alt: "Spiritual awakening",
+      title: "Awaken Your",
+      subtitle: "Inner Wisdom",
+      description: "Discover profound insights and transformative experiences through our carefully curated spiritual programmes."
+    },
+    {
+      src: "/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png",
+      alt: "Meditation retreat",
+      title: "Journey to",
+      subtitle: "Self Discovery",
+      description: "Embark on a life-changing journey of personal growth and spiritual enlightenment with expert guidance."
+    }
+  ];
 
   const programmes = [
     {
@@ -104,50 +135,67 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Hero Section */}
+      {/* Hero Section with Carousel */}
       <div className="relative overflow-hidden">
         <div className="relative h-screen">
-          <img
-            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
-              bannerVisible 
-                ? 'scale-100 opacity-100' 
-                : 'scale-105 opacity-80'
-            }`}
-            src="/lovable-uploads/db80701b-0446-4aba-a856-cf8b1fcb70d7.png"
-            alt="Spiritual guide"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
-          <div className="relative z-10 flex items-center justify-end h-full pr-8 md:pr-16 lg:pr-24">
-            <div className="max-w-2xl">
-              <div className={`text-right transition-all duration-1000 ease-out ${
-                bannerVisible 
-                  ? 'translate-y-0 opacity-100' 
-                  : 'translate-y-8 opacity-0'
-              }`}>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
-                  <span className="block">Transform Your</span>
-                  <span className="block text-blue-400">Consciousness</span>
-                </h1>
-                <p className="mt-3 text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
-                  Join transformative programmes that awaken your inner potential and connect you with like-minded souls on the journey of self-discovery.
-                </p>
-                <div className="mt-8">
-                  <Button 
-                    onClick={() => handleRegister('featured')}
-                    className="relative overflow-hidden px-12 py-6 text-lg md:text-xl font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                    style={{
-                      backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      backgroundRepeat: 'no-repeat'
-                    }}
-                  >
-                    <span className="relative z-10">explore programmes</span>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Carousel 
+            plugins={[plugin.current]}
+            className="w-full h-full"
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+          >
+            <CarouselContent className="-ml-0">
+              {carouselImages.map((image, index) => (
+                <CarouselItem key={index} className="pl-0">
+                  <div className="relative h-screen">
+                    <img
+                      className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
+                        bannerVisible 
+                          ? 'scale-100 opacity-100' 
+                          : 'scale-105 opacity-80'
+                      }`}
+                      src={image.src}
+                      alt={image.alt}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/40 to-black/80"></div>
+                    <div className="relative z-10 flex items-center justify-end h-full pr-8 md:pr-16 lg:pr-24">
+                      <div className="max-w-2xl">
+                        <div className={`text-right transition-all duration-1000 ease-out ${
+                          bannerVisible 
+                            ? 'translate-y-0 opacity-100' 
+                            : 'translate-y-8 opacity-0'
+                        }`}>
+                          <h1 className="text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
+                            <span className="block">{image.title}</span>
+                            <span className="block text-blue-400">{image.subtitle}</span>
+                          </h1>
+                          <p className="mt-3 text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
+                            {image.description}
+                          </p>
+                          <div className="mt-8">
+                            <Button 
+                              onClick={() => handleRegister('featured')}
+                              className="relative overflow-hidden px-12 py-6 text-lg md:text-xl font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                              style={{
+                                backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat'
+                              }}
+                            >
+                              <span className="relative z-10">explore programmes</span>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-4 md:left-8 bg-white/20 hover:bg-white/30 border-white/30 text-white" />
+            <CarouselNext className="right-4 md:right-8 bg-white/20 hover:bg-white/30 border-white/30 text-white" />
+          </Carousel>
         </div>
       </div>
 
