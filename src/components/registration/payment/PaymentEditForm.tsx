@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { convertToInputValue } from '../FieldValueUtils';
 
 interface PaymentInfo {
   invoiceName?: string;
@@ -46,7 +47,7 @@ const PaymentEditForm: React.FC<PaymentEditFormProps> = ({
             <Label htmlFor="invoiceName" className="text-sm font-medium text-gray-700">Name for invoice</Label>
             <Input
               id="invoiceName"
-              value={paymentInfo?.invoiceName || ''}
+              value={convertToInputValue(paymentInfo?.invoiceName)}
               onChange={(e) => onPaymentInfoChange('invoiceName', e.target.value)}
               className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               placeholder="Enter name for invoice"
@@ -57,7 +58,7 @@ const PaymentEditForm: React.FC<PaymentEditFormProps> = ({
             <Input
               id="invoiceEmail"
               type="email"
-              value={paymentInfo?.invoiceEmail || ''}
+              value={convertToInputValue(paymentInfo?.invoiceEmail)}
               onChange={(e) => onPaymentInfoChange('invoiceEmail', e.target.value)}
               className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               placeholder="Enter email for invoice"
@@ -81,7 +82,7 @@ const PaymentEditForm: React.FC<PaymentEditFormProps> = ({
                 <Label htmlFor="gstin" className="text-sm font-medium text-gray-700">GSTIN</Label>
                 <Input
                   id="gstin"
-                  value={paymentInfo?.gstin || ''}
+                  value={convertToInputValue(paymentInfo?.gstin)}
                   onChange={(e) => onPaymentInfoChange('gstin', e.target.value)}
                   className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   placeholder="Enter GSTIN"
@@ -91,7 +92,7 @@ const PaymentEditForm: React.FC<PaymentEditFormProps> = ({
                 <Label htmlFor="tdsPercent" className="text-sm font-medium text-gray-700">TDS %</Label>
                 <Input
                   id="tdsPercent"
-                  value={paymentInfo?.tdsPercent || ''}
+                  value={convertToInputValue(paymentInfo?.tdsPercent)}
                   onChange={(e) => onPaymentInfoChange('tdsPercent', e.target.value)}
                   className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   placeholder="Enter TDS percentage"
@@ -105,7 +106,7 @@ const PaymentEditForm: React.FC<PaymentEditFormProps> = ({
           <Label htmlFor="address" className="text-sm font-medium text-gray-700">Address</Label>
           <Textarea
             id="address"
-            value={paymentInfo?.address || ''}
+            value={convertToInputValue(paymentInfo?.address)}
             onChange={(e) => onPaymentInfoChange('address', e.target.value)}
             className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
             rows={3}

@@ -46,7 +46,7 @@ const MissingFieldsCard: React.FC<MissingFieldsCardProps> = ({
           <Textarea
             value={convertToInputValue(currentValue)}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
-            className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+            className="border-orange-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 resize-none"
             rows={3}
             placeholder="Enter your complete address..."
           />
@@ -57,7 +57,7 @@ const MissingFieldsCard: React.FC<MissingFieldsCardProps> = ({
             type={field === 'invoiceEmail' ? 'email' : 'text'}
             value={convertToInputValue(currentValue)}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
-            className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="h-10 border-orange-200 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
             placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
           />
         );
@@ -67,10 +67,14 @@ const MissingFieldsCard: React.FC<MissingFieldsCardProps> = ({
   if (staticMissingFields.length === 0) return null;
 
   return (
-    <Card className="border-0 shadow-sm bg-white">
+    <Card className="border-orange-200 shadow-sm bg-orange-50">
       <CardHeader className="pb-6">
+        <div className="flex items-center mb-2">
+          <div className="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
+          <span className="text-orange-800 font-medium">Complete Your Registration</span>
+        </div>
         <CardTitle className="text-lg font-medium text-gray-900">
-          Please fill the missing fields
+          Please fill the missing fields to continue
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -96,6 +100,7 @@ const MissingFieldsCard: React.FC<MissingFieldsCardProps> = ({
             <div key={field} className={field === 'address' ? 'col-span-full space-y-3' : 'space-y-3'}>
               <Label className="text-sm font-medium text-gray-700">
                 {formatFieldLabel(field)}
+                <span className="text-orange-600 ml-1">*</span>
               </Label>
               {renderEmptyFieldInput(field)}
             </div>
