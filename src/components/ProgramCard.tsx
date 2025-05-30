@@ -32,16 +32,26 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   onRegister,
   onClick
 }) => {
-  // Helper function to format text with line breaks
-  const formatText = (text: string) => {
-    if (!text || typeof text !== 'string') {
+  // Helper function to format text with line breaks - Fixed to handle all edge cases
+  const formatText = (text: string | undefined | null) => {
+    if (!text || typeof text !== 'string' || text.trim() === '') {
       return <div>-</div>;
     }
     
     return text.split('\n').map((line, index) => (
-      <div key={index}>{line || '-'}</div>
+      <div key={index}>{line.trim() || '-'}</div>
     ));
   };
+
+  // Safe fallback values to prevent runtime errors
+  const safeTitle = title || 'Program';
+  const safeBackgroundImage = backgroundImage || '/placeholder.svg';
+  const safeDates = dates || 'TBD';
+  const safeCheckIn = checkIn || 'TBD';
+  const safeCheckOut = checkOut || 'TBD';
+  const safeInvestment = investment || 'TBD';
+  const safeVenue = venue || 'TBD';
+  const safeNote = note || '';
 
   return (
     <div 
@@ -51,9 +61,13 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
       {/* Background Image */}
       <div className="program-card-background relative h-64 overflow-hidden">
         <img
-          src={backgroundImage}
-          alt={title}
+          src={safeBackgroundImage}
+          alt={safeTitle}
           className="w-full h-full object-cover opacity-90 transition-all duration-500 group-hover:scale-105"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/placeholder.svg';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-white/60"></div>
       </div>
@@ -64,7 +78,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
           {/* Program Title */}
           <div className="program-title-section text-center mb-8">
             <h2 className="program-title text-2xl font-bold text-slate-800">
-              {title}
+              {safeTitle}
             </h2>
           </div>
 
@@ -77,7 +91,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               </div>
               <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Program Dates</h3>
               <div className="program-info-text text-slate-600 text-xs leading-relaxed">
-                {formatText(dates)}
+                {formatText(safeDates)}
               </div>
             </div>
 
@@ -91,7 +105,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               </div>
               <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Check-in-Time</h3>
               <div className="program-info-text text-slate-600 text-xs leading-relaxed">
-                {formatText(checkIn)}
+                {formatText(safeCheckIn)}
               </div>
             </div>
 
@@ -105,7 +119,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               </div>
               <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Check-out-Time</h3>
               <div className="program-info-text text-slate-600 text-xs leading-relaxed">
-                {formatText(checkOut)}
+                {formatText(safeCheckOut)}
               </div>
             </div>
 
@@ -115,7 +129,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
             {/* Investment */}
             <div className="program-info-column flex flex-col items-center text-center px-4">
               <div className="program-icon mb-3">
-                {investment === 'No Waiting List' || investment === 'Free Program' ? (
+                {safeInvestment === 'No Waiting List' || safeInvestment === 'Free Program' ? (
                   <div className="w-6 h-6 flex items-center justify-center">
                     <div className="w-3 h-3 bg-slate-600 rounded-full"></div>
                   </div>
@@ -127,10 +141,10 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               </div>
               <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Investment</h3>
               <div className="program-info-text text-slate-600 text-xs leading-relaxed">
-                {investment === 'No Waiting List' || investment === 'Free Program' ? (
-                  <div>{investment}</div>
+                {safeInvestment === 'No Waiting List' || safeInvestment === 'Free Program' ? (
+                  <div>{safeInvestment}</div>
                 ) : (
-                  formatText(investment)
+                  formatText(safeInvestment)
                 )}
               </div>
             </div>
@@ -140,10 +154,10 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
         {/* Light Blue-Gray Bar */}
         <div className="program-venue-bar bg-slate-100 rounded-b-xl px-6 py-4 flex justify-between items-center text-xs -mt-px">
           <div className="venue-text text-slate-600">
-            <span className="font-medium">Venue:</span> {venue}
+            <span className="font-medium">Venue:</span> {safeVenue}
           </div>
           <div className="note-text text-slate-500 italic">
-            {note}
+            {safeNote}
           </div>
         </div>
 

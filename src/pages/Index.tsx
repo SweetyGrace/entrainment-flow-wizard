@@ -1,10 +1,13 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProgramCard from '@/components/ProgramCard';
 import TopNavigation from '@/components/TopNavigation';
 import BannerCarousel from '@/components/BannerCarousel';
 
 const Index = () => {
+  const navigate = useNavigate();
+
   const programs = [
     {
       id: 'entrainment25',
@@ -18,10 +21,12 @@ const Index = () => {
       venue: "Kovalam, Kerala",
       note: "Popular Program",
       onRegister: (eventId: string) => {
-        console.log(`Register for ${eventId}`);
+        console.log(`Navigating to registration for ${eventId}`);
+        navigate(`/registration?event=${eventId}`);
       },
       onClick: (eventId: string) => {
         console.log(`View details for ${eventId}`);
+        navigate(`/programme/${eventId}`);
       }
     },
     {
@@ -36,10 +41,12 @@ const Index = () => {
       venue: "Rishikesh, Uttarakhand",
       note: "Mountain Retreat",
       onRegister: (eventId: string) => {
-        console.log(`Register for ${eventId}`);
+        console.log(`Navigating to registration for ${eventId}`);
+        navigate(`/registration?event=${eventId}`);
       },
       onClick: (eventId: string) => {
         console.log(`View details for ${eventId}`);
+        navigate(`/programme/${eventId}`);
       }
     },
     {
@@ -54,10 +61,12 @@ const Index = () => {
       venue: "Goa",
       note: "Ocean Side",
       onRegister: (eventId: string) => {
-        console.log(`Register for ${eventId}`);
+        console.log(`Navigating to registration for ${eventId}`);
+        navigate(`/registration?event=${eventId}`);
       },
       onClick: (eventId: string) => {
         console.log(`View details for ${eventId}`);
+        navigate(`/programme/${eventId}`);
       }
     },
     {
@@ -72,10 +81,12 @@ const Index = () => {
       venue: "Chennai, Tamil Nadu",
       note: "3 Day Training",
       onRegister: (eventId: string) => {
-        console.log(`Register for ${eventId}`);
+        console.log(`Navigating to registration for ${eventId}`);
+        navigate(`/registration?event=${eventId}`);
       },
       onClick: (eventId: string) => {
         console.log(`View details for ${eventId}`);
+        navigate(`/programme/${eventId}`);
       }
     }
   ];
