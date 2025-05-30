@@ -298,32 +298,38 @@ const Registration = () => {
   };
 
   // Generate personalized title
-  const generatePersonalizedTitle = (fullName: string) => {
-    const variations = [
-      `${fullName}, let's complete your profile details`,
-      `${fullName}, here are your personal details`,
-      `${fullName}, your information looks great so far`,
-      `${fullName}, let's review your details`,
-      `${fullName}, your personal profile summary`,
-      `${fullName}, these are your current details`
-    ];
-    
-    // Use name length to create consistent but varied selection
-    const index = fullName.length % variations.length;
-    return variations[index];
+  const generatePersonalizedTitle = (fullName?: string) => {
+    if (fullName) {
+      const variations = [
+        `${fullName}, let's complete your profile details`,
+        `${fullName}, here are your personal details`,
+        `${fullName}, your information looks great so far`,
+        `${fullName}, let's review your details`,
+        `${fullName}, your personal profile summary`,
+        `${fullName}, these are your current details`
+      ];
+      
+      // Use name length to create consistent but varied selection
+      const index = fullName.length % variations.length;
+      return variations[index];
+    }
+    return "Hey, let's complete your profile details";
   };
 
   // Generate personalized title for invoice details
-  const generateInvoicePersonalizedTitle = (fullName: string) => {
-    const variations = [
-      `${fullName}, let's complete your billing details`,
-      `${fullName}, we need a few more payment details`,
-      `${fullName}, finish your invoice information`,
-      `${fullName}, let's complete your payment setup`
-    ];
-    
-    const index = fullName.length % variations.length;
-    return variations[index];
+  const generateInvoicePersonalizedTitle = (fullName?: string) => {
+    if (fullName) {
+      const variations = [
+        `${fullName}, let's complete your billing details`,
+        `${fullName}, we need a few more payment details`,
+        `${fullName}, finish your invoice information`,
+        `${fullName}, let's complete your payment setup`
+      ];
+      
+      const index = fullName.length % variations.length;
+      return variations[index];
+    }
+    return "Hey, let's complete your billing details";
   };
 
   // Awaiting approval screen
@@ -340,23 +346,18 @@ const Registration = () => {
 
   // Invoice details step (for paid programs)
   if (currentStep === 'invoice') {
-    // Show personalized title if user has a full name
-    const hasPersonalizedTitle = userData.personalInfo?.fullName;
-
     return (
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Personalized Title */}
-          {hasPersonalizedTitle && (
-            <div className="mb-8 text-left">
-              <h1 className="text-2xl font-semibold text-gray-900">
-                {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
-              </h1>
-              <p className="text-gray-600 mt-2">Complete your billing information</p>
-            </div>
-          )}
+          {/* Personalized Title - Always show */}
+          <div className="mb-8 text-left">
+            <h1 className="text-2xl font-semibold text-gray-900">
+              {generateInvoicePersonalizedTitle(userData.personalInfo?.fullName)}
+            </h1>
+            <p className="text-gray-600 mt-2">Complete your billing information</p>
+          </div>
 
           <div className="flex items-start gap-8">
             {/* Main Content - Center Aligned with Max Width */}
@@ -415,19 +416,16 @@ const Registration = () => {
 
   // Payment step
   if (currentStep === 'payment') {
-    // Show personalized title if user has a full name
-    const hasPersonalizedTitle = userData.personalInfo?.fullName;
-
     return (
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Personalized Title */}
-          {hasPersonalizedTitle && !userData.registrationStatus && (
+          {/* Personalized Title - Always show unless coming from approved state */}
+          {!userData.registrationStatus && (
             <div className="mb-8 text-left">
               <h1 className="text-2xl font-semibold text-gray-900">
-                {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
+                {generateInvoicePersonalizedTitle(userData.personalInfo?.fullName)}
               </h1>
               <p className="text-gray-600 mt-2">Complete your payment details</p>
             </div>
@@ -514,23 +512,18 @@ const Registration = () => {
   }
 
   // Personal information step (initial step)
-  // Show personalized title if user has a full name, regardless of other data
-  const hasPersonalizedTitle = userData.personalInfo?.fullName;
-
   return (
     <div className="min-h-screen bg-gray-50">
       <RegistrationHeader />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Personalized Title */}
-        {hasPersonalizedTitle && (
-          <div className="mb-8 text-left">
-            <h1 className="text-2xl font-semibold text-gray-900">
-              {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
-            </h1>
-            <p className="text-gray-600 mt-2">Review and complete your registration details</p>
-          </div>
-        )}
+        {/* Personalized Title - Always show */}
+        <div className="mb-8 text-left">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {generatePersonalizedTitle(userData.personalInfo?.fullName)}
+          </h1>
+          <p className="text-gray-600 mt-2">Review and complete your registration details</p>
+        </div>
 
         <div className="flex items-start gap-8">
           {/* Main Content - Center Aligned with Max Width */}
