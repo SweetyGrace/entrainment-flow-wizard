@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, RotateCcw, IndianRupee } from "lucide-react";
+import { Calendar, Clock, RotateCcw, IndianRupee, Circle } from "lucide-react";
 
 interface ProgramCardProps {
   id: string;
@@ -55,29 +55,25 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 
   return (
     <div 
-      className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-300"
+      className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300"
       onClick={() => onClick(id)}
     >
-      {/* Header with gradient and title */}
-      <div 
-        className="h-20 bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white relative"
-        style={{
-          backgroundImage: `linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(147, 51, 234, 0.9)), url(${safeBackgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        <h3 className="text-xl font-bold text-center px-4">{safeTitle}</h3>
+      {/* Header with red gradient and circle icon */}
+      <div className="h-16 bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center text-white relative">
+        <div className="absolute left-4">
+          <Circle className="w-8 h-8 text-white fill-white" />
+        </div>
+        <h3 className="text-lg font-bold text-center">{safeTitle}</h3>
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-4">
         {/* Four column info grid */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-4 gap-3 mb-4">
           {/* Program Dates */}
           <div className="text-center">
-            <Calendar className="w-5 h-5 text-gray-500 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-gray-800 mb-1">Program Dates</h4>
+            <Calendar className="w-4 h-4 text-gray-500 mx-auto mb-1" />
+            <h4 className="text-xs font-medium text-gray-800 mb-1">Program Dates</h4>
             <div className="text-xs text-gray-600">
               {formatText(safeDates)}
             </div>
@@ -85,8 +81,8 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 
           {/* Check-in */}
           <div className="text-center">
-            <Clock className="w-5 h-5 text-gray-500 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-gray-800 mb-1">Check-in</h4>
+            <Clock className="w-4 h-4 text-gray-500 mx-auto mb-1" />
+            <h4 className="text-xs font-medium text-gray-800 mb-1">Check-in</h4>
             <div className="text-xs text-gray-600">
               {formatText(safeCheckIn)}
             </div>
@@ -94,8 +90,8 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 
           {/* Check-out */}
           <div className="text-center">
-            <RotateCcw className="w-5 h-5 text-gray-500 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-gray-800 mb-1">Check-out</h4>
+            <RotateCcw className="w-4 h-4 text-gray-500 mx-auto mb-1" />
+            <h4 className="text-xs font-medium text-gray-800 mb-1">Check-out</h4>
             <div className="text-xs text-gray-600">
               {formatText(safeCheckOut)}
             </div>
@@ -103,8 +99,8 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 
           {/* Investment */}
           <div className="text-center">
-            <IndianRupee className="w-5 h-5 text-gray-500 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-gray-800 mb-1">Investment</h4>
+            <IndianRupee className="w-4 h-4 text-gray-500 mx-auto mb-1" />
+            <h4 className="text-xs font-medium text-gray-800 mb-1">Investment</h4>
             <div className="text-xs text-gray-600">
               {safeInvestment}
             </div>
@@ -112,7 +108,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
         </div>
 
         {/* Venue bar */}
-        <div className="bg-gray-50 rounded-lg px-4 py-3 mb-4 flex justify-between items-center">
+        <div className="bg-gray-50 rounded px-3 py-2 mb-3 flex justify-between items-center">
           <span className="text-sm text-gray-700">
             <span className="font-medium">Venue:</span> {safeVenue}
           </span>
@@ -126,7 +122,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               e.stopPropagation();
               onRegister(id);
             }}
-            className="w-full py-2 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-300"
+            className="w-full py-2 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded transition-colors duration-300"
           >
             Register
           </Button>
