@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Edit } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -32,6 +33,9 @@ interface PersonalInfoSectionProps {
   setEditingSection: (section: string | null) => void;
   showPersonalizedTitle?: boolean;
   eventRequiresApproval?: boolean;
+  columnLayout: 2 | 3;
+  setColumnLayout: (layout: 2 | 3) => void;
+  onSaveChanges: () => void;
 }
 
 const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
@@ -40,9 +44,11 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   editingSection,
   setEditingSection,
   showPersonalizedTitle = true,
-  eventRequiresApproval = false
+  eventRequiresApproval = false,
+  columnLayout,
+  setColumnLayout,
+  onSaveChanges
 }) => {
-  const [columnLayout, setColumnLayout] = useState<2 | 3>(2);
   const isEditing = editingSection === 'personal';
   
   // Check if we have meaningful data (not just infinitheismContact)
@@ -181,7 +187,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               </div>
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="space-y-6">
+              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
                 {unfilledFields.map(field => (
                   <div key={field.key} className="space-y-3">
                     <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
@@ -275,22 +281,10 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     <Card className={`mb-6 border-0 shadow-sm ${isEditing ? 'bg-blue-50 border-blue-200' : 'bg-white'}`}>
       <CardHeader className="pb-6">
         {isEditing && (
-          <div className="flex justify-between items-center">
-            <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <CardTitle className="text-lg font-medium text-gray-900">
-                  {personalInfo?.fullName ? `Edit ${personalInfo.fullName}'s information` : 'Edit Personal Information'}
-                </CardTitle>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => setEditingSection(null)}
-                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-full"
-                >
-                  cancel
-                </Button>
-              </div>
-            </div>
+          <div>
+            <CardTitle className="text-lg font-medium text-gray-900">
+              {personalInfo?.fullName ? `Edit ${personalInfo.fullName}'s information` : 'Edit Personal Information'}
+            </CardTitle>
           </div>
         )}
         
@@ -438,7 +432,13 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               onClick={() => setEditingSection(null)}
               className="px-6 rounded-full"
             >
-              cancel
+              Cancel
+            </Button>
+            <Button 
+              onClick={onSaveChanges}
+              className="px-6 rounded-full"
+            >
+              Save Changes
             </Button>
           </div>
         )}

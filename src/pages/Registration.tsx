@@ -80,6 +80,7 @@ const Registration = () => {
   const [userData, setUserData] = useState<UserData>({});
   const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [editingSection, setEditingSection] = useState<string | null>(null);
+  const [columnLayout, setColumnLayout] = useState<2 | 3>(2);
 
   // Configure different event types to demonstrate all flow cases
   const getEventConfig = (id: string): Event => {
@@ -352,6 +353,9 @@ const Registration = () => {
                   isPaid={event.isPaid}
                   hideAmountField={true}
                   showPersonalizedTitle={false}
+                  columnLayout={columnLayout}
+                  setColumnLayout={setColumnLayout}
+                  onSaveChanges={handleSaveChanges}
                 />
 
                 {/* Action buttons */}
@@ -438,6 +442,9 @@ const Registration = () => {
                   isPaid={event.isPaid}
                   hideAmountField={true}
                   showPersonalizedTitle={false}
+                  columnLayout={columnLayout}
+                  setColumnLayout={setColumnLayout}
+                  onSaveChanges={handleSaveChanges}
                 />
 
                 {/* Action buttons */}
@@ -514,6 +521,9 @@ const Registration = () => {
                 setEditingSection={setEditingSection}
                 showPersonalizedTitle={false}
                 eventRequiresApproval={event.requiresApproval}
+                columnLayout={columnLayout}
+                setColumnLayout={setColumnLayout}
+                onSaveChanges={handleSaveChanges}
               />
 
               {/* Action Buttons */}
