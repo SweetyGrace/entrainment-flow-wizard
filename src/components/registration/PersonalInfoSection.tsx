@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -56,21 +57,42 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     return variations[index];
   };
 
+  // Generate personalized title for missing information
+  const generateMissingInfoTitle = (fullName?: string) => {
+    if (fullName) {
+      const variations = [
+        `${fullName}, let's complete your remaining details`,
+        `${fullName}, just a few more details needed`,
+        `${fullName}, help us finish your profile`,
+        `${fullName}, we're almost done with your profile`,
+        `${fullName}, let's add the missing information`
+      ];
+      const index = fullName.length % variations.length;
+      return variations[index];
+    }
+    return 'Missing information';
+  };
+
   // Convert field labels to proper title case (first letter capital, rest lowercase)
   const formatFieldLabel = (label: string) => {
-    // Handle acronyms that should stay uppercase
-    const acronyms = ['ID', 'DOB', 'GST', 'TDS'];
+    // Handle special cases and acronyms
+    const specialCases = {
+      'FULL NAME': 'Full name',
+      'MOBILE NUMBER': 'Mobile number',
+      'EMAIL ADDRESS': 'Email address',
+      'DATE OF BIRTH': 'Date of birth',
+      'INFINITHEISM CONTACT': 'Infinitheism contact',
+      'PREFERRED ROOMMATE': 'Preferred roommate',
+      'GSTIN': 'GSTIN',
+      'TDS PERCENT': 'TDS percent'
+    };
     
-    const words = label.split(' ');
-    return words.map((word, index) => {
-      if (acronyms.includes(word.toUpperCase())) {
-        return word.toUpperCase();
-      }
-      if (index === 0) {
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-      }
-      return word.toLowerCase();
-    }).join(' ');
+    if (specialCases[label]) {
+      return specialCases[label];
+    }
+    
+    // Default title case conversion
+    return label.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   };
   
   // Check which fields are filled and unfilled
@@ -155,7 +177,9 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <CardTitle className="text-lg font-medium text-gray-900">Missing information</CardTitle>
+                    <CardTitle className="text-lg font-medium text-gray-900">
+                      {generateMissingInfoTitle(personalInfo?.fullName)}
+                    </CardTitle>
                     <Button 
                       variant="ghost" 
                       size="sm"

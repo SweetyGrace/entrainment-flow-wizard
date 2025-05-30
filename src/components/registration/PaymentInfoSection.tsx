@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,21 +44,40 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
   
+  // Generate personalized title for missing payment information
+  const generateMissingPaymentTitle = (invoiceName?: string) => {
+    if (invoiceName) {
+      const variations = [
+        `${invoiceName}, complete your billing details`,
+        `${invoiceName}, we need a few more payment details`,
+        `${invoiceName}, finish your invoice information`,
+        `${invoiceName}, let's complete your payment setup`
+      ];
+      const index = invoiceName.length % variations.length;
+      return variations[index];
+    }
+    return 'Missing billing information';
+  };
+  
   // Convert field labels to proper title case (first letter capital, rest lowercase)
   const formatFieldLabel = (label: string) => {
-    // Handle acronyms that should stay uppercase
-    const acronyms = ['ID', 'DOB', 'GST', 'TDS'];
+    // Handle special cases and acronyms
+    const specialCases = {
+      'INVOICE NAME': 'Invoice name',
+      'INVOICE EMAIL': 'Invoice email',
+      'GST REGISTERED': 'GST registered',
+      'GSTIN': 'GSTIN',
+      'TDS PERCENT': 'TDS percent',
+      'ADDRESS': 'Address',
+      'AMOUNT': 'Amount'
+    };
     
-    const words = label.split(' ');
-    return words.map((word, index) => {
-      if (acronyms.includes(word.toUpperCase())) {
-        return word.toUpperCase();
-      }
-      if (index === 0) {
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-      }
-      return word.toLowerCase();
-    }).join(' ');
+    if (specialCases[label]) {
+      return specialCases[label];
+    }
+    
+    // Default title case conversion
+    return label.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   };
 
   // Check which fields are filled and unfilled
@@ -138,7 +158,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <CardTitle className="text-lg font-medium text-gray-900">Missing billing information</CardTitle>
+                    <CardTitle className="text-lg font-medium text-gray-900">
+                      {generateMissingPaymentTitle(paymentInfo?.invoiceName)}
+                    </CardTitle>
                     <Button 
                       variant="ghost" 
                       size="sm"
