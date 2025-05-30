@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -89,17 +88,15 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         <CardHeader className="pb-6">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              {/* Only show title if all required fields are filled */}
-              {hasRequiredFields && (
-                <CardTitle className="text-lg font-medium text-gray-900 mb-3">
-                  Review the details and update anything that needs realignment — <button 
-                    onClick={() => setEditingSection('personal')}
-                    className="text-blue-600 hover:text-blue-700 underline"
-                  >
-                    click here to edit
-                  </button>
-                </CardTitle>
-              )}
+              {/* Always show the review title when in review mode */}
+              <CardTitle className="text-lg font-medium text-gray-900 mb-3">
+                Review the details and update anything that needs realignment — <button 
+                  onClick={() => setEditingSection('personal')}
+                  className="text-blue-600 hover:text-blue-700 underline"
+                >
+                  click here to edit
+                </button>
+              </CardTitle>
               
               {/* Column Layout Toggle */}
               <div className="flex items-center gap-2">
@@ -322,11 +319,11 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           </div>
         )}
         
-        {/* Only show section title if we have complete data or no meaningful data at all */}
-        {!isEditing && (!hasMeaningfulData || hasRequiredFields) && (
+        {/* Show section title only when we have meaningful data */}
+        {!isEditing && hasMeaningfulData && (
           <div>
             <CardTitle className="text-lg font-medium text-gray-900">
-              {hasMeaningfulData ? "We're almost there!" : "Welcome to Entrainment'25"}
+              "Welcome to Entrainment'25"
             </CardTitle>
           </div>
         )}
