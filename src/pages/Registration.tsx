@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,6 +10,7 @@ import PaymentInfoSection from '@/components/registration/PaymentInfoSection';
 import EventDetailsSection from '@/components/registration/EventDetailsSection';
 import RegistrationSuccess from '@/components/registration/RegistrationSuccess';
 import RegistrationHeader from '@/components/registration/RegistrationHeader';
+import AwaitingApprovalScreen from '@/components/registration/AwaitingApprovalScreen';
 
 interface UserData {
   personalInfo?: {
@@ -59,6 +61,7 @@ interface UserData {
       pickupLocation?: string;
     };
   };
+  registrationStatus?: 'pending' | 'approved' | 'rejected';
 }
 
 interface Event {
@@ -70,7 +73,7 @@ interface Event {
   amount?: number;
 }
 
-type RegistrationStep = 'personal' | 'registered' | 'payment' | 'complete';
+type RegistrationStep = 'personal' | 'invoice' | 'awaiting-approval' | 'payment' | 'complete';
 
 const Registration = () => {
   const [searchParams] = useSearchParams();
@@ -80,7 +83,7 @@ const Registration = () => {
   const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [editingSection, setEditingSection] = useState<string | null>(null);
 
-  // Mock event data
+  // Mock event data - you can modify these properties to test different scenarios
   const event: Event = {
     id: 'entrainment25',
     name: "Entrainment'25",
@@ -123,9 +126,29 @@ const Registration = () => {
           amount: 2500
         }
       });
+    } else if (scenario === 'approved') {
+      // User who was previously awaiting approval and is now approved
+      setUserData({
+        personalInfo: {
+          fullName: 'Raj Patel',
+          email: 'raj@example.com',
+          mobile: '+91 9876543212',
+          gender: 'Male',
+          dateOfBirth: new Date('1985-05-15'),
+          city: 'Mumbai',
+          infinitheismContact: 'Admin Maya',
+          acceptedTerms: true
+        },
+        paymentInfo: {
+          invoiceName: 'Raj Patel',
+          invoiceEmail: 'raj@example.com',
+          amount: 2500
+        },
+        registrationStatus: 'approved'
+      });
+      setCurrentStep('payment');
     } else {
       // For demonstrating different states without URL parameters
-      // You can modify this logic to show different scenarios
       const randomScenario = Math.floor(Math.random() * 3);
       
       if (randomScenario === 1) {
@@ -186,11 +209,29 @@ const Registration = () => {
   };
 
   const handlePersonalInfoSubmit = () => {
-    setCurrentStep('registered');
+    // Case 1: Free Program (No Payment, No Approval)
+    if (!event.isPaid && !event.requiresApproval) {
+      setCurrentStep('complete');
+      return;
+    }
+
+    // Case 2 & 3: Paid Programs
+    if (event.isPaid) {
+      setCurrentStep('invoice');
+    }
   };
 
-  const handleProceedToPayment = () => {
-    setCurrentStep('payment');
+  const handleInvoiceSubmit = () => {
+    // Case 2: Paid Program (No Approval Required)
+    if (event.isPaid && !event.requiresApproval) {
+      setCurrentStep('payment');
+      return;
+    }
+
+    // Case 3: Paid Program with Approval
+    if (event.isPaid && event.requiresApproval) {
+      setCurrentStep('awaiting-approval');
+    }
   };
 
   const handlePaymentSubmit = () => {
@@ -211,62 +252,71 @@ const Registration = () => {
     return hasRequiredPaymentInfo;
   };
 
-  // Registration confirmation page
-  if (currentStep === 'registered') {
+  // Awaiting approval screen
+  if (currentStep === 'awaiting-approval') {
+    return (
+      <AwaitingApprovalScreen
+        event={event}
+        personalInfo={userData.personalInfo}
+        paymentInfo={userData.paymentInfo}
+        onEditInfo={() => setCurrentStep('personal')}
+      />
+    );
+  }
+
+  // Invoice details step (for paid programs)
+  if (currentStep === 'invoice') {
     return (
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <Card className="border-0 shadow-lg bg-white">
-            <CardContent className="p-8 text-center">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Programme registered!</h2>
-              <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                Congratulations! You have successfully registered for {event.name}. 
-                {event.isPaid ? " Please proceed to complete your payment to secure your spot." : " Your registration is now complete."}
-              </p>
-              
-              {/* Show registered personal info */}
-              <div className="bg-blue-50 rounded-lg p-6 mb-8 text-left max-w-md mx-auto">
-                <h3 className="font-semibold text-gray-900 mb-4">Registration details:</h3>
-                <div className="space-y-2 text-sm">
-                  <p><span className="font-medium">Name:</span> {userData.personalInfo?.fullName}</p>
-                  <p><span className="font-medium">Email:</span> {userData.personalInfo?.email}</p>
-                  <p><span className="font-medium">Mobile:</span> {userData.personalInfo?.mobile}</p>
-                  <p><span className="font-medium">Programme:</span> {event.name}</p>
-                </div>
-              </div>
+          <div className="space-y-6">
+            <PaymentInfoSection
+              paymentInfo={userData.paymentInfo}
+              onPaymentInfoChange={handlePaymentInfoChange}
+              editingSection={editingSection}
+              setEditingSection={setEditingSection}
+              eventAmount={event.amount || 0}
+              isPaid={event.isPaid}
+            />
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {event.isPaid && (
+            {/* Invoice action buttons */}
+            <Card className="border-0 shadow-sm bg-white">
+              <CardContent className="p-6">
+                <div className="flex justify-center space-x-4">
                   <Button 
-                    onClick={handleProceedToPayment}
-                    className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                    style={{
-                      backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      backgroundRepeat: 'no-repeat'
-                    }}
+                    variant="outline"
+                    onClick={() => setCurrentStep('personal')}
+                    className="px-6 py-3"
                   >
-                    <span className="relative z-10">proceed to payment</span>
+                    back
                   </Button>
-                )}
-                <Button 
-                  variant="outline"
-                  onClick={() => setCurrentStep('personal')}
-                  className="px-8 py-3 text-base"
-                >
-                  edit registration
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                  {editingSection ? (
+                    <div className="text-center text-gray-600">
+                      <p className="text-sm">Make your changes above and click "save changes"</p>
+                    </div>
+                  ) : (
+                    <Button 
+                      onClick={handleInvoiceSubmit}
+                      className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                      disabled={!canProceedToPayment()}
+                      style={{
+                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat'
+                      }}
+                    >
+                      <span className="relative z-10">
+                        {event.requiresApproval ? 'submit for approval' : 'proceed to payment'}
+                      </span>
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     );
@@ -279,6 +329,21 @@ const Registration = () => {
         <RegistrationHeader />
 
         <div className="max-w-4xl mx-auto px-4 py-8">
+          {/* Show approval success message if coming from approved state */}
+          {userData.registrationStatus === 'approved' && (
+            <Card className="mb-6 border-0 shadow-sm bg-green-50 border-green-200">
+              <CardContent className="p-6 text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-semibold text-green-800 mb-2">You're approved!</h2>
+                <p className="text-green-700">Let's finish your registration with payment.</p>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="space-y-6">
             <PaymentInfoSection
               paymentInfo={userData.paymentInfo}
@@ -295,7 +360,7 @@ const Registration = () => {
                 <div className="flex justify-center space-x-4">
                   <Button 
                     variant="outline"
-                    onClick={() => setCurrentStep('registered')}
+                    onClick={() => setCurrentStep('invoice')}
                     className="px-6 py-3"
                   >
                     back
@@ -368,7 +433,7 @@ const Registration = () => {
                   className="mt-1"
                 />
                 <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
-                  I accept the terms and conditions and understand that this registration is subject to approval
+                  I accept the terms and conditions{event.requiresApproval ? ' and understand that this registration is subject to approval' : ''}
                 </Label>
               </div>
 
@@ -389,7 +454,9 @@ const Registration = () => {
                       backgroundRepeat: 'no-repeat'
                     }}
                   >
-                    <span className="relative z-10">continue</span>
+                    <span className="relative z-10">
+                      {!event.isPaid && !event.requiresApproval ? 'confirm & register' : 'continue'}
+                    </span>
                   </Button>
                 )}
               </div>
