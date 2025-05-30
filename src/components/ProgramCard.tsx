@@ -32,8 +32,9 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   onRegister,
   onClick
 }) => {
-  // Helper function to format text with line breaks
-  const formatText = (text: string) => {
+  // Helper function to format text with line breaks - with safety check
+  const formatText = (text: string | undefined) => {
+    if (!text) return <div>-</div>;
     return text.split('\n').map((line, index) => (
       <div key={index}>{line}</div>
     ));
