@@ -32,13 +32,19 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   onRegister,
   onClick
 }) => {
-  // Helper function to format text with line breaks - with safety check
-  const formatText = (text: string | undefined) => {
-    if (!text) return <div>-</div>;
-    return text.split('\n').map((line, index) => (
+  // Helper function to format text with line breaks - with enhanced safety check
+  const formatText = (text: string | undefined | null) => {
+    console.log('formatText called with:', text, 'type:', typeof text);
+    if (text === undefined || text === null || text === '') {
+      return <div>-</div>;
+    }
+    return String(text).split('\n').map((line, index) => (
       <div key={index}>{line}</div>
     ));
   };
+
+  // Add logging to see what props are being passed
+  console.log('ProgramCard props:', { id, title, dates, checkIn, checkOut, investment, venue, note });
 
   return (
     <div 
