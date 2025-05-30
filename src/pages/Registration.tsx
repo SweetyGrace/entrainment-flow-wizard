@@ -350,7 +350,7 @@ const Registration = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Personalized Title */}
           {hasPersonalizedTitle && (
-            <div className="mb-8">
+            <div className="mb-8 text-left">
               <h1 className="text-2xl font-semibold text-gray-900">
                 {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
               </h1>
@@ -359,9 +359,9 @@ const Registration = () => {
           )}
 
           <div className="flex items-start gap-8">
-            {/* Main Content */}
-            <div className="flex-1 max-w-2xl">
-              <div className="space-y-6">
+            {/* Main Content - Full Width */}
+            <div className="flex-1">
+              <div className="max-w-4xl mx-auto space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
                   onPaymentInfoChange={handlePaymentInfoChange}
@@ -405,7 +405,7 @@ const Registration = () => {
 
             {/* Event Details Sidebar */}
             <div className="w-80 flex-shrink-0">
-              <div className="sticky top-24">
+              <div className="sticky top-8">
                 <EventDetailsSection eventName={event.name} isCompact={true} />
               </div>
             </div>
@@ -426,7 +426,7 @@ const Registration = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Personalized Title */}
           {hasPersonalizedTitle && !userData.registrationStatus && (
-            <div className="mb-8">
+            <div className="mb-8 text-left">
               <h1 className="text-2xl font-semibold text-gray-900">
                 {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
               </h1>
@@ -435,24 +435,24 @@ const Registration = () => {
           )}
 
           <div className="flex items-start gap-8">
-            {/* Main Content */}
-            <div className="flex-1 max-w-2xl">
-              {/* Show approval success message if coming from approved state */}
-              {userData.registrationStatus === 'approved' && (
-                <Card className="mb-6 border-0 shadow-sm bg-green-50 border-green-200">
-                  <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <h2 className="text-xl font-semibold text-green-800 mb-2">You're approved!</h2>
-                    <p className="text-green-700">Let's finish your registration with payment.</p>
-                  </CardContent>
-                </Card>
-              )}
+            {/* Main Content - Full Width */}
+            <div className="flex-1">
+              <div className="max-w-4xl mx-auto space-y-6">
+                {/* Show approval success message if coming from approved state */}
+                {userData.registrationStatus === 'approved' && (
+                  <Card className="mb-6 border-0 shadow-sm bg-green-50 border-green-200">
+                    <CardContent className="p-6 text-center">
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <h2 className="text-xl font-semibold text-green-800 mb-2">You're approved!</h2>
+                      <p className="text-green-700">Let's finish your registration with payment.</p>
+                    </CardContent>
+                  </Card>
+                )}
 
-              <div className="space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
                   onPaymentInfoChange={handlePaymentInfoChange}
@@ -494,7 +494,7 @@ const Registration = () => {
 
             {/* Event Details Sidebar */}
             <div className="w-80 flex-shrink-0">
-              <div className="sticky top-24">
+              <div className="sticky top-8">
                 <EventDetailsSection eventName={event.name} isCompact={true} />
               </div>
             </div>
@@ -527,7 +527,7 @@ const Registration = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Personalized Title */}
         {hasPersonalizedTitle && (
-          <div className="mb-8">
+          <div className="mb-8 text-left">
             <h1 className="text-2xl font-semibold text-gray-900">
               {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
             </h1>
@@ -536,9 +536,9 @@ const Registration = () => {
         )}
 
         <div className="flex items-start gap-8">
-          {/* Main Content */}
-          <div className="flex-1 max-w-2xl">
-            <div className="space-y-6">
+          {/* Main Content - Full Width */}
+          <div className="flex-1">
+            <div className="max-w-4xl mx-auto space-y-6">
               <PersonalInfoSection
                 personalInfo={userData.personalInfo}
                 onPersonalInfoChange={handlePersonalInfoChange}
@@ -573,7 +573,7 @@ const Registration = () => {
 
           {/* Event Details Sidebar */}
           <div className="w-80 flex-shrink-0">
-            <div className="sticky top-24">
+            <div className="sticky top-8">
               <EventDetailsSection eventName={event.name} isCompact={true} />
             </div>
           </div>
