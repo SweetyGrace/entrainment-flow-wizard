@@ -41,7 +41,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 
   return (
     <div 
-      className="program-card-wrapper cursor-pointer group border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+      className="program-card-wrapper cursor-pointer group border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
       onClick={() => onClick(id)}
     >
       {/* Background Image */}
@@ -49,14 +49,14 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
         <img
           src={backgroundImage}
           alt={title}
-          className="w-full h-full object-cover opacity-70 transition-all duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover opacity-90 transition-all duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-white/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-white/60"></div>
       </div>
 
       {/* Main Card Content - Overlapping */}
       <div className="program-card-main-content relative -mt-20 mx-6">
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+        <div className="bg-white rounded-t-xl shadow-lg border border-gray-100 p-8">
           {/* Four Column Grid with Dividers */}
           <div className="program-info-grid relative grid grid-cols-4 gap-0">
             {/* Program Dates */}
