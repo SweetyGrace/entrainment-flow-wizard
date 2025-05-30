@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -333,9 +332,9 @@ const Registration = () => {
         <RegistrationHeader />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Personalized Title - Always show */}
-          <div className="mb-8 text-left">
-            <h1 className="text-2xl font-semibold text-gray-900">
+          {/* Personalized Title - Smaller font size */}
+          <div className="mb-6 text-left">
+            <h1 className="text-xl font-medium text-gray-900">
               {generateInvoicePersonalizedTitle(userData.personalInfo?.fullName)}
             </h1>
           </div>
@@ -361,7 +360,7 @@ const Registration = () => {
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentStep('personal')}
-                      className="px-6 py-3"
+                      className="px-6 py-3 rounded-full"
                     >
                       cancel
                     </Button>
@@ -386,7 +385,7 @@ const Registration = () => {
             </div>
 
             {/* Event Details Sidebar */}
-            <div className="w-80 flex-shrink-0 sticky top-8">
+            <div className="w-80 flex-shrink-0 sticky top-24">
               <EventDetailsSection eventName={event.name} isCompact={true} />
             </div>
           </div>
@@ -404,8 +403,8 @@ const Registration = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Personalized Title - Always show unless coming from approved state */}
           {!userData.registrationStatus && (
-            <div className="mb-8 text-left">
-              <h1 className="text-2xl font-semibold text-gray-900">
+            <div className="mb-6 text-left">
+              <h1 className="text-xl font-medium text-gray-900">
                 {generateInvoicePersonalizedTitle(userData.personalInfo?.fullName)}
               </h1>
             </div>
@@ -447,7 +446,7 @@ const Registration = () => {
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentStep('invoice')}
-                      className="px-6 py-3"
+                      className="px-6 py-3 rounded-full"
                     >
                       cancel
                     </Button>
@@ -470,7 +469,7 @@ const Registration = () => {
             </div>
 
             {/* Event Details Sidebar */}
-            <div className="w-80 flex-shrink-0 sticky top-8">
+            <div className="w-80 flex-shrink-0 sticky top-24">
               <EventDetailsSection eventName={event.name} isCompact={true} />
             </div>
           </div>
@@ -548,7 +547,7 @@ const Registration = () => {
           </div>
 
           {/* Event Details Sidebar */}
-          <div className="w-80 flex-shrink-0 sticky top-8">
+          <div className="w-80 flex-shrink-0 sticky top-24">
             <EventDetailsSection eventName={event.name} isCompact={true} />
           </div>
         </div>

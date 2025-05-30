@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarIcon, Clock, MapPin, IndianRupee } from 'lucide-react';
@@ -13,7 +14,7 @@ const EventDetailsSection: React.FC<EventDetailsSectionProps> = ({
 }) => {
   if (isCompact) {
     return (
-      <Card className="border-0 shadow-sm bg-white sticky top-8">
+      <Card className="border-0 shadow-sm bg-white">
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-medium text-gray-900">{eventName}</CardTitle>
         </CardHeader>
@@ -41,13 +42,13 @@ const EventDetailsSection: React.FC<EventDetailsSectionProps> = ({
             </div>
           </div>
           
-          <div className="pt-4 border-t border-gray-100">
-            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+          <div className="pt-4">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
               <div className="flex items-center space-x-2 mb-1">
-                <IndianRupee className="w-4 h-4 text-blue-600" />
-                <p className="text-sm font-semibold text-blue-800">₹2,500</p>
+                <IndianRupee className="w-5 h-5 text-blue-600" />
+                <p className="text-base font-semibold text-blue-800">₹2,500</p>
               </div>
-              <p className="text-xs text-blue-700">
+              <p className="text-sm text-blue-700">
                 Event registration fee
               </p>
             </div>
@@ -113,3 +114,4 @@ const EventDetailsSection: React.FC<EventDetailsSectionProps> = ({
 };
 
 export default EventDetailsSection;
+

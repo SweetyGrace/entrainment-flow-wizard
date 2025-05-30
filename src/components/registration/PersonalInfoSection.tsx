@@ -42,46 +42,16 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   showPersonalizedTitle = true,
   eventRequiresApproval = false
 }) => {
-  const [tempFormData, setTempFormData] = useState<PersonalInfo>({});
   const [columnLayout, setColumnLayout] = useState<2 | 3>(2);
-  const hasData = personalInfo && Object.keys(personalInfo).length > 0;
   const isEditing = editingSection === 'personal';
   
-  // Generate personalized title
-  const generatePersonalizedTitle = (fullName: string) => {
-    const variations = [
-      `${fullName}, let's complete your profile details`,
-      `${fullName}, here are your personal details`,
-      `${fullName}, your information looks great so far`,
-      `${fullName}, let's review your details`,
-      `${fullName}, your personal profile summary`,
-      `${fullName}, these are your current details`
-    ];
-    
-    // Use name length to create consistent but varied selection
-    const index = fullName.length % variations.length;
-    return variations[index];
-  };
-
-  // Generate personalized title for missing information
-  const generateMissingInfoTitle = (fullName?: string) => {
-    if (fullName) {
-      const variations = [
-        `${fullName}, let's complete your remaining details`,
-        `${fullName}, just a few more details needed`,
-        `${fullName}, help us finish your profile`,
-        `${fullName}, we're almost done with your profile`,
-        `${fullName}, let's add the missing information`
-      ];
-      const index = fullName.length % variations.length;
-      return variations[index];
-    }
-    return 'Missing information';
-  };
-
+  // Check if we have meaningful data (not just infinitheismContact)
+  const hasMeaningfulData = personalInfo && Object.keys(personalInfo).some(key => 
+    key !== 'infinitheismContact' && personalInfo[key as keyof PersonalInfo]
+  );
+  
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
-    // Map of field keys to proper title case labels
     const titleCaseLabels = {
       'FULL NAME': 'Full name',
       'GENDER': 'Gender',
@@ -109,11 +79,11 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     { key: 'dateOfBirth', label: 'DATE OF BIRTH', type: 'date' },
     { key: 'city', label: 'CITY', type: 'text' },
     { key: 'infinitheismContact', label: 'INFINITHEISM CONTACT', type: 'text' },
-    { key: 'preferredRoommate', label: 'NOTE', type: 'text', optional: true },
-    { key: 'additionalNotes', label: 'PREFERRED ROOMMATE', type: 'textarea', optional: true }
+    { key: 'preferredRoommate', label: 'PREFERRED ROOMMATE', type: 'text', optional: true },
+    { key: 'additionalNotes', label: 'NOTE', type: 'textarea', optional: true }
   ];
   
-  if (hasData) {
+  if (hasMeaningfulData) {
     allFields.forEach(field => {
       if (personalInfo?.[field.key as keyof PersonalInfo]) {
         filledFields.push(field);
@@ -122,23 +92,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       }
     });
   }
-  
-  const dataState = hasData && filledFields.length > 4 ? 'complete' : hasData && filledFields.length > 0 ? 'partial' : 'new';
 
-  const handleTempChange = (field: string, value: any) => {
-    setTempFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSaveChanges = () => {
-    // Save all temp changes to actual data
-    Object.keys(tempFormData).forEach(field => {
-      onPersonalInfoChange(field, tempFormData[field as keyof PersonalInfo]);
-    });
-    setTempFormData({});
-    setEditingSection(null);
-  };
-
-  if (hasData && !isEditing) {
+  if (hasMeaningfulData && !isEditing) {
     return (
       <>
         {/* Filled Fields Section */}
@@ -163,7 +118,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       variant={columnLayout === 2 ? "default" : "outline"}
                       size="sm"
                       onClick={() => setColumnLayout(2)}
-                      className="h-7 px-3 text-xs"
+                      className="h-7 px-3 text-xs rounded-full"
                     >
                       2 Columns
                     </Button>
@@ -171,7 +126,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       variant={columnLayout === 3 ? "default" : "outline"}
                       size="sm"
                       onClick={() => setColumnLayout(3)}
-                      className="h-7 px-3 text-xs"
+                      className="h-7 px-3 text-xs rounded-full"
                     >
                       3 Columns
                     </Button>
@@ -236,8 +191,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                     
                     {field.type === 'select' && field.key === 'gender' ? (
                       <Select 
-                        value={tempFormData?.gender || personalInfo?.gender} 
-                        onValueChange={(value) => handleTempChange('gender', value)}
+                        value={personalInfo?.gender} 
+                        onValueChange={(value) => onPersonalInfoChange('gender', value)}
                       >
                         <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                           <SelectValue placeholder="Select gender" />
@@ -254,12 +209,12 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                             variant="outline"
                             className={cn(
                               "w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50",
-                              !(tempFormData?.dateOfBirth || personalInfo?.dateOfBirth) && "text-gray-400"
+                              !personalInfo?.dateOfBirth && "text-gray-400"
                             )}
                           >
                             <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
-                            {(tempFormData?.dateOfBirth || personalInfo?.dateOfBirth) ? 
-                              format(tempFormData?.dateOfBirth || personalInfo?.dateOfBirth!, "PPP") : 
+                            {personalInfo?.dateOfBirth ? 
+                              format(personalInfo.dateOfBirth, "PPP") : 
                               "Pick a date"
                             }
                           </Button>
@@ -267,8 +222,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={tempFormData?.dateOfBirth || personalInfo?.dateOfBirth}
-                            onSelect={(date) => handleTempChange('dateOfBirth', date)}
+                            selected={personalInfo?.dateOfBirth}
+                            onSelect={(date) => onPersonalInfoChange('dateOfBirth', date)}
                             initialFocus
                             className="pointer-events-auto"
                           />
@@ -277,8 +232,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                     ) : field.type === 'textarea' ? (
                       <Textarea
                         id={field.key}
-                        value={tempFormData?.[field.key as keyof PersonalInfo] as string || personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
-                        onChange={(e) => handleTempChange(field.key, e.target.value)}
+                        value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
+                        onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
                         className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
                         rows={3}
                         placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
@@ -287,8 +242,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       <Input
                         id={field.key}
                         type={field.type}
-                        value={tempFormData?.[field.key as keyof PersonalInfo] as string || personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
-                        onChange={(e) => handleTempChange(field.key, e.target.value)}
+                        value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
+                        onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
                         className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                         placeholder={`Enter your ${formatFieldLabel(field.label).toLowerCase()}`}
                       />
@@ -309,22 +264,6 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
                 </Label>
               </div>
-
-              {/* Save Changes Button */}
-              <div className="flex justify-end pt-6 border-t border-gray-100">
-                <Button 
-                  onClick={handleSaveChanges}
-                  className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                  style={{
-                    backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
-                  }}
-                >
-                  <span className="relative z-10">save changes</span>
-                </Button>
-              </div>
             </CardContent>
           </Card>
         )}
@@ -333,7 +272,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   }
 
   return (
-    <Card className="mb-6 border-0 shadow-sm bg-white">
+    <Card className={`mb-6 border-0 shadow-sm ${isEditing ? 'bg-blue-50 border-blue-200' : 'bg-white'}`}>
       <CardHeader className="pb-6">
         {isEditing && (
           <div className="flex justify-between items-center">
@@ -346,7 +285,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   variant="ghost" 
                   size="sm"
                   onClick={() => setEditingSection(null)}
-                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md"
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-full"
                 >
                   cancel
                 </Button>
@@ -358,7 +297,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         {!isEditing && (
           <div>
             <CardTitle className="text-lg font-medium text-gray-900">
-              {dataState === 'new' ? "Welcome to Entrainment'25" : "We're almost there!"}
+              {hasMeaningfulData ? "We're almost there!" : "Welcome to Entrainment'25"}
             </CardTitle>
           </div>
         )}
@@ -422,7 +361,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50",
+                    "w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50 rounded-md",
                     !personalInfo?.dateOfBirth && "text-gray-400"
                   )}
                 >
@@ -497,7 +436,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             <Button 
               variant="outline"
               onClick={() => setEditingSection(null)}
-              className="px-6"
+              className="px-6 rounded-full"
             >
               cancel
             </Button>

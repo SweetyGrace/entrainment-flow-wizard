@@ -42,7 +42,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   hideAmountField = false,
   showPersonalizedTitle = true
 }) => {
-  const [tempFormData, setTempFormData] = useState<PaymentInfo>({});
   const [columnLayout, setColumnLayout] = useState<2 | 3>(2);
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
@@ -86,19 +85,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     });
   }
 
-  const handleTempChange = (field: string, value: any) => {
-    setTempFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSaveChanges = () => {
-    // Save all temp changes to actual data
-    Object.keys(tempFormData).forEach(field => {
-      onPaymentInfoChange(field, tempFormData[field as keyof PaymentInfo]);
-    });
-    setTempFormData({});
-    setEditingSection(null);
-  };
-
   if (hasData && !isEditing) {
     return (
       <>
@@ -124,7 +110,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                       variant={columnLayout === 2 ? "default" : "outline"}
                       size="sm"
                       onClick={() => setColumnLayout(2)}
-                      className="h-7 px-3 text-xs"
+                      className="h-7 px-3 text-xs rounded-full"
                     >
                       2 Columns
                     </Button>
@@ -132,7 +118,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                       variant={columnLayout === 3 ? "default" : "outline"}
                       size="sm"
                       onClick={() => setColumnLayout(3)}
-                      className="h-7 px-3 text-xs"
+                      className="h-7 px-3 text-xs rounded-full"
                     >
                       3 Columns
                     </Button>
@@ -184,8 +170,8 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                     {field.type === 'textarea' ? (
                       <Textarea
                         id={field.key}
-                        value={tempFormData?.[field.key as keyof PaymentInfo] as string || paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
-                        onChange={(e) => handleTempChange(field.key, e.target.value)}
+                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
+                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
                         className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
                         rows={3}
                         placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
@@ -194,8 +180,8 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                       <div className="flex items-center space-x-3">
                         <Checkbox
                           id={field.key}
-                          checked={tempFormData?.[field.key as keyof PaymentInfo] as boolean || paymentInfo?.[field.key as keyof PaymentInfo] as boolean || false}
-                          onCheckedChange={(checked) => handleTempChange(field.key, checked)}
+                          checked={paymentInfo?.[field.key as keyof PaymentInfo] as boolean || false}
+                          onCheckedChange={(checked) => onPaymentInfoChange(field.key, checked)}
                         />
                         <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
                           {formatFieldLabel(field.label)}
@@ -205,30 +191,14 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                       <Input
                         id={field.key}
                         type={field.type}
-                        value={tempFormData?.[field.key as keyof PaymentInfo] as string || paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
-                        onChange={(e) => handleTempChange(field.key, e.target.value)}
+                        value={paymentInfo?.[field.key as keyof PaymentInfo] as string || ''}
+                        onChange={(e) => onPaymentInfoChange(field.key, e.target.value)}
                         className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                         placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}`}
                       />
                     )}
                   </div>
                 ))}
-              </div>
-
-              {/* Save Changes Button */}
-              <div className="flex justify-end pt-6 border-t border-gray-100">
-                <Button 
-                  onClick={handleSaveChanges}
-                  className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                  style={{
-                    backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
-                  }}
-                >
-                  <span className="relative z-10">save changes</span>
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -238,7 +208,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   }
 
   return (
-    <Card className="mb-6 border-0 shadow-sm bg-white">
+    <Card className={`mb-6 border-0 shadow-sm ${isEditing ? 'bg-blue-50 border-blue-200' : 'bg-white'}`}>
       <CardHeader className="pb-6">
         {isEditing && (
           <div className="flex justify-between items-center">
@@ -249,7 +219,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                   variant="ghost" 
                   size="sm"
                   onClick={() => setEditingSection(null)}
-                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md"
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-full"
                 >
                   cancel
                 </Button>
@@ -343,7 +313,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             <Button 
               variant="outline"
               onClick={() => setEditingSection(null)}
-              className="px-6"
+              className="px-6 rounded-full"
             >
               cancel
             </Button>
