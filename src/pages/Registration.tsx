@@ -80,7 +80,7 @@ const Registration = () => {
   const [userData, setUserData] = useState<UserData>({});
   const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [columnLayout, setColumnLayout] = useState<1 | 2 | 3>(2);
+  const [columnLayout, setColumnLayout] = useState<2 | 3>(2);
 
   // Configure different event types to demonstrate all flow cases
   const getEventConfig = (id: string): Event => {

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,8 +33,8 @@ interface PersonalInfoSectionProps {
   setEditingSection: (section: string | null) => void;
   showPersonalizedTitle?: boolean;
   eventRequiresApproval?: boolean;
-  columnLayout: 1 | 2 | 3;
-  setColumnLayout: (layout: 1 | 2 | 3) => void;
+  columnLayout: 2 | 3;
+  setColumnLayout: (layout: 2 | 3) => void;
   onSaveChanges: () => void;
 }
 
@@ -72,7 +73,10 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     return titleCaseLabels[label] || label.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   };
   
-  // All form fields - no dynamic movement
+  // Check which fields are filled and unfilled
+  const filledFields = [];
+  const unfilledFields = [];
+  
   const allFields = [
     { key: 'fullName', label: 'FULL NAME', type: 'text' },
     { key: 'gender', label: 'GENDER', type: 'select' },
@@ -84,100 +88,192 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     { key: 'preferredRoommate', label: 'PREFERRED ROOMMATE', type: 'text', optional: true },
     { key: 'additionalNotes', label: 'NOTE', type: 'textarea', optional: true }
   ];
-
-  const getGridColumns = () => {
-    switch (columnLayout) {
-      case 1:
-        return 'grid-cols-1';
-      case 2:
-        return 'grid-cols-1 md:grid-cols-2';
-      case 3:
-        return 'grid-cols-1 md:grid-cols-3';
-      default:
-        return 'grid-cols-1 md:grid-cols-2';
-    }
-  };
+  
+  if (hasMeaningfulData) {
+    allFields.forEach(field => {
+      if (personalInfo?.[field.key as keyof PersonalInfo]) {
+        filledFields.push(field);
+      } else {
+        unfilledFields.push(field);
+      }
+    });
+  }
 
   if (hasMeaningfulData && !isEditing) {
     return (
-      <Card className="mb-6 border-0 shadow-sm bg-white">
-        <CardHeader className="pb-6">
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <CardTitle className="text-lg font-medium text-gray-900">
-                Review the details and update anything that needs realignment — <button 
-                  onClick={() => setEditingSection('personal')}
-                  className="text-blue-600 hover:text-blue-700 underline"
-                >
-                  click here to edit
-                </button>
-              </CardTitle>
-              
-              {/* Column Layout Toggle */}
-              <div className="flex items-center gap-2 mt-3">
-                <span className="text-sm text-gray-500">View:</span>
-                <Button
-                  variant={columnLayout === 1 ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setColumnLayout(1)}
-                  className="h-7 px-3 text-xs rounded-full"
-                >
-                  1 Column
-                </Button>
-                <Button
-                  variant={columnLayout === 2 ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setColumnLayout(2)}
-                  className="h-7 px-3 text-xs rounded-full"
-                >
-                  2 Columns
-                </Button>
-                <Button
-                  variant={columnLayout === 3 ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setColumnLayout(3)}
-                  className="h-7 px-3 text-xs rounded-full"
-                >
-                  3 Columns
-                </Button>
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className={`grid ${getGridColumns()} gap-6`}>
-            {allFields.map(field => {
-              const value = personalInfo?.[field.key as keyof PersonalInfo];
-              return (
-                <div key={field.key} className="space-y-2">
-                  <Label className="text-xs font-medium text-gray-500 tracking-wide">
-                    {formatFieldLabel(field.label)}
-                  </Label>
-                  <div className="text-sm text-gray-900 font-medium">
-                    {field.type === 'date' && value instanceof Date
-                      ? format(value, "PPP")
-                      : value ? String(value) : 
-                        <span className="text-gray-400 italic">Not provided</span>}
+      <>
+        {/* Filled Fields Section */}
+        {filledFields.length > 0 && (
+          <Card className="mb-6 border-0 shadow-sm bg-white">
+            <CardHeader className="pb-6">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <CardTitle className="text-lg font-medium text-gray-900">
+                    Review the details and update anything that needs realignment — <button 
+                      onClick={() => setEditingSection('personal')}
+                      className="text-blue-600 hover:text-blue-700 underline"
+                    >
+                      click here to edit
+                    </button>
+                  </CardTitle>
+                  
+                  {/* Column Layout Toggle */}
+                  <div className="flex items-center gap-2 mt-3">
+                    <span className="text-sm text-gray-500">View:</span>
+                    <Button
+                      variant={columnLayout === 2 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(2)}
+                      className="h-7 px-3 text-xs rounded-full"
+                    >
+                      2 Columns
+                    </Button>
+                    <Button
+                      variant={columnLayout === 3 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(3)}
+                      className="h-7 px-3 text-xs rounded-full"
+                    >
+                      3 Columns
+                    </Button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-          
-          {/* T&C Checkbox */}
-          <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
-            <Checkbox
-              id="terms-complete"
-              checked={personalInfo?.acceptedTerms || false}
-              onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
-              className="mt-1"
-            />
-            <Label htmlFor="terms-complete" className="text-sm text-gray-700 leading-relaxed">
-              I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
-            </Label>
-          </div>
-        </CardContent>
-      </Card>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+                {filledFields.map(field => (
+                  <div key={field.key} className="space-y-2">
+                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                      {formatFieldLabel(field.label)}
+                    </Label>
+                    <div className="text-sm text-gray-900 font-medium">
+                      {field.type === 'date' && personalInfo?.[field.key as keyof PersonalInfo] instanceof Date
+                        ? format(personalInfo[field.key as keyof PersonalInfo] as Date, "PPP")
+                        : String(personalInfo?.[field.key as keyof PersonalInfo] || '')}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {/* T&C Checkbox - Show only if no missing fields */}
+              {unfilledFields.length === 0 && (
+                <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
+                  <Checkbox
+                    id="terms-complete"
+                    checked={personalInfo?.acceptedTerms || false}
+                    onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
+                    className="mt-1"
+                  />
+                  <Label htmlFor="terms-complete" className="text-sm text-gray-700 leading-relaxed">
+                    I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
+                  </Label>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+        
+        {/* Unfilled Fields Section */}
+        {unfilledFields.length > 0 && (
+          <Card className="mb-6 border-0 shadow-sm bg-white">
+            <CardHeader className="pb-4">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <CardTitle className="text-lg font-medium text-gray-900">
+                    Please fill the missing fields
+                  </CardTitle>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+                {unfilledFields.map(field => (
+                  <div key={field.key} className="space-y-3">
+                    <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
+                      {formatFieldLabel(field.label)}
+                      {field.optional && <span className="text-gray-400 text-xs ml-1">(Optional)</span>}
+                    </Label>
+                    
+                    {field.type === 'select' && field.key === 'gender' ? (
+                      <Select 
+                        value={personalInfo?.gender} 
+                        onValueChange={(value) => onPersonalInfoChange('gender', value)}
+                      >
+                        <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Male">Male</SelectItem>
+                          <SelectItem value="Female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : field.type === 'date' ? (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50",
+                              !personalInfo?.dateOfBirth && "text-gray-400"
+                            )}
+                          >
+                            <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
+                            {personalInfo?.dateOfBirth ? 
+                              format(personalInfo.dateOfBirth, "PPP") : 
+                              "Pick a date"
+                            }
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={personalInfo?.dateOfBirth}
+                            onSelect={(date) => onPersonalInfoChange('dateOfBirth', date)}
+                            initialFocus
+                            className="pointer-events-auto"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    ) : field.type === 'textarea' ? (
+                      <Textarea
+                        id={field.key}
+                        value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
+                        onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
+                        className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                        rows={3}
+                        placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
+                      />
+                    ) : (
+                      <Input
+                        id={field.key}
+                        type={field.type}
+                        value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
+                        onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
+                        className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                        placeholder={`Enter your ${formatFieldLabel(field.label).toLowerCase()}`}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* T&C Checkbox - Show only if there are missing fields */}
+              <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
+                <Checkbox
+                  id="terms-missing"
+                  checked={personalInfo?.acceptedTerms || false}
+                  onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
+                  className="mt-1"
+                />
+                <Label htmlFor="terms-missing" className="text-sm text-gray-700 leading-relaxed">
+                  I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
+                </Label>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </>
     );
   }
 

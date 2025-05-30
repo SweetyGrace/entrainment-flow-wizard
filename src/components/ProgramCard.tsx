@@ -33,102 +33,132 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   onClick
 }) => {
   // Helper function to format text with line breaks
-  const formatText = (text: string | undefined | null) => {
-    if (!text || typeof text !== 'string' || text.trim() === '') {
-      return <div>-</div>;
-    }
-    
+  const formatText = (text: string) => {
     return text.split('\n').map((line, index) => (
-      <div key={index}>{line.trim() || '-'}</div>
+      <div key={index}>{line}</div>
     ));
   };
 
-  // Safe fallback values
-  const safeTitle = title || 'Program';
-  const safeBackgroundImage = backgroundImage || '/placeholder.svg';
-  const safeDates = dates || 'TBD';
-  const safeCheckIn = checkIn || 'TBD';
-  const safeCheckOut = checkOut || 'TBD';
-  const safeInvestment = investment || 'TBD';
-  const safeVenue = venue || 'TBD';
-  const safeNote = note || '';
-
   return (
     <div 
-      className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-300"
+      className="program-card-wrapper cursor-pointer group border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
       onClick={() => onClick(id)}
     >
-      {/* Header with background image */}
-      <div 
-        className="h-20 bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white relative"
-        style={{
-          backgroundImage: `linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(147, 51, 234, 0.9)), url(${safeBackgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        <h3 className="text-xl font-bold text-center px-4">{safeTitle}</h3>
+      {/* Background Image */}
+      <div className="program-card-background relative h-64 overflow-hidden">
+        <img
+          src={backgroundImage}
+          alt={title}
+          className="w-full h-full object-cover opacity-90 transition-all duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-white/60"></div>
       </div>
 
-      {/* Content */}
-      <div className="p-6">
-        {/* Four column info grid */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
-          {/* Program Dates */}
-          <div className="text-center">
-            <Calendar className="w-5 h-5 text-gray-500 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-gray-800 mb-1">Program Dates</h4>
-            <div className="text-xs text-gray-600">
-              {formatText(safeDates)}
-            </div>
+      {/* Main Card Content - Overlapping */}
+      <div className="program-card-main-content relative -mt-20 mx-6">
+        <div className="bg-white rounded-t-xl shadow-lg border border-gray-100 p-8">
+          {/* Program Title */}
+          <div className="program-title-section text-center mb-8">
+            <h2 className="program-title text-2xl font-bold text-slate-800">
+              {title}
+            </h2>
           </div>
 
-          {/* Check-in */}
-          <div className="text-center">
-            <Clock className="w-5 h-5 text-gray-500 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-gray-800 mb-1">Check-in</h4>
-            <div className="text-xs text-gray-600">
-              {formatText(safeCheckIn)}
+          {/* Four Column Grid with Dividers */}
+          <div className="program-info-grid relative grid grid-cols-4 gap-0">
+            {/* Program Dates */}
+            <div className="program-info-column flex flex-col items-center text-center px-4">
+              <div className="program-icon mb-3">
+                <Calendar className="w-6 h-6 text-slate-600 stroke-1" />
+              </div>
+              <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Program Dates</h3>
+              <div className="program-info-text text-slate-600 text-xs leading-relaxed">
+                {formatText(dates)}
+              </div>
             </div>
-          </div>
 
-          {/* Check-out */}
-          <div className="text-center">
-            <RotateCcw className="w-5 h-5 text-gray-500 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-gray-800 mb-1">Check-out</h4>
-            <div className="text-xs text-gray-600">
-              {formatText(safeCheckOut)}
+            {/* Vertical Divider 1 */}
+            <div className="absolute left-1/4 top-0 bottom-0 w-px bg-gray-200"></div>
+
+            {/* Check-in Time */}
+            <div className="program-info-column flex flex-col items-center text-center px-4">
+              <div className="program-icon mb-3">
+                <Clock className="w-6 h-6 text-slate-600 stroke-1" />
+              </div>
+              <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Check-in-Time</h3>
+              <div className="program-info-text text-slate-600 text-xs leading-relaxed">
+                {formatText(checkIn)}
+              </div>
             </div>
-          </div>
 
-          {/* Investment */}
-          <div className="text-center">
-            <IndianRupee className="w-5 h-5 text-gray-500 mx-auto mb-2" />
-            <h4 className="text-xs font-semibold text-gray-800 mb-1">Investment</h4>
-            <div className="text-xs text-gray-600">
-              {safeInvestment}
+            {/* Vertical Divider 2 */}
+            <div className="absolute left-2/4 top-0 bottom-0 w-px bg-gray-200"></div>
+
+            {/* Check-out Time */}
+            <div className="program-info-column flex flex-col items-center text-center px-4">
+              <div className="program-icon mb-3">
+                <RotateCcw className="w-6 h-6 text-slate-600 stroke-1" />
+              </div>
+              <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Check-out-Time</h3>
+              <div className="program-info-text text-slate-600 text-xs leading-relaxed">
+                {formatText(checkOut)}
+              </div>
+            </div>
+
+            {/* Vertical Divider 3 */}
+            <div className="absolute left-3/4 top-0 bottom-0 w-px bg-gray-200"></div>
+
+            {/* Investment */}
+            <div className="program-info-column flex flex-col items-center text-center px-4">
+              <div className="program-icon mb-3">
+                {investment === 'No Waiting List' || investment === 'Free Program' ? (
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    <div className="w-3 h-3 bg-slate-600 rounded-full"></div>
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 border-2 border-slate-600 rounded flex items-center justify-center">
+                    <IndianRupee className="w-3 h-3 text-slate-600 stroke-1" />
+                  </div>
+                )}
+              </div>
+              <h3 className="program-info-title font-bold text-slate-800 text-sm mb-2">Investment</h3>
+              <div className="program-info-text text-slate-600 text-xs leading-relaxed">
+                {investment === 'No Waiting List' || investment === 'Free Program' ? (
+                  <div>{investment}</div>
+                ) : (
+                  formatText(investment)
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Venue bar */}
-        <div className="bg-gray-50 rounded-lg px-4 py-3 mb-4 flex justify-between items-center">
-          <span className="text-sm text-gray-700">
-            <span className="font-medium">Venue:</span> {safeVenue}
-          </span>
-          <span className="text-xs text-gray-500 italic">{safeNote}</span>
+        {/* Light Blue-Gray Bar */}
+        <div className="program-venue-bar bg-slate-100 rounded-b-xl px-6 py-4 flex justify-between items-center text-xs -mt-px">
+          <div className="venue-text text-slate-600">
+            <span className="font-medium">Venue:</span> {venue}
+          </div>
+          <div className="note-text text-slate-500 italic">
+            {note}
+          </div>
         </div>
 
-        {/* Register button */}
-        <div className="text-center">
+        {/* Register Button */}
+        <div className="program-register-container flex justify-center mt-6 mb-4">
           <Button 
             onClick={(e) => {
               e.stopPropagation();
               onRegister(id);
             }}
-            className="w-full py-2 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-300"
+            className="register-button relative overflow-hidden px-12 py-3 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border-0 text-sm tracking-wide hover:scale-105"
+            style={{
+              backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
           >
-            Register
+            <span className="relative z-10">register</span>
           </Button>
         </div>
       </div>
