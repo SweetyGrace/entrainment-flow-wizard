@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -73,26 +72,22 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     return 'Missing information';
   };
 
-  // Convert field labels to proper title case (first letter capital, rest lowercase)
+  // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
-    // Handle special cases and acronyms
-    const specialCases = {
+    // Map of field keys to proper title case labels
+    const titleCaseLabels = {
       'FULL NAME': 'Full name',
+      'GENDER': 'Gender',
       'MOBILE NUMBER': 'Mobile number',
       'EMAIL ADDRESS': 'Email address',
       'DATE OF BIRTH': 'Date of birth',
+      'CITY': 'City',
       'INFINITHEISM CONTACT': 'Infinitheism contact',
       'PREFERRED ROOMMATE': 'Preferred roommate',
-      'GSTIN': 'GSTIN',
-      'TDS PERCENT': 'TDS percent'
+      'NOTE': 'Note'
     };
     
-    if (specialCases[label]) {
-      return specialCases[label];
-    }
-    
-    // Default title case conversion
-    return label.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+    return titleCaseLabels[label] || label.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   };
   
   // Check which fields are filled and unfilled
