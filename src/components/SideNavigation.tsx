@@ -5,8 +5,8 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const SideNavigation: React.FC = () => {
   return (
-    <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-40">
-      <div className="bg-white rounded-b-3xl shadow-lg p-4 flex flex-col items-center space-y-6">
+    <div className="fixed left-0 top-0 h-screen z-40 flex items-center">
+      <div className="bg-white rounded-r-3xl shadow-lg p-4 flex flex-col items-center space-y-6 h-full justify-center">
         {/* Meditation/Yoga icon */}
         <div className="p-3 hover:bg-gray-50 rounded-full transition-colors cursor-pointer">
           <User className="w-6 h-6 text-blue-900" strokeWidth={1.5} />
