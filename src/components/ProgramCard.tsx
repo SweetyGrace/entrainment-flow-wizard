@@ -32,43 +32,16 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
   onRegister,
   onClick
 }) => {
-  // Helper function to format text with line breaks - with comprehensive safety checks
-  const formatText = (text: any) => {
-    console.log('formatText called with:', text, 'type:', typeof text, 'value:', JSON.stringify(text));
-    
-    // Handle all falsy values and non-string types
-    if (text === undefined || text === null || text === '' || typeof text !== 'string') {
+  // Helper function to format text with line breaks
+  const formatText = (text: string) => {
+    if (!text || typeof text !== 'string') {
       return <div>-</div>;
     }
     
-    try {
-      // Ensure we have a string and split it
-      const textString = String(text);
-      if (!textString || textString.trim() === '') {
-        return <div>-</div>;
-      }
-      
-      return textString.split('\n').map((line, index) => (
-        <div key={index}>{line || '-'}</div>
-      ));
-    } catch (error) {
-      console.error('Error in formatText:', error, 'with text:', text);
-      return <div>-</div>;
-    }
+    return text.split('\n').map((line, index) => (
+      <div key={index}>{line || '-'}</div>
+    ));
   };
-
-  // Add comprehensive logging to see what props are being passed
-  console.log('ProgramCard props:', { 
-    id: typeof id, 
-    title: typeof title, 
-    dates: typeof dates, 
-    checkIn: typeof checkIn, 
-    checkOut: typeof checkOut, 
-    investment: typeof investment, 
-    venue: typeof venue, 
-    note: typeof note 
-  });
-  console.log('ProgramCard actual values:', { id, title, dates, checkIn, checkOut, investment, venue, note });
 
   return (
     <div 
