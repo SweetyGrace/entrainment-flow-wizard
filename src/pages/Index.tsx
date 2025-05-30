@@ -54,7 +54,7 @@ const Index = () => {
     {
       id: 'entrainment25',
       title: 'Entrainment\'25',
-      description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra (Paid + Approval Required)',
+      description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra (Paid Program)',
       image: '/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png',
       date: 'March 15-17, 2025',
       location: 'Mysore, Karnataka',
@@ -64,7 +64,7 @@ const Index = () => {
     {
       id: 'hdb',
       title: 'HDB',
-      description: 'Global gathering of spiritual leaders and consciousness researchers (Paid Program)',
+      description: 'Global gathering of spiritual leaders and consciousness researchers (Paid + Approval Required)',
       image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
       date: 'April 20-22, 2025',
       location: 'Rishikesh, Uttarakhand',
@@ -74,7 +74,7 @@ const Index = () => {
     {
       id: 'msd',
       title: 'MSD',
-      description: 'Silent meditation retreat for deep inner peace and clarity (Free Program)',
+      description: 'Silent meditation retreat for deep inner peace and clarity (No Waiting List)',
       image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
       date: 'May 10-17, 2025',
       location: 'Dharamshala, HP',
@@ -85,7 +85,7 @@ const Index = () => {
       id: 'tat',
       title: 'TAT',
       description: 'Transformative awareness training for personal growth and mindfulness (Free Program)',
-      image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
+      image: '/lovable-uploads/9915522c-4120-403c-9834-f100e5676ef4.png',
       date: 'June 5-7, 2025',
       location: 'Pune, Maharashtra',
       participants: 'Open for 200 participants',

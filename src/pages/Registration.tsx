@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import RegistrationHeader from '@/components/registration/RegistrationHeader';
 import PersonalInfoSection from '@/components/registration/PersonalInfoSection';
@@ -87,37 +89,37 @@ const Registration = () => {
   const getEventConfig = (id: string): Event => {
     switch (id) {
       case 'entrainment25':
-        // Case 3: Paid Program with Approval
+        // Case: Paid Program (No Approval Required)
         return {
           id: 'entrainment25',
           name: "Entrainment'25",
           isPaid: true,
-          requiresApproval: true,
+          requiresApproval: false,
           isOffline: true,
           amount: 2500
         };
       case 'hdb':
-        // Case 2: Paid Program (No Approval Required)
+        // Case: Paid Program with Approval
         return {
           id: 'hdb',
           name: "HDB",
           isPaid: true,
-          requiresApproval: false,
+          requiresApproval: true,
           isOffline: true,
           amount: 1500
         };
       case 'msd':
-        // Case 1: Free Program (No Payment, No Approval)
+        // Case: No waiting list (Paid Program, No Approval)
         return {
           id: 'msd',
           name: "MSD",
-          isPaid: false,
+          isPaid: true,
           requiresApproval: false,
           isOffline: true,
-          amount: 0
+          amount: 1200
         };
       case 'tat':
-        // Case 1: Free Program (No Payment, No Approval)
+        // Case: Free Program (No Payment, No Approval)
         return {
           id: 'tat',
           name: "TAT",
@@ -131,7 +133,7 @@ const Registration = () => {
           id: 'entrainment25',
           name: "Entrainment'25",
           isPaid: true,
-          requiresApproval: true,
+          requiresApproval: false,
           isOffline: true,
           amount: 2500
         };
