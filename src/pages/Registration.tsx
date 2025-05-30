@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -346,20 +347,20 @@ const Registration = () => {
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Personalized Title */}
-          {hasPersonalizedTitle && (
-            <div className="mb-8">
-              <h1 className="text-2xl font-semibold text-gray-900">
-                {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
-              </h1>
-              <p className="text-gray-600 mt-2">Complete your billing information</p>
-            </div>
-          )}
-
-          <div className="grid grid-cols-12 gap-6">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-12 gap-8">
             {/* Main Content */}
             <div className="col-span-12 lg:col-span-8">
+              {/* Personalized Title */}
+              {hasPersonalizedTitle && (
+                <div className="mb-8">
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
+                  </h1>
+                  <p className="text-gray-600 mt-2">Complete your billing information</p>
+                </div>
+              )}
+
               <div className="space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
@@ -422,35 +423,35 @@ const Registration = () => {
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Show approval success message if coming from approved state */}
-          {userData.registrationStatus === 'approved' && (
-            <Card className="mb-6 border-0 shadow-sm bg-green-50 border-green-200">
-              <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h2 className="text-xl font-semibold text-green-800 mb-2">You're approved!</h2>
-                <p className="text-green-700">Let's finish your registration with payment.</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Personalized Title */}
-          {hasPersonalizedTitle && !userData.registrationStatus && (
-            <div className="mb-8">
-              <h1 className="text-2xl font-semibold text-gray-900">
-                {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
-              </h1>
-              <p className="text-gray-600 mt-2">Complete your payment details</p>
-            </div>
-          )}
-
-          <div className="grid grid-cols-12 gap-6">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-12 gap-8">
             {/* Main Content */}
             <div className="col-span-12 lg:col-span-8">
+              {/* Show approval success message if coming from approved state */}
+              {userData.registrationStatus === 'approved' && (
+                <Card className="mb-6 border-0 shadow-sm bg-green-50 border-green-200">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <h2 className="text-xl font-semibold text-green-800 mb-2">You're approved!</h2>
+                    <p className="text-green-700">Let's finish your registration with payment.</p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Personalized Title */}
+              {hasPersonalizedTitle && !userData.registrationStatus && (
+                <div className="mb-8">
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
+                  </h1>
+                  <p className="text-gray-600 mt-2">Complete your payment details</p>
+                </div>
+              )}
+
               <div className="space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
@@ -523,20 +524,20 @@ const Registration = () => {
     <div className="min-h-screen bg-gray-50">
       <RegistrationHeader />
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Personalized Title */}
-        {hasPersonalizedTitle && (
-          <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-gray-900">
-              {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
-            </h1>
-            <p className="text-gray-600 mt-2">Review and complete your registration details</p>
-          </div>
-        )}
-
-        <div className="grid grid-cols-12 gap-6">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-12 gap-8">
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-8">
+            {/* Personalized Title */}
+            {hasPersonalizedTitle && (
+              <div className="mb-8">
+                <h1 className="text-2xl font-semibold text-gray-900">
+                  {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
+                </h1>
+                <p className="text-gray-600 mt-2">Review and complete your registration details</p>
+              </div>
+            )}
+
             <div className="space-y-6">
               <PersonalInfoSection
                 personalInfo={userData.personalInfo}
