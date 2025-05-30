@@ -150,7 +150,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               const value = personalInfo?.[field.key as keyof PersonalInfo];
               return (
                 <div key={field.key} className="space-y-2">
-                  <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <Label className="text-xs font-medium text-gray-500 tracking-wide">
                     {formatFieldLabel(field.label)}
                   </Label>
                   <div className="text-sm text-gray-900 font-medium">
