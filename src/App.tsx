@@ -22,13 +22,15 @@ const App = () => (
         <div className="min-h-screen bg-gray-50">
           <TopNavigation />
           <SideNavigation />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/registration" element={<Registration />} />
-            <Route path="/programme/:id" element={<ProgrammeDetails />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <div className="ml-20">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/registration" element={<Registration />} />
+              <Route path="/programme/:id" element={<ProgrammeDetails />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </div>
       </BrowserRouter>
     </TooltipProvider>
