@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import RegistrationHeader from '@/components/registration/RegistrationHeader';
 import PersonalInfoSection from '@/components/registration/PersonalInfoSection';
 import EventDetailsSection from '@/components/registration/EventDetailsSection';
@@ -521,29 +518,14 @@ const Registration = () => {
                 editingSection={editingSection}
                 setEditingSection={setEditingSection}
                 showPersonalizedTitle={false}
+                eventRequiresApproval={event.requiresApproval}
               />
 
-              {/* Terms and Conditions + Action Buttons */}
-              <Card className="border-0 shadow-sm bg-white">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mb-6">
-                    <Checkbox
-                      id="terms"
-                      checked={userData.personalInfo?.acceptedTerms || false}
-                      onCheckedChange={(checked) => handlePersonalInfoChange('acceptedTerms', checked)}
-                      className="mt-1"
-                    />
-                    <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
-                      I accept the terms and conditions{event.requiresApproval ? ' and understand that this registration is subject to approval' : ''}
-                    </Label>
-                  </div>
-
-                  <div className="flex justify-center">
-                    {editingSection ? (
-                      <div className="text-center text-gray-600">
-                        <p className="text-sm">Make your changes above and click "save changes"</p>
-                      </div>
-                    ) : (
+              {/* Action Buttons - Only show if not editing and no missing fields */}
+              {!editingSection && (
+                <Card className="border-0 shadow-sm bg-white">
+                  <CardContent className="p-6">
+                    <div className="flex justify-center">
                       <Button 
                         onClick={handlePersonalInfoSubmit}
                         className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
@@ -559,10 +541,10 @@ const Registration = () => {
                           {!event.isPaid && !event.requiresApproval ? 'confirm & register' : 'continue'}
                         </span>
                       </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
 

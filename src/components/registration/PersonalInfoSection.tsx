@@ -31,6 +31,7 @@ interface PersonalInfoSectionProps {
   editingSection: string | null;
   setEditingSection: (section: string | null) => void;
   showPersonalizedTitle?: boolean;
+  eventRequiresApproval?: boolean;
 }
 
 const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
@@ -38,7 +39,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   onPersonalInfoChange,
   editingSection,
   setEditingSection,
-  showPersonalizedTitle = true
+  showPersonalizedTitle = true,
+  eventRequiresApproval = false
 }) => {
   const [tempFormData, setTempFormData] = useState<PersonalInfo>({});
   const hasData = personalInfo && Object.keys(personalInfo).length > 0;
@@ -106,8 +108,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     { key: 'dateOfBirth', label: 'DATE OF BIRTH', type: 'date' },
     { key: 'city', label: 'CITY', type: 'text' },
     { key: 'infinitheismContact', label: 'INFINITHEISM CONTACT', type: 'text' },
-    { key: 'preferredRoommate', label: 'PREFERRED ROOMMATE', type: 'text', optional: true },
-    { key: 'additionalNotes', label: 'NOTE', type: 'textarea', optional: true }
+    { key: 'preferredRoommate', label: 'NOTE', type: 'text', optional: true },
+    { key: 'additionalNotes', label: 'PREFERRED ROOMMATE', type: 'textarea', optional: true }
   ];
   
   if (hasData) {
@@ -177,6 +179,21 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   </div>
                 ))}
               </div>
+              
+              {/* T&C Checkbox - Show only if no missing fields */}
+              {unfilledFields.length === 0 && (
+                <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
+                  <Checkbox
+                    id="terms-complete"
+                    checked={personalInfo?.acceptedTerms || false}
+                    onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
+                    className="mt-1"
+                  />
+                  <Label htmlFor="terms-complete" className="text-sm text-gray-700 leading-relaxed">
+                    I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
+                  </Label>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
@@ -266,6 +283,19 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 ))}
               </div>
 
+              {/* T&C Checkbox - Show only if there are missing fields */}
+              <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
+                <Checkbox
+                  id="terms-missing"
+                  checked={personalInfo?.acceptedTerms || false}
+                  onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
+                  className="mt-1"
+                />
+                <Label htmlFor="terms-missing" className="text-sm text-gray-700 leading-relaxed">
+                  I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
+                </Label>
+              </div>
+
               {/* Save Changes Button */}
               <div className="flex justify-end pt-6 border-t border-gray-100">
                 <Button 
@@ -280,19 +310,6 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 >
                   <span className="relative z-10">save changes</span>
                 </Button>
-              </div>
-
-              {/* T&C Checkbox for missing fields */}
-              <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
-                <Checkbox
-                  id="terms-missing"
-                  checked={personalInfo?.acceptedTerms || false}
-                  onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
-                  className="mt-1"
-                />
-                <Label htmlFor="terms-missing" className="text-sm text-gray-700 leading-relaxed">
-                  I accept the terms and conditions and understand that this registration is subject to approval
-                </Label>
               </div>
             </CardContent>
           </Card>
