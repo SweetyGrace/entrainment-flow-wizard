@@ -51,27 +51,40 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
 
-  // Capture initial field state only once when component mounts - this is the key fix
-  const [initialFieldState] = React.useState(() => {
-    if (!paymentInfo) return { preFilledFields: [], missingFields: ['invoiceName', 'invoiceEmail', 'address'] };
+  // Capture initial field state only once when component mounts and never update it
+  const [initialFieldCategories] = React.useState(() => {
+    if (!paymentInfo) {
+      return { 
+        preFilledFields: [], 
+        missingFields: ['invoiceName', 'invoiceEmail', 'address'],
+        gstWasInitiallyRegistered: false
+      };
+    }
     
-    const baseFields = ['invoiceName', 'invoiceEmail', 'address'];
-    const gstFields = paymentInfo.gstRegistered ? ['gstin', 'tdsPercent'] : [];
-    const allFields = [...baseFields, ...gstFields];
+    const baseRequiredFields = ['invoiceName', 'invoiceEmail', 'address'];
+    const gstWasRegistered = Boolean(paymentInfo.gstRegistered);
+    const gstFields = gstWasRegistered ? ['gstin', 'tdsPercent'] : [];
+    const allRelevantFields = [...baseRequiredFields, ...gstFields];
     
-    const preFilledFields = allFields.filter(field => 
-      paymentInfo[field as keyof PaymentInfo] && 
-      paymentInfo[field as keyof PaymentInfo] !== ''
-    );
+    // Determine which fields had meaningful values at component mount
+    const preFilledFields = allRelevantFields.filter(field => {
+      const value = paymentInfo[field as keyof PaymentInfo];
+      return value !== undefined && value !== null && value !== '';
+    });
     
-    const missingFields = allFields.filter(field => !preFilledFields.includes(field));
+    const missingFields = allRelevantFields.filter(field => !preFilledFields.includes(field));
     
-    return { preFilledFields, missingFields };
+    return { 
+      preFilledFields, 
+      missingFields, 
+      gstWasInitiallyRegistered: gstWasRegistered 
+    };
   });
 
-  // Use the captured initial state - never update these
-  const staticPreFilledFields = initialFieldState.preFilledFields;
-  const staticMissingFields = initialFieldState.missingFields;
+  // Use the captured initial state - these never change
+  const staticPreFilledFields = initialFieldCategories.preFilledFields;
+  const staticMissingFields = initialFieldCategories.missingFields;
+  const gstWasInitiallyRegistered = initialFieldCategories.gstWasInitiallyRegistered;
 
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
@@ -167,21 +180,23 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             </CardHeader>
             <CardContent className="pt-0">
               <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                {/* GST Registered Status */}
-                <div className="space-y-3">
-                  <Label className="text-sm font-medium text-gray-600">
-                    {formatFieldLabel('gstRegistered')}
-                  </Label>
-                  <div className="flex items-center space-x-3">
-                    <Checkbox
-                      checked={paymentInfo?.gstRegistered || false}
-                      onCheckedChange={(checked) => onPaymentInfoChange('gstRegistered', checked)}
-                    />
-                    <span className="text-sm text-gray-700">
-                      {paymentInfo?.gstRegistered ? 'Yes' : 'No'}
-                    </span>
+                {/* GST Registered Status - only show if it was initially filled */}
+                {gstWasInitiallyRegistered && (
+                  <div className="space-y-3">
+                    <Label className="text-sm font-medium text-gray-600">
+                      {formatFieldLabel('gstRegistered')}
+                    </Label>
+                    <div className="flex items-center space-x-3">
+                      <Checkbox
+                        checked={paymentInfo?.gstRegistered || false}
+                        onCheckedChange={(checked) => onPaymentInfoChange('gstRegistered', checked)}
+                      />
+                      <span className="text-sm text-gray-700">
+                        {paymentInfo?.gstRegistered ? 'Yes' : 'No'}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Show filled fields */}
                 {staticPreFilledFields.map((field) => (
@@ -209,8 +224,8 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             </CardHeader>
             <CardContent className="space-y-6">
               <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                {/* Show GST checkbox if not in filled fields */}
-                {!staticPreFilledFields.includes('gstRegistered') && (
+                {/* Show GST checkbox if it wasn't initially registered */}
+                {!gstWasInitiallyRegistered && (
                   <div className="space-y-3">
                     <Label className="text-sm font-medium text-gray-700">GST registered?</Label>
                     <div className="flex items-center space-x-3">
@@ -234,6 +249,20 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                     {renderEmptyFieldInput(field)}
                   </div>
                 ))}
+
+                {/* Show GST fields if GST is now checked but wasn't initially registered */}
+                {!gstWasInitiallyRegistered && paymentInfo?.gstRegistered && (
+                  <>
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium text-gray-700">GSTIN</Label>
+                      {renderEmptyFieldInput('gstin')}
+                    </div>
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium text-gray-700">TDS percent</Label>
+                      {renderEmptyFieldInput('tdsPercent')}
+                    </div>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
