@@ -77,7 +77,7 @@ const Index = () => {
       id: 'entrainment25',
       title: 'Entrainment\'25',
       description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra',
-      image: '/lovable-uploads/7648de7d-d1af-4fec-b3cd-b2b81614552d.png',
+      image: '/lovable-uploads/f0247085-e8e2-4308-840f-99073530b0b0.png',
       dates: 'Wed, 18 Sept to\nSat, 21 Sept 2025',
       checkIn: '04:00 p.m. to 09:00 p.m.\non Wed, 18 Sept 2025',
       checkOut: 'Latest by 02:00 p.m.\non Sat, 21 Sept 2025',

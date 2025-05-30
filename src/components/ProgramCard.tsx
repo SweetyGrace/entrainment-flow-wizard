@@ -150,13 +150,15 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
               e.stopPropagation();
               onRegister(id);
             }}
-            className="register-button px-12 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border-0 text-sm tracking-wide"
+            className="register-button relative overflow-hidden px-12 py-3 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border-0 text-sm tracking-wide hover:scale-105"
             style={{
-              background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 12px rgba(59,130,246,0.3)'
+              backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
             }}
           >
-            register
+            <span className="relative z-10">register</span>
           </Button>
         </div>
       </div>
