@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,7 +52,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     key !== 'infinitheismContact' && personalInfo[key as keyof PersonalInfo]
   );
 
-  // Static field definitions - fields are assigned based on initial data state
+  // Static field definitions - computed once based on initial data, never changes
   const staticPreFilledFields = React.useMemo(() => {
     if (!personalInfo) return [];
     
@@ -66,7 +65,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       personalInfo[field as keyof PersonalInfo] && 
       personalInfo[field as keyof PersonalInfo] !== ''
     );
-  }, [personalInfo?.fullName, personalInfo?.gender, personalInfo?.mobile, personalInfo?.email, personalInfo?.dateOfBirth, personalInfo?.city, personalInfo?.infinitheismContact, personalInfo?.preferredRoommate, personalInfo?.additionalNotes]);
+  }, []);
 
   const staticMissingFields = React.useMemo(() => {
     const allFields = [
@@ -80,14 +79,14 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
     const titleCaseLabels = {
-      'fullName': 'Full name',
+      'fullName': 'Full Name',
       'gender': 'Gender',
-      'mobile': 'Mobile number',
-      'email': 'Email address',
-      'dateOfBirth': 'Date of birth',
+      'mobile': 'Mobile Number',
+      'email': 'Email Address',
+      'dateOfBirth': 'Date of Birth',
       'city': 'City',
-      'infinitheismContact': 'Infinitheism contact',
-      'preferredRoommate': 'Preferred roommate',
+      'infinitheismContact': 'Infinitheism Contact',
+      'preferredRoommate': 'Preferred Roommate',
       'additionalNotes': 'Note'
     };
     
@@ -117,10 +116,13 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         );
       case 'dateOfBirth':
         return (
-          <BirthDatePicker
-            value={undefined}
-            onChange={(date) => onPersonalInfoChange(field, date)}
-          />
+          <div className="space-y-3">
+            <Label className="text-sm font-medium text-gray-700">Date of Birth</Label>
+            <BirthDatePicker
+              value={undefined}
+              onChange={(date) => onPersonalInfoChange(field, date)}
+            />
+          </div>
         );
       case 'additionalNotes':
         return (
@@ -216,12 +218,14 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
                 {staticMissingFields.map((field) => (
                   <div key={field} className="space-y-3">
-                    <Label className="text-sm font-medium text-gray-700">
-                      {formatFieldLabel(field)}
-                      {(field === 'preferredRoommate' || field === 'additionalNotes') && (
-                        <span className="text-gray-400 text-xs"> (Optional)</span>
-                      )}
-                    </Label>
+                    {field !== 'dateOfBirth' && (
+                      <Label className="text-sm font-medium text-gray-700">
+                        {formatFieldLabel(field)}
+                        {(field === 'preferredRoommate' || field === 'additionalNotes') && (
+                          <span className="text-gray-400 text-xs"> (Optional)</span>
+                        )}
+                      </Label>
+                    )}
                     {renderEmptyFieldInput(field)}
                   </div>
                 ))}
@@ -314,6 +318,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
+            <Label className="text-sm font-medium text-gray-700">Date of Birth</Label>
             <BirthDatePicker
               value={personalInfo?.dateOfBirth}
               onChange={(date) => onPersonalInfoChange('dateOfBirth', date)}

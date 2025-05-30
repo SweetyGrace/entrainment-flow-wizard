@@ -49,16 +49,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
 
-  // Static field definitions - fields are assigned based on initial data state
+  // Static field definitions - computed once based on initial data, never changes
   const { preFilledFields: staticPreFilledFields, missingFields: staticMissingFields } = 
-    React.useMemo(() => getStaticFieldSegregation(paymentInfo), [
-      paymentInfo?.invoiceName, 
-      paymentInfo?.invoiceEmail, 
-      paymentInfo?.address, 
-      paymentInfo?.gstin, 
-      paymentInfo?.tdsPercent, 
-      paymentInfo?.gstRegistered
-    ]);
+    React.useMemo(() => getStaticFieldSegregation(paymentInfo), []);
 
   // If editing, show the edit form
   if (isEditing) {

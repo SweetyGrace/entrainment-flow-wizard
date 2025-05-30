@@ -8,7 +8,6 @@ interface BirthDatePickerProps {
   value?: Date;
   onChange: (date: Date | undefined) => void;
   className?: string;
-  label?: string;
   error?: string;
 }
 
@@ -16,7 +15,6 @@ const BirthDatePicker: React.FC<BirthDatePickerProps> = ({
   value,
   onChange,
   className,
-  label = "Date of birth",
   error
 }) => {
   const [day, setDay] = useState<string>('');
@@ -145,11 +143,8 @@ const BirthDatePicker: React.FC<BirthDatePickerProps> = ({
 
   return (
     <div className={cn("space-y-3", className)}>
-      <Label className="text-sm font-medium text-gray-700">{label}</Label>
-      
       <div className="grid grid-cols-3 gap-3">
         <div className="space-y-1">
-          <Label className="text-xs text-gray-500">Day</Label>
           <Select value={day} onValueChange={handleDayChange}>
             <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
               <SelectValue placeholder="Day" />
@@ -165,7 +160,6 @@ const BirthDatePicker: React.FC<BirthDatePickerProps> = ({
         </div>
 
         <div className="space-y-1">
-          <Label className="text-xs text-gray-500">Month</Label>
           <Select value={month} onValueChange={handleMonthChange}>
             <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
               <SelectValue placeholder="Month" />
@@ -181,7 +175,6 @@ const BirthDatePicker: React.FC<BirthDatePickerProps> = ({
         </div>
 
         <div className="space-y-1">
-          <Label className="text-xs text-gray-500">Year</Label>
           <Select value={year} onValueChange={handleYearChange}>
             <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
               <SelectValue placeholder="Year" />
