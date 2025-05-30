@@ -254,6 +254,10 @@ const Registration = () => {
     }));
   };
 
+  const handleSaveChanges = () => {
+    setEditingSection(null);
+  };
+
   const handlePersonalInfoSubmit = () => {
     // Case 1: Free Program (No Payment, No Approval)
     if (!event.isPaid && !event.requiresApproval) {
