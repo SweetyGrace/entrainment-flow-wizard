@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -51,22 +52,27 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
 
-  // Define base fields
-  const baseFields = ['invoiceName', 'invoiceEmail', 'address'];
-  // GST fields are conditional
-  const gstFields = paymentInfo?.gstRegistered ? ['gstin', 'tdsPercent'] : [];
-  const allFields = [...baseFields, ...gstFields];
+  // Static field definitions - fields are assigned based on initial data state
+  const staticPreFilledFields = React.useMemo(() => {
+    if (!paymentInfo) return [];
+    
+    const baseFields = ['invoiceName', 'invoiceEmail', 'address'];
+    const gstFields = paymentInfo.gstRegistered ? ['gstin', 'tdsPercent'] : [];
+    const allFields = [...baseFields, ...gstFields];
+    
+    return allFields.filter(field => 
+      paymentInfo[field as keyof PaymentInfo] && 
+      paymentInfo[field as keyof PaymentInfo] !== ''
+    );
+  }, [paymentInfo?.invoiceName, paymentInfo?.invoiceEmail, paymentInfo?.address, paymentInfo?.gstin, paymentInfo?.tdsPercent, paymentInfo?.gstRegistered]);
 
-  // Separate filled and empty fields
-  const filledFields = allFields.filter(field => 
-    paymentInfo?.[field as keyof PaymentInfo] && 
-    paymentInfo[field as keyof PaymentInfo] !== ''
-  );
-
-  const emptyFields = allFields.filter(field => 
-    !paymentInfo?.[field as keyof PaymentInfo] || 
-    paymentInfo[field as keyof PaymentInfo] === ''
-  );
+  const staticMissingFields = React.useMemo(() => {
+    const baseFields = ['invoiceName', 'invoiceEmail', 'address'];
+    const gstFields = paymentInfo?.gstRegistered ? ['gstin', 'tdsPercent'] : [];
+    const allFields = [...baseFields, ...gstFields];
+    
+    return allFields.filter(field => !staticPreFilledFields.includes(field));
+  }, [staticPreFilledFields, paymentInfo?.gstRegistered]);
 
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
@@ -120,7 +126,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     return (
       <div className="space-y-6">
         {/* Pre-filled Fields Section */}
-        {filledFields.length > 0 && (
+        {staticPreFilledFields.length > 0 && (
           <Card className="border-0 shadow-sm bg-white">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
@@ -161,7 +167,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
               <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
                 {/* GST Registered Status */}
                 <div className="space-y-3">
-                  <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <Label className="text-sm font-medium text-gray-600">
                     {formatFieldLabel('gstRegistered')}
                   </Label>
                   <div className="flex items-center space-x-3">
@@ -176,9 +182,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                 </div>
 
                 {/* Show filled fields */}
-                {filledFields.map((field) => (
+                {staticPreFilledFields.map((field) => (
                   <div key={field} className={field === 'address' ? 'col-span-full space-y-3' : 'space-y-3'}>
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    <Label className="text-sm font-medium text-gray-600">
                       {formatFieldLabel(field)}
                     </Label>
                     <div className="text-sm text-gray-900 font-medium">
@@ -192,7 +198,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         )}
 
         {/* Missing Fields Section */}
-        {emptyFields.length > 0 && (
+        {staticMissingFields.length > 0 && (
           <Card className="border-0 shadow-sm bg-white">
             <CardHeader className="pb-6">
               <CardTitle className="text-lg font-medium text-gray-900">
@@ -202,7 +208,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             <CardContent className="space-y-6">
               <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
                 {/* Show GST checkbox if not in filled fields */}
-                {!filledFields.includes('gstRegistered') && (
+                {!staticPreFilledFields.includes('gstRegistered') && (
                   <div className="space-y-3">
                     <Label className="text-sm font-medium text-gray-700">GST registered?</Label>
                     <div className="flex items-center space-x-3">
@@ -218,7 +224,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                 )}
 
                 {/* Show empty fields */}
-                {emptyFields.map((field) => (
+                {staticMissingFields.map((field) => (
                   <div key={field} className={field === 'address' ? 'col-span-full space-y-3' : 'space-y-3'}>
                     <Label className="text-sm font-medium text-gray-700">
                       {formatFieldLabel(field)}

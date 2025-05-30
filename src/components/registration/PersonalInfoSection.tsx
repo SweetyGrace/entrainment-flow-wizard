@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,12 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import { format } from 'date-fns';
+import BirthDatePicker from '@/components/ui/birth-date-picker';
 
 interface PersonalInfo {
   fullName?: string;
@@ -55,22 +53,29 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     key !== 'infinitheismContact' && personalInfo[key as keyof PersonalInfo]
   );
 
-  // Define all fields
-  const allFields = [
-    'fullName', 'gender', 'mobile', 'email', 'dateOfBirth', 
-    'city', 'infinitheismContact', 'preferredRoommate', 'additionalNotes'
-  ];
+  // Static field definitions - fields are assigned based on initial data state
+  const staticPreFilledFields = React.useMemo(() => {
+    if (!personalInfo) return [];
+    
+    const allFields = [
+      'fullName', 'gender', 'mobile', 'email', 'dateOfBirth', 
+      'city', 'infinitheismContact', 'preferredRoommate', 'additionalNotes'
+    ];
+    
+    return allFields.filter(field => 
+      personalInfo[field as keyof PersonalInfo] && 
+      personalInfo[field as keyof PersonalInfo] !== ''
+    );
+  }, [personalInfo?.fullName, personalInfo?.gender, personalInfo?.mobile, personalInfo?.email, personalInfo?.dateOfBirth, personalInfo?.city, personalInfo?.infinitheismContact, personalInfo?.preferredRoommate, personalInfo?.additionalNotes]);
 
-  // Separate filled and empty fields
-  const filledFields = allFields.filter(field => 
-    personalInfo?.[field as keyof PersonalInfo] && 
-    personalInfo[field as keyof PersonalInfo] !== ''
-  );
-
-  const emptyFields = allFields.filter(field => 
-    !personalInfo?.[field as keyof PersonalInfo] || 
-    personalInfo[field as keyof PersonalInfo] === ''
-  );
+  const staticMissingFields = React.useMemo(() => {
+    const allFields = [
+      'fullName', 'gender', 'mobile', 'email', 'dateOfBirth', 
+      'city', 'infinitheismContact', 'preferredRoommate', 'additionalNotes'
+    ];
+    
+    return allFields.filter(field => !staticPreFilledFields.includes(field));
+  }, [staticPreFilledFields]);
 
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
@@ -112,26 +117,10 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         );
       case 'dateOfBirth':
         return (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50 text-gray-400"
-              >
-                <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
-                Pick a date
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={undefined}
-                onSelect={(date) => onPersonalInfoChange(field, date)}
-                initialFocus
-                className="pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
+          <BirthDatePicker
+            value={undefined}
+            onChange={(date) => onPersonalInfoChange(field, date)}
+          />
         );
       case 'additionalNotes':
         return (
@@ -161,7 +150,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
     return (
       <div className="space-y-6">
         {/* Pre-filled Fields Section */}
-        {filledFields.length > 0 && (
+        {staticPreFilledFields.length > 0 && (
           <Card className="border-0 shadow-sm bg-white">
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
@@ -200,9 +189,9 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             </CardHeader>
             <CardContent className="pt-0">
               <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                {filledFields.map((field) => (
+                {staticPreFilledFields.map((field) => (
                   <div key={field} className="space-y-3">
-                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    <Label className="text-sm font-medium text-gray-600">
                       {formatFieldLabel(field)}
                     </Label>
                     <div className="text-sm text-gray-900 font-medium">
@@ -216,7 +205,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         )}
 
         {/* Missing Fields Section */}
-        {emptyFields.length > 0 && (
+        {staticMissingFields.length > 0 && (
           <Card className="border-0 shadow-sm bg-white">
             <CardHeader className="pb-6">
               <CardTitle className="text-lg font-medium text-gray-900">
@@ -225,7 +214,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             </CardHeader>
             <CardContent className="space-y-6">
               <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                {emptyFields.map((field) => (
+                {staticMissingFields.map((field) => (
                   <div key={field} className="space-y-3">
                     <Label className="text-sm font-medium text-gray-700">
                       {formatFieldLabel(field)}
@@ -325,30 +314,10 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700">Date of birth</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50 rounded-md",
-                    !personalInfo?.dateOfBirth && "text-gray-400"
-                  )}
-                >
-                  <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
-                  {personalInfo?.dateOfBirth ? format(personalInfo.dateOfBirth, "PPP") : "Pick a date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={personalInfo?.dateOfBirth}
-                  onSelect={(date) => onPersonalInfoChange('dateOfBirth', date)}
-                  initialFocus
-                  className="pointer-events-auto"
-                />
-              </PopoverContent>
-            </Popover>
+            <BirthDatePicker
+              value={personalInfo?.dateOfBirth}
+              onChange={(date) => onPersonalInfoChange('dateOfBirth', date)}
+            />
           </div>
           <div className="space-y-3">
             <Label htmlFor="city" className="text-sm font-medium text-gray-700">City</Label>
