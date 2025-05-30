@@ -148,53 +148,44 @@ const BirthDatePicker: React.FC<BirthDatePickerProps> = ({
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
       
       <div className="grid grid-cols-3 gap-3">
-        <div className="space-y-1">
-          <Label className="text-xs text-gray-500">Day</Label>
-          <Select value={day} onValueChange={handleDayChange}>
-            <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-              <SelectValue placeholder="Day" />
-            </SelectTrigger>
-            <SelectContent className="max-h-60">
-              {days.map((d) => (
-                <SelectItem key={d} value={d.toString()}>
-                  {d}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Select value={day} onValueChange={handleDayChange}>
+          <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+            <SelectValue placeholder="Day" />
+          </SelectTrigger>
+          <SelectContent className="max-h-60">
+            {days.map((d) => (
+              <SelectItem key={d} value={d.toString()}>
+                {d}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <div className="space-y-1">
-          <Label className="text-xs text-gray-500">Month</Label>
-          <Select value={month} onValueChange={handleMonthChange}>
-            <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-              <SelectValue placeholder="Month" />
-            </SelectTrigger>
-            <SelectContent className="max-h-60">
-              {months.map((m) => (
-                <SelectItem key={m.value} value={m.value}>
-                  {m.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Select value={month} onValueChange={handleMonthChange}>
+          <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+            <SelectValue placeholder="Month" />
+          </SelectTrigger>
+          <SelectContent className="max-h-60">
+            {months.map((m) => (
+              <SelectItem key={m.value} value={m.value}>
+                {m.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <div className="space-y-1">
-          <Label className="text-xs text-gray-500">Year</Label>
-          <Select value={year} onValueChange={handleYearChange}>
-            <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-              <SelectValue placeholder="Year" />
-            </SelectTrigger>
-            <SelectContent className="max-h-60">
-              {years.map((y) => (
-                <SelectItem key={y} value={y.toString()}>
-                  {y}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <Select value={year} onValueChange={handleYearChange}>
+          <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+            <SelectValue placeholder="Year" />
+          </SelectTrigger>
+          <SelectContent className="max-h-60">
+            {years.map((y) => (
+              <SelectItem key={y} value={y.toString()}>
+                {y}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {(isUnderage() || error) && (
