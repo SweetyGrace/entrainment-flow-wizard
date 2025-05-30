@@ -148,8 +148,11 @@ const Registration = () => {
           fullName: 'Aravind Kumar',
           email: 'aravind@example.com',
           mobile: '+91 9876543210',
-          gender: 'Male',
-          infinitheismContact: 'Admin Sarah'
+          gender: 'Male'
+        },
+        paymentInfo: {
+          invoiceName: 'Aravind Kumar',
+          invoiceEmail: 'aravind@example.com'
         }
       });
     } else if (scenario === 'complete') {
@@ -161,7 +164,6 @@ const Registration = () => {
           gender: 'Male',
           dateOfBirth: new Date('1990-01-01'),
           city: 'Chennai',
-          infinitheismContact: 'Admin Sarah',
           preferredRoommate: 'John Doe',
           additionalNotes: 'Vegetarian meals preferred',
           acceptedTerms: true
@@ -169,6 +171,10 @@ const Registration = () => {
         paymentInfo: {
           invoiceName: 'Aravind Kumar',
           invoiceEmail: 'aravind@example.com',
+          gstRegistered: true,
+          gstin: 'GST123456789',
+          tdsPercent: '2',
+          address: '123 Main Street, Chennai, Tamil Nadu 600001',
           amount: 2500
         }
       });
@@ -182,12 +188,12 @@ const Registration = () => {
           gender: 'Male',
           dateOfBirth: new Date('1985-05-15'),
           city: 'Mumbai',
-          infinitheismContact: 'Admin Maya',
           acceptedTerms: true
         },
         paymentInfo: {
           invoiceName: 'Raj Patel',
           invoiceEmail: 'raj@example.com',
+          address: '456 Business Street, Mumbai, Maharashtra 400001',
           amount: 2500
         },
         registrationStatus: 'approved'
@@ -198,14 +204,17 @@ const Registration = () => {
       const randomScenario = Math.floor(Math.random() * 3);
       
       if (randomScenario === 1) {
-        // Partial data scenario
+        // Partial data scenario with some payment info
         setUserData({
           personalInfo: {
             fullName: 'Priya Sharma',
             email: 'priya@example.com',
             mobile: '+91 9876543211',
-            gender: 'Female',
-            infinitheismContact: 'Admin Raj'
+            gender: 'Female'
+          },
+          paymentInfo: {
+            invoiceName: 'Priya Sharma',
+            invoiceEmail: 'priya@example.com'
           }
         });
       } else if (randomScenario === 2) {
@@ -218,7 +227,6 @@ const Registration = () => {
             gender: 'Male',
             dateOfBirth: new Date('1985-05-15'),
             city: 'Mumbai',
-            infinitheismContact: 'Admin Maya',
             preferredRoommate: 'Best friend',
             additionalNotes: 'Early check-in required',
             acceptedTerms: true
@@ -226,16 +234,14 @@ const Registration = () => {
           paymentInfo: {
             invoiceName: 'Raj Patel',
             invoiceEmail: 'raj@example.com',
+            gstRegistered: false,
+            address: '456 Business Street, Mumbai, Maharashtra 400001',
             amount: 2500
           }
         });
       } else {
-        // New user with default infinitheism contact
-        setUserData({
-          personalInfo: {
-            infinitheismContact: 'Admin Team'
-          }
-        });
+        // New user - completely empty (no pre-filled data)
+        setUserData({});
       }
     }
   }, [scenario]);

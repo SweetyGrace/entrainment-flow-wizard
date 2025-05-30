@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,7 +54,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
 
   // Capture initial field state only once when component mounts and never update it
   const [initialFieldCategories] = React.useState(() => {
-    if (!paymentInfo) {
+    if (!paymentInfo || Object.keys(paymentInfo).length === 0) {
       return { 
         preFilledFields: [], 
         missingFields: ['invoiceName', 'invoiceEmail', 'address'],
