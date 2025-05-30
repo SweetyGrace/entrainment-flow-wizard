@@ -347,19 +347,19 @@ const Registration = () => {
         <RegistrationHeader />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
-          {/* Personalized Title (outside of section) */}
+          {/* Personalized Title */}
           {hasPersonalizedTitle && (
-            <div className="mb-6">
+            <div className="mb-8">
               <h1 className="text-2xl font-semibold text-gray-900">
                 {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
               </h1>
-              <p className="text-gray-600 mt-1">Complete your billing information</p>
+              <p className="text-gray-600 mt-2">Complete your billing information</p>
             </div>
           )}
 
-          <div className="flex gap-8">
+          <div className="grid grid-cols-12 gap-6">
             {/* Main Content */}
-            <div className="flex-1 max-w-4xl">
+            <div className="col-span-12 lg:col-span-8">
               <div className="space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
@@ -372,9 +372,9 @@ const Registration = () => {
                   showPersonalizedTitle={false}
                 />
 
-                {/* Invoice action buttons - standalone button */}
+                {/* Action buttons */}
                 {!editingSection && (
-                  <div className="flex justify-center space-x-4">
+                  <div className="flex justify-center space-x-4 pt-6">
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentStep('personal')}
@@ -403,8 +403,10 @@ const Registration = () => {
             </div>
 
             {/* Event Details Sidebar */}
-            <div className="w-80">
-              <EventDetailsSection eventName={event.name} isCompact={true} />
+            <div className="col-span-12 lg:col-span-4">
+              <div className="sticky top-8">
+                <EventDetailsSection eventName={event.name} isCompact={true} />
+              </div>
             </div>
           </div>
         </div>
@@ -436,19 +438,19 @@ const Registration = () => {
             </Card>
           )}
 
-          {/* Personalized Title (outside of section) */}
+          {/* Personalized Title */}
           {hasPersonalizedTitle && !userData.registrationStatus && (
-            <div className="mb-6">
+            <div className="mb-8">
               <h1 className="text-2xl font-semibold text-gray-900">
                 {generateInvoicePersonalizedTitle(userData.personalInfo!.fullName!)}
               </h1>
-              <p className="text-gray-600 mt-1">Complete your payment details</p>
+              <p className="text-gray-600 mt-2">Complete your payment details</p>
             </div>
           )}
 
-          <div className="flex gap-8">
+          <div className="grid grid-cols-12 gap-6">
             {/* Main Content */}
-            <div className="flex-1 max-w-4xl">
+            <div className="col-span-12 lg:col-span-8">
               <div className="space-y-6">
                 <PaymentInfoSection
                   paymentInfo={userData.paymentInfo}
@@ -461,9 +463,9 @@ const Registration = () => {
                   showPersonalizedTitle={false}
                 />
 
-                {/* Payment action buttons - standalone button */}
+                {/* Action buttons */}
                 {!editingSection && (
-                  <div className="flex justify-center space-x-4">
+                  <div className="flex justify-center space-x-4 pt-6">
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentStep('invoice')}
@@ -490,8 +492,10 @@ const Registration = () => {
             </div>
 
             {/* Event Details Sidebar */}
-            <div className="w-80">
-              <EventDetailsSection eventName={event.name} isCompact={true} />
+            <div className="col-span-12 lg:col-span-4">
+              <div className="sticky top-8">
+                <EventDetailsSection eventName={event.name} isCompact={true} />
+              </div>
             </div>
           </div>
         </div>
@@ -519,22 +523,21 @@ const Registration = () => {
     <div className="min-h-screen bg-gray-50">
       <RegistrationHeader />
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          {/* Main Content */}
-          <div className="flex-1 max-w-4xl">
-            <div className="space-y-6">
-              {/* Personalized Title (outside of section) */}
-              {hasPersonalizedTitle && (
-                <div className="mb-6">
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
-                  </h1>
-                  <p className="text-gray-600 mt-1">Review and complete your registration details</p>
-                </div>
-              )}
+        {/* Personalized Title */}
+        {hasPersonalizedTitle && (
+          <div className="mb-8">
+            <h1 className="text-2xl font-semibold text-gray-900">
+              {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
+            </h1>
+            <p className="text-gray-600 mt-2">Review and complete your registration details</p>
+          </div>
+        )}
 
+        <div className="grid grid-cols-12 gap-6">
+          {/* Main Content */}
+          <div className="col-span-12 lg:col-span-8">
+            <div className="space-y-6">
               <PersonalInfoSection
                 personalInfo={userData.personalInfo}
                 onPersonalInfoChange={handlePersonalInfoChange}
@@ -544,9 +547,9 @@ const Registration = () => {
                 eventRequiresApproval={event.requiresApproval}
               />
 
-              {/* Action Buttons - standalone button */}
+              {/* Action Buttons */}
               {!editingSection && (
-                <div className="flex justify-center">
+                <div className="flex justify-center pt-6">
                   <Button 
                     onClick={handlePersonalInfoSubmit}
                     className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
@@ -568,8 +571,10 @@ const Registration = () => {
           </div>
 
           {/* Event Details Sidebar */}
-          <div className="w-80">
-            <EventDetailsSection eventName={event.name} isCompact={true} />
+          <div className="col-span-12 lg:col-span-4">
+            <div className="sticky top-8">
+              <EventDetailsSection eventName={event.name} isCompact={true} />
+            </div>
           </div>
         </div>
       </div>

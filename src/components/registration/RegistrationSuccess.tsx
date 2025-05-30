@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Edit } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 
 interface PersonalInfo {
   fullName?: string;
@@ -18,6 +18,7 @@ interface PaymentInfo {
 interface Event {
   requiresApproval: boolean;
   isPaid: boolean;
+  name: string;
 }
 
 interface RegistrationSuccessProps {
@@ -45,7 +46,7 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white">
             <h1 className="text-4xl font-light mb-3">Registration Complete</h1>
-            <p className="text-xl opacity-90 font-light">Thank you for joining Entrainment'25</p>
+            <p className="text-xl opacity-90 font-light">Thank you for joining {event.name}</p>
           </div>
         </div>
       </div>
@@ -63,59 +64,33 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
               <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto">
                 {event.requiresApproval 
                   ? "Your registration has been submitted and is pending approval. We'll notify you once it's confirmed."
-                  : "Your registration for Entrainment'25 has been confirmed. We look forward to seeing you there!"
+                  : `Your registration for ${event.name} has been confirmed. We look forward to seeing you there!`
                 }
               </p>
             </div>
 
-            <div className="space-y-4 mb-10">
-              {personalInfo && (
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
-                  <h3 className="font-medium text-gray-900 mb-2 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
-                    Personal Information
-                  </h3>
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <p>Name: {personalInfo.fullName}</p>
-                    <p>Email: {personalInfo.email}</p>
-                    <p>Mobile: {personalInfo.mobile}</p>
-                  </div>
-                </div>
-              )}
-
-              {event.isPaid && paymentInfo && (
-                <div className="p-4 bg-green-50 rounded-lg border border-green-100">
-                  <h3 className="font-medium text-gray-900 mb-2 flex items-center">
-                    <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
-                    Payment Information
-                  </h3>
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <p>Invoice Name: {paymentInfo.invoiceName}</p>
-                    <p>Amount: ₹{paymentInfo.amount}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-3 justify-center">
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button 
+                className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                style={{
+                  backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
+                }}
+              >
+                <span className="relative z-10">Add to Calendar</span>
+              </Button>
               <Button 
                 variant="outline" 
-                onClick={() => setEditingSection('personal')}
-                className="border-blue-200 text-blue-600 hover:bg-blue-50"
+                className="px-6 py-3 border-gray-300 text-gray-700 hover:bg-gray-50"
               >
-                <Edit className="w-4 h-4 mr-2" />
-                Edit Info
-              </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                Add to Calendar
-              </Button>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
                 Download Invoice
               </Button>
               <Button 
                 variant="ghost"
                 onClick={() => window.location.href = '/'}
-                className="text-gray-500 hover:bg-gray-100"
+                className="px-6 py-3 text-gray-500 hover:bg-gray-100"
               >
                 Go to Homepage
               </Button>
