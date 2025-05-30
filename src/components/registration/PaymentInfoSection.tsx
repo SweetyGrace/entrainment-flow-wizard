@@ -3,9 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { Edit } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { CalendarIcon, Edit } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 interface PaymentInfo {
   invoiceName?: string;
@@ -28,6 +33,7 @@ interface PaymentInfoSectionProps {
   setEditingSection: (section: string | null) => void;
   eventAmount: number;
   isPaid: boolean;
+  hideAmountField?: boolean;
 }
 
 const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
@@ -36,10 +42,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   editingSection,
   setEditingSection,
   eventAmount,
-  isPaid
+  isPaid,
+  hideAmountField = false
 }) => {
-  if (!isPaid) return null;
-
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
   
@@ -309,12 +314,14 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           />
         </div>
 
-        <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700">Total amount:</span>
-            <span className="text-2xl font-semibold text-blue-600">₹{eventAmount}</span>
+        {!hideAmountField && (
+          <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-gray-700">Total amount:</span>
+              <span className="text-2xl font-semibold text-blue-600">₹{eventAmount}</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {isEditing && (
           <div className="flex justify-end space-x-3 pt-6 border-t border-gray-100">

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -301,6 +300,22 @@ const Registration = () => {
     return hasRequiredPaymentInfo;
   };
 
+  // Generate personalized title
+  const generatePersonalizedTitle = (fullName: string) => {
+    const variations = [
+      `${fullName}, let's complete your profile details`,
+      `${fullName}, here are your personal details`,
+      `${fullName}, your information looks great so far`,
+      `${fullName}, let's review your details`,
+      `${fullName}, your personal profile summary`,
+      `${fullName}, these are your current details`
+    ];
+    
+    // Use name length to create consistent but varied selection
+    const index = fullName.length % variations.length;
+    return variations[index];
+  };
+
   // Awaiting approval screen
   if (currentStep === 'awaiting-approval') {
     return (
@@ -319,52 +334,63 @@ const Registration = () => {
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="space-y-6">
-            <PaymentInfoSection
-              paymentInfo={userData.paymentInfo}
-              onPaymentInfoChange={handlePaymentInfoChange}
-              editingSection={editingSection}
-              setEditingSection={setEditingSection}
-              eventAmount={event.amount || 0}
-              isPaid={event.isPaid}
-            />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex gap-8">
+            {/* Main Content */}
+            <div className="flex-1 max-w-4xl">
+              <div className="space-y-6">
+                <PaymentInfoSection
+                  paymentInfo={userData.paymentInfo}
+                  onPaymentInfoChange={handlePaymentInfoChange}
+                  editingSection={editingSection}
+                  setEditingSection={setEditingSection}
+                  eventAmount={event.amount || 0}
+                  isPaid={event.isPaid}
+                  hideAmountField={true}
+                />
 
-            {/* Invoice action buttons */}
-            <Card className="border-0 shadow-sm bg-white">
-              <CardContent className="p-6">
-                <div className="flex justify-center space-x-4">
-                  <Button 
-                    variant="outline"
-                    onClick={() => setCurrentStep('personal')}
-                    className="px-6 py-3"
-                  >
-                    back
-                  </Button>
-                  {editingSection ? (
-                    <div className="text-center text-gray-600">
-                      <p className="text-sm">Make your changes above and click "save changes"</p>
+                {/* Invoice action buttons */}
+                <Card className="border-0 shadow-sm bg-white">
+                  <CardContent className="p-6">
+                    <div className="flex justify-center space-x-4">
+                      <Button 
+                        variant="outline"
+                        onClick={() => setCurrentStep('personal')}
+                        className="px-6 py-3"
+                      >
+                        back
+                      </Button>
+                      {editingSection ? (
+                        <div className="text-center text-gray-600">
+                          <p className="text-sm">Make your changes above and click "save changes"</p>
+                        </div>
+                      ) : (
+                        <Button 
+                          onClick={handleInvoiceSubmit}
+                          className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                          disabled={!canProceedToPayment()}
+                          style={{
+                            backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                          }}
+                        >
+                          <span className="relative z-10">
+                            {event.requiresApproval ? 'submit for approval' : 'proceed to payment'}
+                          </span>
+                        </Button>
+                      )}
                     </div>
-                  ) : (
-                    <Button 
-                      onClick={handleInvoiceSubmit}
-                      className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                      disabled={!canProceedToPayment()}
-                      style={{
-                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                      }}
-                    >
-                      <span className="relative z-10">
-                        {event.requiresApproval ? 'submit for approval' : 'proceed to payment'}
-                      </span>
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Event Details Sidebar */}
+            <div className="w-80">
+              <EventDetailsSection eventName={event.name} isCompact={true} />
+            </div>
           </div>
         </div>
       </div>
@@ -377,7 +403,7 @@ const Registration = () => {
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Show approval success message if coming from approved state */}
           {userData.registrationStatus === 'approved' && (
             <Card className="mb-6 border-0 shadow-sm bg-green-50 border-green-200">
@@ -393,49 +419,60 @@ const Registration = () => {
             </Card>
           )}
 
-          <div className="space-y-6">
-            <PaymentInfoSection
-              paymentInfo={userData.paymentInfo}
-              onPaymentInfoChange={handlePaymentInfoChange}
-              editingSection={editingSection}
-              setEditingSection={setEditingSection}
-              eventAmount={event.amount || 0}
-              isPaid={event.isPaid}
-            />
+          <div className="flex gap-8">
+            {/* Main Content */}
+            <div className="flex-1 max-w-4xl">
+              <div className="space-y-6">
+                <PaymentInfoSection
+                  paymentInfo={userData.paymentInfo}
+                  onPaymentInfoChange={handlePaymentInfoChange}
+                  editingSection={editingSection}
+                  setEditingSection={setEditingSection}
+                  eventAmount={event.amount || 0}
+                  isPaid={event.isPaid}
+                  hideAmountField={true}
+                />
 
-            {/* Payment action buttons */}
-            <Card className="border-0 shadow-sm bg-white">
-              <CardContent className="p-6">
-                <div className="flex justify-center space-x-4">
-                  <Button 
-                    variant="outline"
-                    onClick={() => setCurrentStep('invoice')}
-                    className="px-6 py-3"
-                  >
-                    back
-                  </Button>
-                  {editingSection ? (
-                    <div className="text-center text-gray-600">
-                      <p className="text-sm">Make your changes above and click "save changes"</p>
+                {/* Payment action buttons */}
+                <Card className="border-0 shadow-sm bg-white">
+                  <CardContent className="p-6">
+                    <div className="flex justify-center space-x-4">
+                      <Button 
+                        variant="outline"
+                        onClick={() => setCurrentStep('invoice')}
+                        className="px-6 py-3"
+                      >
+                        back
+                      </Button>
+                      {editingSection ? (
+                        <div className="text-center text-gray-600">
+                          <p className="text-sm">Make your changes above and click "save changes"</p>
+                        </div>
+                      ) : (
+                        <Button 
+                          onClick={handlePaymentSubmit}
+                          className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                          disabled={!canProceedToPayment()}
+                          style={{
+                            backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat'
+                          }}
+                        >
+                          <span className="relative z-10">complete payment</span>
+                        </Button>
+                      )}
                     </div>
-                  ) : (
-                    <Button 
-                      onClick={handlePaymentSubmit}
-                      className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                      disabled={!canProceedToPayment()}
-                      style={{
-                        backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
-                      }}
-                    >
-                      <span className="relative z-10">complete payment</span>
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Event Details Sidebar */}
+            <div className="w-80">
+              <EventDetailsSection eventName={event.name} isCompact={true} />
+            </div>
           </div>
         </div>
       </div>
@@ -455,62 +492,84 @@ const Registration = () => {
   }
 
   // Personal information step (initial step)
+  const hasData = userData.personalInfo && Object.keys(userData.personalInfo).length > 0;
+  const hasPersonalizedTitle = userData.personalInfo?.fullName && hasData;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <RegistrationHeader />
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="space-y-6">
-          <PersonalInfoSection
-            personalInfo={userData.personalInfo}
-            onPersonalInfoChange={handlePersonalInfoChange}
-            editingSection={editingSection}
-            setEditingSection={setEditingSection}
-          />
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex gap-8">
+          {/* Main Content */}
+          <div className="flex-1 max-w-4xl">
+            <div className="space-y-6">
+              {/* Personalized Title (outside of section) */}
+              {hasPersonalizedTitle && (
+                <div className="mb-6">
+                  <h1 className="text-2xl font-semibold text-gray-900">
+                    {generatePersonalizedTitle(userData.personalInfo!.fullName!)}
+                  </h1>
+                  <p className="text-gray-600 mt-1">Review and complete your registration details</p>
+                </div>
+              )}
 
-          <EventDetailsSection eventName={event.name} />
+              <PersonalInfoSection
+                personalInfo={userData.personalInfo}
+                onPersonalInfoChange={handlePersonalInfoChange}
+                editingSection={editingSection}
+                setEditingSection={setEditingSection}
+                showPersonalizedTitle={false}
+              />
 
-          {/* Terms and Conditions + Action Buttons */}
-          <Card className="border-0 shadow-sm bg-white">
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mb-6">
-                <Checkbox
-                  id="terms"
-                  checked={userData.personalInfo?.acceptedTerms || false}
-                  onCheckedChange={(checked) => handlePersonalInfoChange('acceptedTerms', checked)}
-                  className="mt-1"
-                />
-                <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
-                  I accept the terms and conditions{event.requiresApproval ? ' and understand that this registration is subject to approval' : ''}
-                </Label>
-              </div>
-
-              <div className="flex justify-center">
-                {editingSection ? (
-                  <div className="text-center text-gray-600">
-                    <p className="text-sm">Make your changes above and click "save changes"</p>
+              {/* Terms and Conditions + Action Buttons */}
+              <Card className="border-0 shadow-sm bg-white">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mb-6">
+                    <Checkbox
+                      id="terms"
+                      checked={userData.personalInfo?.acceptedTerms || false}
+                      onCheckedChange={(checked) => handlePersonalInfoChange('acceptedTerms', checked)}
+                      className="mt-1"
+                    />
+                    <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
+                      I accept the terms and conditions{event.requiresApproval ? ' and understand that this registration is subject to approval' : ''}
+                    </Label>
                   </div>
-                ) : (
-                  <Button 
-                    onClick={handlePersonalInfoSubmit}
-                    className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-                    disabled={!canContinue()}
-                    style={{
-                      backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      backgroundRepeat: 'no-repeat'
-                    }}
-                  >
-                    <span className="relative z-10">
-                      {!event.isPaid && !event.requiresApproval ? 'confirm & register' : 'continue'}
-                    </span>
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+
+                  <div className="flex justify-center">
+                    {editingSection ? (
+                      <div className="text-center text-gray-600">
+                        <p className="text-sm">Make your changes above and click "save changes"</p>
+                      </div>
+                    ) : (
+                      <Button 
+                        onClick={handlePersonalInfoSubmit}
+                        className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                        disabled={!canContinue()}
+                        style={{
+                          backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          backgroundRepeat: 'no-repeat'
+                        }}
+                      >
+                        <span className="relative z-10">
+                          {!event.isPaid && !event.requiresApproval ? 'confirm & register' : 'continue'}
+                        </span>
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Event Details Sidebar */}
+          <div className="w-80">
+            <EventDetailsSection eventName={event.name} isCompact={true} />
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CalendarIcon, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface PersonalInfo {
   fullName?: string;
@@ -30,14 +30,17 @@ interface PersonalInfoSectionProps {
   onPersonalInfoChange: (field: string, value: any) => void;
   editingSection: string | null;
   setEditingSection: (section: string | null) => void;
+  showPersonalizedTitle?: boolean;
 }
 
 const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   personalInfo,
   onPersonalInfoChange,
   editingSection,
-  setEditingSection
+  setEditingSection,
+  showPersonalizedTitle = true
 }) => {
+  const [tempFormData, setTempFormData] = useState<PersonalInfo>({});
   const hasData = personalInfo && Object.keys(personalInfo).length > 0;
   const isEditing = editingSection === 'personal';
   
@@ -119,6 +122,19 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   
   const dataState = hasData && filledFields.length > 4 ? 'complete' : hasData && filledFields.length > 0 ? 'partial' : 'new';
 
+  const handleTempChange = (field: string, value: any) => {
+    setTempFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveChanges = () => {
+    // Save all temp changes to actual data
+    Object.keys(tempFormData).forEach(field => {
+      onPersonalInfoChange(field, tempFormData[field as keyof PersonalInfo]);
+    });
+    setTempFormData({});
+    setEditingSection(null);
+  };
+
   if (hasData && !isEditing) {
     return (
       <>
@@ -130,7 +146,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <CardTitle className="text-lg font-medium text-gray-900">
-                      {personalInfo?.fullName ? generatePersonalizedTitle(personalInfo.fullName) : 'Personal Information'}
+                      Confirm your details
                     </CardTitle>
                     <Button 
                       variant="ghost" 
@@ -171,20 +187,9 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <CardTitle className="text-lg font-medium text-gray-900">
-                      {generateMissingInfoTitle(personalInfo?.fullName)}
-                    </CardTitle>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => setEditingSection('personal')}
-                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
-                    >
-                      <Edit className="w-4 h-4 mr-1" />
-                      edit
-                    </Button>
-                  </div>
+                  <CardTitle className="text-lg font-medium text-gray-900">
+                    Please fill the missing fields
+                  </CardTitle>
                   <p className="text-sm text-gray-500 mt-1">Complete your profile</p>
                 </div>
               </div>
@@ -199,7 +204,10 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                     </Label>
                     
                     {field.type === 'select' && field.key === 'gender' ? (
-                      <Select value={personalInfo?.gender} onValueChange={(value) => onPersonalInfoChange('gender', value)}>
+                      <Select 
+                        value={tempFormData?.gender || personalInfo?.gender} 
+                        onValueChange={(value) => handleTempChange('gender', value)}
+                      >
                         <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                           <SelectValue placeholder="Select gender" />
                         </SelectTrigger>
@@ -215,18 +223,21 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                             variant="outline"
                             className={cn(
                               "w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50",
-                              !personalInfo?.dateOfBirth && "text-gray-400"
+                              !(tempFormData?.dateOfBirth || personalInfo?.dateOfBirth) && "text-gray-400"
                             )}
                           >
                             <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
-                            {personalInfo?.dateOfBirth ? format(personalInfo.dateOfBirth, "PPP") : "Pick a date"}
+                            {(tempFormData?.dateOfBirth || personalInfo?.dateOfBirth) ? 
+                              format(tempFormData?.dateOfBirth || personalInfo?.dateOfBirth!, "PPP") : 
+                              "Pick a date"
+                            }
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={personalInfo?.dateOfBirth}
-                            onSelect={(date) => onPersonalInfoChange('dateOfBirth', date)}
+                            selected={tempFormData?.dateOfBirth || personalInfo?.dateOfBirth}
+                            onSelect={(date) => handleTempChange('dateOfBirth', date)}
                             initialFocus
                             className="pointer-events-auto"
                           />
@@ -235,8 +246,8 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                     ) : field.type === 'textarea' ? (
                       <Textarea
                         id={field.key}
-                        value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
-                        onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
+                        value={tempFormData?.[field.key as keyof PersonalInfo] as string || personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
+                        onChange={(e) => handleTempChange(field.key, e.target.value)}
                         className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
                         rows={3}
                         placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
@@ -245,14 +256,43 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       <Input
                         id={field.key}
                         type={field.type}
-                        value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
-                        onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
+                        value={tempFormData?.[field.key as keyof PersonalInfo] as string || personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
+                        onChange={(e) => handleTempChange(field.key, e.target.value)}
                         className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                         placeholder={`Enter your ${formatFieldLabel(field.label).toLowerCase()}`}
                       />
                     )}
                   </div>
                 ))}
+              </div>
+
+              {/* Save Changes Button */}
+              <div className="flex justify-end pt-6 border-t border-gray-100">
+                <Button 
+                  onClick={handleSaveChanges}
+                  className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                  style={{
+                    backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                  }}
+                >
+                  <span className="relative z-10">save changes</span>
+                </Button>
+              </div>
+
+              {/* T&C Checkbox for missing fields */}
+              <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
+                <Checkbox
+                  id="terms-missing"
+                  checked={personalInfo?.acceptedTerms || false}
+                  onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
+                  className="mt-1"
+                />
+                <Label htmlFor="terms-missing" className="text-sm text-gray-700 leading-relaxed">
+                  I accept the terms and conditions and understand that this registration is subject to approval
+                </Label>
               </div>
             </CardContent>
           </Card>
