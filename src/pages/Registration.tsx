@@ -375,7 +375,7 @@ const Registration = () => {
 
                 {/* Action buttons */}
                 {!editingSection && (
-                  <div className="flex justify-start space-x-4 pt-6">
+                  <div className="flex justify-center space-x-4 pt-6">
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentStep('personal')}
@@ -404,10 +404,8 @@ const Registration = () => {
             </div>
 
             {/* Event Details Sidebar */}
-            <div className="w-80 flex-shrink-0">
-              <div className="sticky top-8">
-                <EventDetailsSection eventName={event.name} isCompact={true} />
-              </div>
+            <div className="w-80 flex-shrink-0 sticky top-8">
+              <EventDetailsSection eventName={event.name} isCompact={true} />
             </div>
           </div>
         </div>
@@ -467,7 +465,7 @@ const Registration = () => {
 
                 {/* Action buttons */}
                 {!editingSection && (
-                  <div className="flex justify-start space-x-4 pt-6">
+                  <div className="flex justify-center space-x-4 pt-6">
                     <Button 
                       variant="outline"
                       onClick={() => setCurrentStep('invoice')}
@@ -494,10 +492,8 @@ const Registration = () => {
             </div>
 
             {/* Event Details Sidebar */}
-            <div className="w-80 flex-shrink-0">
-              <div className="sticky top-8">
-                <EventDetailsSection eventName={event.name} isCompact={true} />
-              </div>
+            <div className="w-80 flex-shrink-0 sticky top-8">
+              <EventDetailsSection eventName={event.name} isCompact={true} />
             </div>
           </div>
         </div>
@@ -551,7 +547,7 @@ const Registration = () => {
 
               {/* Action Buttons */}
               {!editingSection && (
-                <div className="flex justify-start pt-6">
+                <div className="flex justify-center pt-6">
                   <Button 
                     onClick={handlePersonalInfoSubmit}
                     className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
@@ -573,10 +569,8 @@ const Registration = () => {
           </div>
 
           {/* Event Details Sidebar */}
-          <div className="w-80 flex-shrink-0">
-            <div className="sticky top-8">
-              <EventDetailsSection eventName={event.name} isCompact={true} />
-            </div>
+          <div className="w-80 flex-shrink-0 sticky top-8">
+            <EventDetailsSection eventName={event.name} isCompact={true} />
           </div>
         </div>
       </div>
