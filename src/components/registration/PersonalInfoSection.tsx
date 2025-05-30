@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -151,7 +152,6 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   <div key={field.key} className="space-y-2">
                     <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                       {formatFieldLabel(field.label)}
-                      {field.optional && <span className="text-gray-400 ml-1">(Optional)</span>}
                     </Label>
                     <div className="text-sm text-gray-900 font-medium">
                       {field.type === 'date' && personalInfo?.[field.key as keyof PersonalInfo] instanceof Date
