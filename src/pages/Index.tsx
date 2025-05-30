@@ -80,6 +80,16 @@ const Index = () => {
       location: 'Dharamshala, HP',
       participants: 'Limited to 50 participants',
       duration: '7 days silent retreat'
+    },
+    {
+      id: 'tat',
+      title: 'TAT',
+      description: 'Transformative awareness training for personal growth and mindfulness (Free Program)',
+      image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
+      date: 'June 5-7, 2025',
+      location: 'Pune, Maharashtra',
+      participants: 'Open for 200 participants',
+      duration: '3 days workshop'
     }
   ];
 

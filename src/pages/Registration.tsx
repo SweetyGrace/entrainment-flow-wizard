@@ -1,14 +1,14 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import PersonalInfoSection from '@/components/registration/PersonalInfoSection';
-import PaymentInfoSection from '@/components/registration/PaymentInfoSection';
-import EventDetailsSection from '@/components/registration/EventDetailsSection';
-import RegistrationSuccess from '@/components/registration/RegistrationSuccess';
+import { Badge } from '@/components/ui/badge';
 import RegistrationHeader from '@/components/registration/RegistrationHeader';
+import PersonalInfoSection from '@/components/registration/PersonalInfoSection';
+import EventDetailsSection from '@/components/registration/EventDetailsSection';
+import PaymentInfoSection from '@/components/registration/PaymentInfoSection';
+import RegistrationSuccess from '@/components/registration/RegistrationSuccess';
 import AwaitingApprovalScreen from '@/components/registration/AwaitingApprovalScreen';
 
 interface UserData {
@@ -111,6 +111,16 @@ const Registration = () => {
         return {
           id: 'msd',
           name: "MSD",
+          isPaid: false,
+          requiresApproval: false,
+          isOffline: true,
+          amount: 0
+        };
+      case 'tat':
+        // Case 1: Free Program (No Payment, No Approval)
+        return {
+          id: 'tat',
+          name: "TAT",
           isPaid: false,
           requiresApproval: false,
           isOffline: true,
