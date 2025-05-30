@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -347,10 +346,10 @@ const Registration = () => {
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-12 gap-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex items-start gap-8">
             {/* Main Content */}
-            <div className="col-span-12 lg:col-span-8">
+            <div className="flex-1 max-w-2xl">
               {/* Personalized Title */}
               {hasPersonalizedTitle && (
                 <div className="mb-8">
@@ -404,7 +403,7 @@ const Registration = () => {
             </div>
 
             {/* Event Details Sidebar */}
-            <div className="col-span-12 lg:col-span-4">
+            <div className="w-80 flex-shrink-0">
               <div className="sticky top-8">
                 <EventDetailsSection eventName={event.name} isCompact={true} />
               </div>
@@ -423,10 +422,10 @@ const Registration = () => {
       <div className="min-h-screen bg-gray-50">
         <RegistrationHeader />
 
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-12 gap-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex items-start gap-8">
             {/* Main Content */}
-            <div className="col-span-12 lg:col-span-8">
+            <div className="flex-1 max-w-2xl">
               {/* Show approval success message if coming from approved state */}
               {userData.registrationStatus === 'approved' && (
                 <Card className="mb-6 border-0 shadow-sm bg-green-50 border-green-200">
@@ -493,7 +492,7 @@ const Registration = () => {
             </div>
 
             {/* Event Details Sidebar */}
-            <div className="col-span-12 lg:col-span-4">
+            <div className="w-80 flex-shrink-0">
               <div className="sticky top-8">
                 <EventDetailsSection eventName={event.name} isCompact={true} />
               </div>
@@ -524,10 +523,10 @@ const Registration = () => {
     <div className="min-h-screen bg-gray-50">
       <RegistrationHeader />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-12 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex items-start gap-8">
           {/* Main Content */}
-          <div className="col-span-12 lg:col-span-8">
+          <div className="flex-1 max-w-2xl">
             {/* Personalized Title */}
             {hasPersonalizedTitle && (
               <div className="mb-8">
@@ -572,7 +571,7 @@ const Registration = () => {
           </div>
 
           {/* Event Details Sidebar */}
-          <div className="col-span-12 lg:col-span-4">
+          <div className="w-80 flex-shrink-0">
             <div className="sticky top-8">
               <EventDetailsSection eventName={event.name} isCompact={true} />
             </div>
