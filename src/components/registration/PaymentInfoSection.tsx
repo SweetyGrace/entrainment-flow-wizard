@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { CreditCard, Edit } from 'lucide-react';
+import { Edit } from 'lucide-react';
 
 interface PaymentInfo {
   invoiceName?: string;
@@ -49,23 +49,18 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
       <Card className="mb-6 border-0 shadow-sm bg-white">
         <CardHeader className="pb-4">
           <div className="flex justify-between items-start">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
-                <CreditCard className="w-4 h-4 text-green-600" />
-              </div>
-              <div>
-                <CardTitle className="text-lg font-medium text-gray-900">Invoice Details</CardTitle>
-                <p className="text-sm text-gray-500 mt-1">Your billing information</p>
-              </div>
+            <div className="flex-1">
+              <CardTitle className="text-lg font-medium text-gray-900">Invoice details</CardTitle>
+              <p className="text-sm text-gray-500 mt-1">Your billing information</p>
             </div>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => setEditingSection('payment')}
-              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
+              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md ml-4"
             >
               <Edit className="w-4 h-4 mr-1" />
-              Edit
+              edit
             </Button>
           </div>
         </CardHeader>
@@ -73,13 +68,13 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {paymentInfo?.invoiceName && (
               <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Invoice Name</Label>
+                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Invoice name</Label>
                 <div className="text-sm text-gray-900 font-medium">{paymentInfo.invoiceName}</div>
               </div>
             )}
             {paymentInfo?.invoiceEmail && (
               <div className="space-y-2">
-                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Invoice Email</Label>
+                <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Invoice email</Label>
                 <div className="text-sm text-gray-900 font-medium">{paymentInfo.invoiceEmail}</div>
               </div>
             )}
@@ -100,35 +95,25 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
       <CardHeader className="pb-6">
         {isEditing && (
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
-                <CreditCard className="w-4 h-4 text-green-600" />
-              </div>
-              <div>
-                <CardTitle className="text-lg font-medium text-gray-900">Edit Invoice Details</CardTitle>
-                <p className="text-sm text-gray-500 mt-1">Update your billing information</p>
-              </div>
+            <div className="flex-1">
+              <CardTitle className="text-lg font-medium text-gray-900">Edit invoice details</CardTitle>
+              <p className="text-sm text-gray-500 mt-1">Update your billing information</p>
             </div>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => setEditingSection(null)}
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md ml-4"
             >
-              Cancel
+              cancel
             </Button>
           </div>
         )}
 
         {!isEditing && (
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
-              <CreditCard className="w-4 h-4 text-green-600" />
-            </div>
-            <div>
-              <CardTitle className="text-lg font-medium text-gray-900">Invoice Details</CardTitle>
-              <p className="text-sm text-gray-500 mt-1">We need some billing information for your registration.</p>
-            </div>
+          <div>
+            <CardTitle className="text-lg font-medium text-gray-900">Invoice details</CardTitle>
+            <p className="text-sm text-gray-500 mt-1">We need some billing information for your registration.</p>
           </div>
         )}
       </CardHeader>
@@ -136,7 +121,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <Label htmlFor="invoiceName" className="text-sm font-medium text-gray-700">Name for Invoice</Label>
+            <Label htmlFor="invoiceName" className="text-sm font-medium text-gray-700">Name for invoice</Label>
             <Input
               id="invoiceName"
               value={paymentInfo?.invoiceName || ''}
@@ -146,7 +131,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             />
           </div>
           <div className="space-y-3">
-            <Label htmlFor="invoiceEmail" className="text-sm font-medium text-gray-700">Email for Invoice</Label>
+            <Label htmlFor="invoiceEmail" className="text-sm font-medium text-gray-700">Email for invoice</Label>
             <Input
               id="invoiceEmail"
               type="email"
@@ -165,7 +150,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
               checked={paymentInfo?.gstRegistered || false}
               onCheckedChange={(checked) => onPaymentInfoChange('gstRegistered', checked)}
             />
-            <Label htmlFor="gstRegistered" className="text-sm font-medium text-gray-700">GST Registered?</Label>
+            <Label htmlFor="gstRegistered" className="text-sm font-medium text-gray-700">GST registered?</Label>
           </div>
 
           {paymentInfo?.gstRegistered && (
@@ -208,7 +193,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
 
         <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700">Total Amount:</span>
+            <span className="text-sm font-medium text-gray-700">Total amount:</span>
             <span className="text-2xl font-semibold text-blue-600">₹{eventAmount}</span>
           </div>
         </div>
@@ -220,13 +205,13 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
               onClick={() => setEditingSection(null)}
               className="px-6"
             >
-              Cancel
+              cancel
             </Button>
             <Button 
               onClick={() => setEditingSection(null)}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6"
             >
-              Save Changes
+              save changes
             </Button>
           </div>
         )}

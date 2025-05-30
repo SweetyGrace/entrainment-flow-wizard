@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -6,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import PersonalInfoSection from '@/components/registration/PersonalInfoSection';
 import PaymentInfoSection from '@/components/registration/PaymentInfoSection';
+import EventDetailsSection from '@/components/registration/EventDetailsSection';
 import RegistrationSuccess from '@/components/registration/RegistrationSuccess';
 import RegistrationHeader from '@/components/registration/RegistrationHeader';
 
@@ -228,7 +230,7 @@ const Registration = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Programme Registered!</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Programme registered!</h2>
               <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
                 Congratulations! You have successfully registered for {event.name}. 
                 {event.isPaid ? " Please proceed to complete your payment to secure your spot." : " Your registration is now complete."}
@@ -236,7 +238,7 @@ const Registration = () => {
               
               {/* Show registered personal info */}
               <div className="bg-blue-50 rounded-lg p-6 mb-8 text-left max-w-md mx-auto">
-                <h3 className="font-semibold text-gray-900 mb-4">Registration Details:</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">Registration details:</h3>
                 <div className="space-y-2 text-sm">
                   <p><span className="font-medium">Name:</span> {userData.personalInfo?.fullName}</p>
                   <p><span className="font-medium">Email:</span> {userData.personalInfo?.email}</p>
@@ -257,7 +259,7 @@ const Registration = () => {
                       backgroundRepeat: 'no-repeat'
                     }}
                   >
-                    <span className="relative z-10">Proceed to Payment</span>
+                    <span className="relative z-10">proceed to payment</span>
                   </Button>
                 )}
                 <Button 
@@ -265,7 +267,7 @@ const Registration = () => {
                   onClick={() => setCurrentStep('personal')}
                   className="px-8 py-3 text-base"
                 >
-                  Edit Registration
+                  edit registration
                 </Button>
               </div>
             </CardContent>
@@ -290,8 +292,8 @@ const Registration = () => {
             <Card className="border-0 shadow-sm bg-white">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between text-sm text-gray-600">
-                  <span className="text-green-600 font-medium">✓ Registration Complete</span>
-                  <span className="font-medium text-blue-600">Payment Details</span>
+                  <span className="text-green-600 font-medium">✓ registration complete</span>
+                  <span className="font-medium text-blue-600">payment details</span>
                 </div>
               </CardContent>
             </Card>
@@ -314,11 +316,11 @@ const Registration = () => {
                     onClick={() => setCurrentStep('registered')}
                     className="px-6 py-3"
                   >
-                    Back
+                    back
                   </Button>
                   {editingSection ? (
                     <div className="text-center text-gray-600">
-                      <p className="text-sm">Make your changes above and click "Save Changes"</p>
+                      <p className="text-sm">Make your changes above and click "save changes"</p>
                     </div>
                   ) : (
                     <Button 
@@ -332,7 +334,7 @@ const Registration = () => {
                         backgroundRepeat: 'no-repeat'
                       }}
                     >
-                      <span className="relative z-10">Complete Payment</span>
+                      <span className="relative z-10">complete payment</span>
                     </Button>
                   )}
                 </div>
@@ -374,6 +376,8 @@ const Registration = () => {
             setEditingSection={setEditingSection}
           />
 
+          <EventDetailsSection eventName={event.name} />
+
           {/* Terms and Conditions + Action Buttons */}
           <Card className="border-0 shadow-sm bg-white">
             <CardContent className="p-6">
@@ -392,7 +396,7 @@ const Registration = () => {
               <div className="flex justify-center">
                 {editingSection ? (
                   <div className="text-center text-gray-600">
-                    <p className="text-sm">Make your changes above and click "Save Changes"</p>
+                    <p className="text-sm">Make your changes above and click "save changes"</p>
                   </div>
                 ) : (
                   <Button 
@@ -406,7 +410,7 @@ const Registration = () => {
                       backgroundRepeat: 'no-repeat'
                     }}
                   >
-                    <span className="relative z-10">Continue</span>
+                    <span className="relative z-10">continue</span>
                   </Button>
                 )}
               </div>

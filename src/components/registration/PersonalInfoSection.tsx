@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, User, Edit } from 'lucide-react';
+import { CalendarIcon, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
@@ -41,20 +41,53 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   const hasData = personalInfo && Object.keys(personalInfo).length > 0;
   const isEditing = editingSection === 'personal';
   
+  // Generate personalized title
+  const generatePersonalizedTitle = (fullName: string) => {
+    const variations = [
+      `${fullName}, let's complete your profile details`,
+      `${fullName}, here are your personal details`,
+      `${fullName}, your information looks great so far`,
+      `${fullName}, let's review your details`,
+      `${fullName}, your personal profile summary`,
+      `${fullName}, these are your current details`
+    ];
+    
+    // Use name length to create consistent but varied selection
+    const index = fullName.length % variations.length;
+    return variations[index];
+  };
+
+  // Convert field labels to title case
+  const formatFieldLabel = (label: string) => {
+    // Handle acronyms that should stay uppercase
+    const acronyms = ['ID', 'DOB', 'GST', 'TDS'];
+    
+    const words = label.split(' ');
+    return words.map((word, index) => {
+      if (acronyms.includes(word.toUpperCase())) {
+        return word.toUpperCase();
+      }
+      if (index === 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+      return word.toLowerCase();
+    }).join(' ');
+  };
+  
   // Check which fields are filled and unfilled
   const filledFields = [];
   const unfilledFields = [];
   
   const allFields = [
-    { key: 'fullName', label: 'Full Name', type: 'text' },
-    { key: 'gender', label: 'Gender', type: 'select' },
-    { key: 'mobile', label: 'Mobile Number', type: 'text' },
-    { key: 'email', label: 'Email Address', type: 'email' },
-    { key: 'dateOfBirth', label: 'Date of Birth', type: 'date' },
-    { key: 'city', label: 'City', type: 'text' },
-    { key: 'infinitheismContact', label: 'Infinitheism Contact', type: 'text' },
-    { key: 'preferredRoommate', label: 'Preferred Roommate', type: 'text', optional: true },
-    { key: 'additionalNotes', label: 'Note', type: 'textarea', optional: true }
+    { key: 'fullName', label: 'FULL NAME', type: 'text' },
+    { key: 'gender', label: 'GENDER', type: 'select' },
+    { key: 'mobile', label: 'MOBILE NUMBER', type: 'text' },
+    { key: 'email', label: 'EMAIL ADDRESS', type: 'email' },
+    { key: 'dateOfBirth', label: 'DATE OF BIRTH', type: 'date' },
+    { key: 'city', label: 'CITY', type: 'text' },
+    { key: 'infinitheismContact', label: 'INFINITHEISM CONTACT', type: 'text' },
+    { key: 'preferredRoommate', label: 'PREFERRED ROOMMATE', type: 'text', optional: true },
+    { key: 'additionalNotes', label: 'NOTE', type: 'textarea', optional: true }
   ];
   
   if (hasData) {
@@ -74,55 +107,55 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       <Card className="mb-6 border-0 shadow-sm bg-white">
         <CardHeader className="pb-4">
           <div className="flex justify-between items-start">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                <User className="w-4 h-4 text-blue-600" />
-              </div>
-              <div>
-                <CardTitle className="text-lg font-medium text-gray-900">Personal Information</CardTitle>
-                <p className="text-sm text-gray-500 mt-1">Your basic details</p>
-              </div>
+            <div className="flex-1">
+              <CardTitle className="text-lg font-medium text-gray-900">
+                {personalInfo?.fullName ? generatePersonalizedTitle(personalInfo.fullName) : 'Personal Information'}
+              </CardTitle>
+              <p className="text-sm text-gray-500 mt-1">Your basic details</p>
             </div>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => setEditingSection('personal')}
-              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
+              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md ml-4"
             >
               <Edit className="w-4 h-4 mr-1" />
-              Edit
+              edit
             </Button>
           </div>
         </CardHeader>
         <CardContent className="pt-0">
           {/* Show filled fields */}
           {filledFields.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              {filledFields.map(field => (
-                <div key={field.key} className="space-y-2">
-                  <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    {field.label}
-                    {field.optional && <span className="text-gray-400 ml-1">(Optional)</span>}
-                  </Label>
-                  <div className="text-sm text-gray-900 font-medium">
-                    {field.type === 'date' && personalInfo?.[field.key as keyof PersonalInfo] instanceof Date
-                      ? format(personalInfo[field.key as keyof PersonalInfo] as Date, "PPP")
-                      : String(personalInfo?.[field.key as keyof PersonalInfo] || '')}
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-4">Completed information</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                {filledFields.map(field => (
+                  <div key={field.key} className="space-y-2">
+                    <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                      {formatFieldLabel(field.label)}
+                      {field.optional && <span className="text-gray-400 ml-1">(Optional)</span>}
+                    </Label>
+                    <div className="text-sm text-gray-900 font-medium">
+                      {field.type === 'date' && personalInfo?.[field.key as keyof PersonalInfo] instanceof Date
+                        ? format(personalInfo[field.key as keyof PersonalInfo] as Date, "PPP")
+                        : String(personalInfo?.[field.key as keyof PersonalInfo] || '')}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
           
           {/* Show unfilled fields for partial data */}
           {dataState === 'partial' && unfilledFields.length > 0 && (
             <div className="border-t border-gray-100 pt-6">
-              <h4 className="text-sm font-medium text-gray-700 mb-4">Complete your profile</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-4">Missing information</h4>
               <div className="space-y-6">
                 {unfilledFields.map(field => (
                   <div key={field.key} className="space-y-3">
                     <Label htmlFor={field.key} className="text-sm font-medium text-gray-700">
-                      {field.label}
+                      {formatFieldLabel(field.label)}
                       {field.optional && <span className="text-gray-400 text-xs ml-1">(Optional)</span>}
                     </Label>
                     
@@ -167,7 +200,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                         onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
                         className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
                         rows={3}
-                        placeholder={`Enter ${field.label.toLowerCase()}...`}
+                        placeholder={`Enter ${formatFieldLabel(field.label).toLowerCase()}...`}
                       />
                     ) : (
                       <Input
@@ -176,7 +209,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                         value={personalInfo?.[field.key as keyof PersonalInfo] as string || ''}
                         onChange={(e) => onPersonalInfoChange(field.key, e.target.value)}
                         className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        placeholder={`Enter your ${field.label.toLowerCase()}`}
+                        placeholder={`Enter your ${formatFieldLabel(field.label).toLowerCase()}`}
                       />
                     )}
                   </div>
@@ -194,41 +227,33 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       <CardHeader className="pb-6">
         {isEditing && (
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                <User className="w-4 h-4 text-blue-600" />
-              </div>
-              <div>
-                <CardTitle className="text-lg font-medium text-gray-900">Edit Personal Information</CardTitle>
-                <p className="text-sm text-gray-500 mt-1">Update your details below</p>
-              </div>
+            <div className="flex-1">
+              <CardTitle className="text-lg font-medium text-gray-900">
+                {personalInfo?.fullName ? `Edit ${personalInfo.fullName}'s information` : 'Edit Personal Information'}
+              </CardTitle>
+              <p className="text-sm text-gray-500 mt-1">Update your details below</p>
             </div>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => setEditingSection(null)}
-              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md"
+              className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 h-8 px-3 rounded-md ml-4"
             >
-              Cancel
+              cancel
             </Button>
           </div>
         )}
         
         {!isEditing && (
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-              <User className="w-4 h-4 text-blue-600" />
-            </div>
-            <div>
-              <CardTitle className="text-lg font-medium text-gray-900">
-                {dataState === 'new' ? "Welcome to Entrainment'25" : "We're almost there!"}
-              </CardTitle>
-              <p className="text-sm text-gray-500 mt-1">
-                {dataState === 'new' 
-                  ? "Let's get your journey started with some basic information." 
-                  : "Just a few quick things to wrap up your profile."}
-              </p>
-            </div>
+          <div>
+            <CardTitle className="text-lg font-medium text-gray-900">
+              {dataState === 'new' ? "Welcome to Entrainment'25" : "We're almost there!"}
+            </CardTitle>
+            <p className="text-sm text-gray-500 mt-1">
+              {dataState === 'new' 
+                ? "Let's get your journey started with some basic information." 
+                : "Just a few quick things to wrap up your profile."}
+            </p>
           </div>
         )}
       </CardHeader>
@@ -236,7 +261,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">Full Name</Label>
+            <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">Full name</Label>
             <Input
               id="fullName"
               value={personalInfo?.fullName || ''}
@@ -261,7 +286,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <Label htmlFor="mobile" className="text-sm font-medium text-gray-700">Mobile Number</Label>
+            <Label htmlFor="mobile" className="text-sm font-medium text-gray-700">Mobile number</Label>
             <Input
               id="mobile"
               value={personalInfo?.mobile || ''}
@@ -271,7 +296,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             />
           </div>
           <div className="space-y-3">
-            <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email Address</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email address</Label>
             <Input
               id="email"
               type="email"
@@ -285,7 +310,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700">Date of Birth</Label>
+            <Label className="text-sm font-medium text-gray-700">Date of birth</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -324,7 +349,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <Label htmlFor="infinitheismContact" className="text-sm font-medium text-gray-700">Infinitheism Contact</Label>
+            <Label htmlFor="infinitheismContact" className="text-sm font-medium text-gray-700">Infinitheism contact</Label>
             <Input
               id="infinitheismContact"
               value={personalInfo?.infinitheismContact || ''}
@@ -335,7 +360,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           </div>
           <div className="space-y-3">
             <Label htmlFor="preferredRoommate" className="text-sm font-medium text-gray-700">
-              Preferred Roommate <span className="text-gray-400 text-xs">(Optional)</span>
+              Preferred roommate <span className="text-gray-400 text-xs">(Optional)</span>
             </Label>
             <Input
               id="preferredRoommate"
@@ -368,13 +393,13 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               onClick={() => setEditingSection(null)}
               className="px-6"
             >
-              Cancel
+              cancel
             </Button>
             <Button 
               onClick={() => setEditingSection(null)}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6"
             >
-              Save Changes
+              save changes
             </Button>
           </div>
         )}
