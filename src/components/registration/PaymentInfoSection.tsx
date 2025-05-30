@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,6 +43,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   showPersonalizedTitle = true
 }) => {
   const [tempFormData, setTempFormData] = useState<PaymentInfo>({});
+  const [columnLayout, setColumnLayout] = useState<2 | 3>(2);
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
   
@@ -108,24 +108,40 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <CardTitle className="text-lg font-medium text-gray-900">Invoice details</CardTitle>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
+                  <CardTitle className="text-lg font-medium text-gray-900">
+                    Review the details and update anything that needs realignment — <button 
                       onClick={() => setEditingSection('payment')}
-                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 px-3 rounded-md"
+                      className="text-blue-600 hover:text-blue-700 underline"
                     >
-                      <Edit className="w-4 h-4 mr-1" />
-                      edit
+                      click here to edit
+                    </button>
+                  </CardTitle>
+                  
+                  {/* Column Layout Toggle */}
+                  <div className="flex items-center gap-2 mt-3">
+                    <span className="text-sm text-gray-500">View:</span>
+                    <Button
+                      variant={columnLayout === 2 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(2)}
+                      className="h-7 px-3 text-xs"
+                    >
+                      2 Columns
+                    </Button>
+                    <Button
+                      variant={columnLayout === 3 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(3)}
+                      className="h-7 px-3 text-xs"
+                    >
+                      3 Columns
                     </Button>
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">Your billing information</p>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
                 {filledFields.map(field => (
                   <div key={field.key} className="space-y-2">
                     <Label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
@@ -154,7 +170,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                   <CardTitle className="text-lg font-medium text-gray-900">
                     Please fill the missing fields
                   </CardTitle>
-                  <p className="text-sm text-gray-500 mt-1">Complete your invoice details</p>
                 </div>
               </div>
             </CardHeader>
@@ -239,7 +254,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                   cancel
                 </Button>
               </div>
-              <p className="text-sm text-gray-500 mt-1">Update your billing information</p>
             </div>
           </div>
         )}
@@ -247,7 +261,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         {!isEditing && (
           <div>
             <CardTitle className="text-lg font-medium text-gray-900">Invoice details</CardTitle>
-            <p className="text-sm text-gray-500 mt-1">We need some billing information for your registration.</p>
           </div>
         )}
       </CardHeader>
@@ -333,18 +346,6 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
               className="px-6"
             >
               cancel
-            </Button>
-            <Button 
-              onClick={() => setEditingSection(null)}
-              className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-              style={{
-                backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat'
-              }}
-            >
-              <span className="relative z-10">save changes</span>
             </Button>
           </div>
         )}

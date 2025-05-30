@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 interface PersonalInfo {
   fullName?: string;
@@ -55,8 +54,15 @@ const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
         <Card className="border-0 shadow-lg bg-white">
           <CardContent className="p-8">
             <div className="text-center mb-10">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="w-10 h-10 text-green-600" />
+              <div className="relative w-20 h-20 mx-auto mb-6">
+                {/* Animated success icon */}
+                <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full animate-pulse"></div>
+                <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
+                  <Sparkles className="w-8 h-8 text-emerald-500 animate-bounce" />
+                </div>
+                {/* Floating particles */}
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-ping"></div>
+                <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
               </div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">
                 {event.requiresApproval ? "Awaiting Mahatria's Approval" : "You're All Set!"}

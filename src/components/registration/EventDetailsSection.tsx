@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarIcon, Clock, MapPin, IndianRupee } from 'lucide-react';
@@ -17,7 +16,6 @@ const EventDetailsSection: React.FC<EventDetailsSectionProps> = ({
       <Card className="border-0 shadow-sm bg-white sticky top-8">
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-medium text-gray-900">{eventName}</CardTitle>
-          <p className="text-sm text-gray-500">Programme summary</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
@@ -41,24 +39,16 @@ const EventDetailsSection: React.FC<EventDetailsSectionProps> = ({
                 <p className="text-sm font-medium text-gray-900">3 days intensive</p>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-3">
-              <IndianRupee className="w-4 h-4 text-blue-600 flex-shrink-0" />
-              <div>
-                <p className="text-sm font-medium text-gray-900">₹2,500</p>
-              </div>
-            </div>
           </div>
           
           <div className="pt-4 border-t border-gray-100">
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <p className="text-xs text-blue-800">
-                <span className="font-medium">Total Amount:</span> ₹2,500
-              </p>
-              <p className="text-xs text-blue-700 mt-1">
-                Including GST @18%: ₹25,000<br />
-                TDS: ₹1,000<br />
-                <span className="font-medium">Amount to be paid: ₹2,58,000</span>
+            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+              <div className="flex items-center space-x-2 mb-1">
+                <IndianRupee className="w-4 h-4 text-blue-600" />
+                <p className="text-sm font-semibold text-blue-800">₹2,500</p>
+              </div>
+              <p className="text-xs text-blue-700">
+                Event registration fee
               </p>
             </div>
           </div>
@@ -71,7 +61,6 @@ const EventDetailsSection: React.FC<EventDetailsSectionProps> = ({
     <Card className="mb-6 border-0 shadow-sm bg-white">
       <CardHeader className="pb-4">
         <CardTitle className="text-lg font-medium text-gray-900">Event details</CardTitle>
-        <p className="text-sm text-gray-500 mt-1">Programme information and logistics</p>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

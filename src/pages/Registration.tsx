@@ -297,39 +297,20 @@ const Registration = () => {
     return hasRequiredPaymentInfo;
   };
 
-  // Generate personalized title
+  // Generate simple personalized title
   const generatePersonalizedTitle = (fullName?: string) => {
     if (fullName) {
-      const variations = [
-        `${fullName}, let's complete your profile details`,
-        `${fullName}, here are your personal details`,
-        `${fullName}, your information looks great so far`,
-        `${fullName}, let's review your details`,
-        `${fullName}, your personal profile summary`,
-        `${fullName}, these are your current details`
-      ];
-      
-      // Use name length to create consistent but varied selection
-      const index = fullName.length % variations.length;
-      return variations[index];
+      return `Namaste ${fullName}! Let's ensure your profile reflects you fully.`;
     }
-    return "Hey, let's complete your profile details";
+    return "Namaste! Let's ensure your profile reflects you fully.";
   };
 
   // Generate personalized title for invoice details
   const generateInvoicePersonalizedTitle = (fullName?: string) => {
     if (fullName) {
-      const variations = [
-        `${fullName}, let's complete your billing details`,
-        `${fullName}, we need a few more payment details`,
-        `${fullName}, finish your invoice information`,
-        `${fullName}, let's complete your payment setup`
-      ];
-      
-      const index = fullName.length % variations.length;
-      return variations[index];
+      return `Namaste ${fullName}! Let's ensure your profile reflects you fully.`;
     }
-    return "Hey, let's complete your billing details";
+    return "Namaste! Let's ensure your profile reflects you fully.";
   };
 
   // Awaiting approval screen
@@ -356,7 +337,6 @@ const Registration = () => {
             <h1 className="text-2xl font-semibold text-gray-900">
               {generateInvoicePersonalizedTitle(userData.personalInfo?.fullName)}
             </h1>
-            <p className="text-gray-600 mt-2">Complete your billing information</p>
           </div>
 
           <div className="flex items-start gap-8">
@@ -382,7 +362,7 @@ const Registration = () => {
                       onClick={() => setCurrentStep('personal')}
                       className="px-6 py-3"
                     >
-                      back
+                      cancel
                     </Button>
                     <Button 
                       onClick={handleInvoiceSubmit}
@@ -427,7 +407,6 @@ const Registration = () => {
               <h1 className="text-2xl font-semibold text-gray-900">
                 {generateInvoicePersonalizedTitle(userData.personalInfo?.fullName)}
               </h1>
-              <p className="text-gray-600 mt-2">Complete your payment details</p>
             </div>
           )}
 
@@ -469,7 +448,7 @@ const Registration = () => {
                       onClick={() => setCurrentStep('invoice')}
                       className="px-6 py-3"
                     >
-                      back
+                      cancel
                     </Button>
                     <Button 
                       onClick={handlePaymentSubmit}
@@ -522,7 +501,6 @@ const Registration = () => {
           <h1 className="text-2xl font-semibold text-gray-900">
             {generatePersonalizedTitle(userData.personalInfo?.fullName)}
           </h1>
-          <p className="text-gray-600 mt-2">Review and complete your registration details</p>
         </div>
 
         <div className="flex items-start gap-8">
@@ -540,7 +518,14 @@ const Registration = () => {
 
               {/* Action Buttons */}
               {!editingSection && (
-                <div className="flex justify-center pt-6">
+                <div className="flex justify-center space-x-4 pt-6">
+                  <Button 
+                    variant="outline"
+                    onClick={() => window.location.href = '/'}
+                    className="px-6 py-3"
+                  >
+                    cancel
+                  </Button>
                   <Button 
                     onClick={handlePersonalInfoSubmit}
                     className="relative overflow-hidden px-8 py-3 text-base font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
