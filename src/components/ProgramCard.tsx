@@ -57,6 +57,13 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
       {/* Main Card Content - Overlapping */}
       <div className="program-card-main-content relative -mt-20 mx-6">
         <div className="bg-white rounded-t-xl shadow-lg border border-gray-100 p-8">
+          {/* Program Title */}
+          <div className="program-title-section text-center mb-8">
+            <h2 className="program-title text-2xl font-bold text-slate-800">
+              {title}
+            </h2>
+          </div>
+
           {/* Four Column Grid with Dividers */}
           <div className="program-info-grid relative grid grid-cols-4 gap-0">
             {/* Program Dates */}
