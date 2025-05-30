@@ -2,7 +2,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgramCard from '@/components/ProgramCard';
-import TopNavigation from '@/components/TopNavigation';
 import BannerCarousel from '@/components/BannerCarousel';
 
 const Index = () => {
@@ -93,8 +92,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <TopNavigation />
-      
       {/* Banner Carousel */}
       <BannerCarousel />
 
