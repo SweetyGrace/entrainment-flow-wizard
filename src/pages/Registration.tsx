@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -78,20 +77,58 @@ type RegistrationStep = 'personal' | 'invoice' | 'awaiting-approval' | 'payment'
 const Registration = () => {
   const [searchParams] = useSearchParams();
   const scenario = searchParams.get('scenario') || 'new';
+  const eventId = searchParams.get('event') || 'entrainment25'; // Get event from URL
   
   const [userData, setUserData] = useState<UserData>({});
   const [currentStep, setCurrentStep] = useState<RegistrationStep>('personal');
   const [editingSection, setEditingSection] = useState<string | null>(null);
 
-  // Mock event data - you can modify these properties to test different scenarios
-  const event: Event = {
-    id: 'entrainment25',
-    name: "Entrainment'25",
-    isPaid: true,
-    requiresApproval: true,
-    isOffline: true,
-    amount: 2500
+  // Configure different event types to demonstrate all flow cases
+  const getEventConfig = (id: string): Event => {
+    switch (id) {
+      case 'entrainment25':
+        // Case 3: Paid Program with Approval
+        return {
+          id: 'entrainment25',
+          name: "Entrainment'25",
+          isPaid: true,
+          requiresApproval: true,
+          isOffline: true,
+          amount: 2500
+        };
+      case 'hdb':
+        // Case 2: Paid Program (No Approval Required)
+        return {
+          id: 'hdb',
+          name: "HDB",
+          isPaid: true,
+          requiresApproval: false,
+          isOffline: true,
+          amount: 1500
+        };
+      case 'msd':
+        // Case 1: Free Program (No Payment, No Approval)
+        return {
+          id: 'msd',
+          name: "MSD",
+          isPaid: false,
+          requiresApproval: false,
+          isOffline: true,
+          amount: 0
+        };
+      default:
+        return {
+          id: 'entrainment25',
+          name: "Entrainment'25",
+          isPaid: true,
+          requiresApproval: true,
+          isOffline: true,
+          amount: 2500
+        };
+    }
   };
+
+  const event = getEventConfig(eventId);
 
   // Simulate different user states based on URL parameter or default scenarios
   useEffect(() => {
