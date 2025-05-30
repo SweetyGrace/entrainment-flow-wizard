@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,27 +51,27 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
   const hasData = paymentInfo && Object.keys(paymentInfo).length > 0;
   const isEditing = editingSection === 'payment';
 
-  // Static field definitions - fields are assigned based on initial data state
-  const staticPreFilledFields = React.useMemo(() => {
-    if (!paymentInfo) return [];
+  // Capture initial field state only once when component mounts
+  const initialFieldState = React.useMemo(() => {
+    if (!paymentInfo) return { preFilledFields: [], missingFields: [] };
     
     const baseFields = ['invoiceName', 'invoiceEmail', 'address'];
     const gstFields = paymentInfo.gstRegistered ? ['gstin', 'tdsPercent'] : [];
     const allFields = [...baseFields, ...gstFields];
     
-    return allFields.filter(field => 
+    const preFilledFields = allFields.filter(field => 
       paymentInfo[field as keyof PaymentInfo] && 
       paymentInfo[field as keyof PaymentInfo] !== ''
     );
-  }, [paymentInfo?.invoiceName, paymentInfo?.invoiceEmail, paymentInfo?.address, paymentInfo?.gstin, paymentInfo?.tdsPercent, paymentInfo?.gstRegistered]);
-
-  const staticMissingFields = React.useMemo(() => {
-    const baseFields = ['invoiceName', 'invoiceEmail', 'address'];
-    const gstFields = paymentInfo?.gstRegistered ? ['gstin', 'tdsPercent'] : [];
-    const allFields = [...baseFields, ...gstFields];
     
-    return allFields.filter(field => !staticPreFilledFields.includes(field));
-  }, [staticPreFilledFields, paymentInfo?.gstRegistered]);
+    const missingFields = allFields.filter(field => !preFilledFields.includes(field));
+    
+    return { preFilledFields, missingFields };
+  }, []); // Empty dependency array - only calculate once on mount
+
+  // Static field assignments based on initial state
+  const staticPreFilledFields = initialFieldState.preFilledFields;
+  const staticMissingFields = initialFieldState.missingFields;
 
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
@@ -101,7 +100,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
       case 'address':
         return (
           <Textarea
-            value=""
+            value={paymentInfo?.[field as keyof PaymentInfo] || ""}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
             className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
             rows={3}
@@ -112,7 +111,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         return (
           <Input
             type={field === 'invoiceEmail' ? 'email' : 'text'}
-            value=""
+            value={paymentInfo?.[field as keyof PaymentInfo] || ""}
             onChange={(e) => onPaymentInfoChange(field, e.target.value)}
             className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
