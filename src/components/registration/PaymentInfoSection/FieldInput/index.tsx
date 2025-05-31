@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Input } from '@/common/components/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/components/Select';
@@ -13,6 +14,9 @@ interface FieldInputProps {
   onChange: (id: string, value: string | number) => void;
   options?: { value: string; label: string }[];
   error?: string;
+  field?: string;
+  paymentInfo?: any;
+  onPaymentInfoChange?: (field: string, value: any) => void;
 }
 
 const FieldInput: React.FC<FieldInputProps> = ({
@@ -24,16 +28,35 @@ const FieldInput: React.FC<FieldInputProps> = ({
   onChange,
   options,
   error,
+  field,
+  paymentInfo,
+  onPaymentInfoChange,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    onChange(id, (e.target as HTMLInputElement).value);
+    if (onChange) {
+      onChange(id, (e.target as HTMLInputElement).value);
+    } else if (onPaymentInfoChange && field) {
+      onPaymentInfoChange(field, (e.target as HTMLInputElement).value);
+    }
   };
+
+  // If using field prop, get value from paymentInfo
+  const fieldValue = field && paymentInfo ? paymentInfo[field] : value;
 
   return (
     <div className={styles.fieldInput}>
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id || field}>{label}</Label>
       {type === 'select' && options ? (
-        <Select value={String(value)} onValueChange={(val) => onChange(id, val)}>
+        <Select 
+          value={String(fieldValue)} 
+          onValueChange={(val) => {
+            if (onChange) {
+              onChange(id, val);
+            } else if (onPaymentInfoChange && field) {
+              onPaymentInfoChange(field, val);
+            }
+          }}
+        >
           <SelectTrigger className={styles.selectTrigger}>
             <SelectValue placeholder={placeholder || "Select"} />
           </SelectTrigger>
@@ -48,9 +71,9 @@ const FieldInput: React.FC<FieldInputProps> = ({
       ) : (
         <Input
           type={type}
-          id={id}
+          id={id || field}
           placeholder={placeholder}
-          value={String(value)}
+          value={String(fieldValue || '')}
           onChange={handleChange}
         />
       )}

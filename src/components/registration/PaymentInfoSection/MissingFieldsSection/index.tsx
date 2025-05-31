@@ -1,14 +1,14 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
+import { Label } from '@/common/components/Label';
+import { Checkbox } from '@/common/components/Checkbox';
 import FieldInput from '../FieldInput';
 import { PaymentInfo } from '../types';
 import styles from './index.module.css';
 
 interface MissingFieldsSectionProps {
-  staticMissingFields: string[];
+  missingFields: string[];
   gstWasInitiallyRegistered: boolean;
   paymentInfo?: PaymentInfo;
   onPaymentInfoChange: (field: string, value: any) => void;
@@ -16,7 +16,7 @@ interface MissingFieldsSectionProps {
 }
 
 const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
-  staticMissingFields,
+  missingFields,
   gstWasInitiallyRegistered,
   paymentInfo,
   onPaymentInfoChange,
@@ -48,10 +48,13 @@ const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
             </div>
           )}
 
-          {staticMissingFields.map((field) => (
+          {missingFields.map((field) => (
             <FieldInput
               key={field}
+              id={field}
               field={field}
+              label={field}
+              type="text"
               paymentInfo={paymentInfo}
               onPaymentInfoChange={onPaymentInfoChange}
             />
@@ -60,12 +63,18 @@ const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
           {!gstWasInitiallyRegistered && paymentInfo?.gstRegistered && (
             <>
               <FieldInput
+                id="gstin"
                 field="gstin"
+                label="GSTIN"
+                type="text"
                 paymentInfo={paymentInfo}
                 onPaymentInfoChange={onPaymentInfoChange}
               />
               <FieldInput
+                id="tdsPercent"
                 field="tdsPercent"
+                label="TDS Percent"
+                type="text"
                 paymentInfo={paymentInfo}
                 onPaymentInfoChange={onPaymentInfoChange}
               />

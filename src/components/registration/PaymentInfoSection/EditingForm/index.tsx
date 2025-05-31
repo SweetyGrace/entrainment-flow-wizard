@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/common/components/Button';
 import FieldInput from '../FieldInput';
@@ -24,24 +25,32 @@ const EditingForm: React.FC<EditingFormProps> = ({ paymentInfo, onSave, onCancel
   return (
     <div className={styles.editingForm}>
       <FieldInput
+        id="cardNumber"
         label="Card Number"
+        type="text"
         value={editedInfo.cardNumber}
-        onChange={value => handleChange('cardNumber', value)}
+        onChange={(id, value) => handleChange('cardNumber', value as string)}
       />
       <FieldInput
+        id="expiryDate"
         label="Expiry Date"
+        type="text"
         value={editedInfo.expiryDate}
-        onChange={value => handleChange('expiryDate', value)}
+        onChange={(id, value) => handleChange('expiryDate', value as string)}
       />
       <FieldInput
+        id="cvv"
         label="CVV"
+        type="text"
         value={editedInfo.cvv}
-        onChange={value => handleChange('cvv', value)}
+        onChange={(id, value) => handleChange('cvv', value as string)}
       />
       <FieldInput
+        id="cardholderName"
         label="Cardholder Name"
+        type="text"
         value={editedInfo.cardholderName}
-        onChange={value => handleChange('cardholderName', value)}
+        onChange={(id, value) => handleChange('cardholderName', value as string)}
       />
       <div className={styles.buttons}>
         <Button onClick={handleSave}>Save</Button>

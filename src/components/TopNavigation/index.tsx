@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Bell } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/common/components/Avatar';
 import styles from './index.module.css';
 
 const TopNavigation: React.FC = () => {
