@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
@@ -77,7 +78,7 @@ const Index = () => {
       id: 'entrainment25',
       title: 'Entrainment\'25',
       description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra',
-      backgroundImage: '/lovable-uploads/f0247085-e8e2-4308-840f-99073530b0b0.png',
+      image: '/lovable-uploads/f0247085-e8e2-4308-840f-99073530b0b0.png',
       dates: 'Wed, 18 Sept to\nSat, 21 Sept 2025',
       checkIn: '04:00 p.m. to 09:00 p.m.\non Wed, 18 Sept 2025',
       checkOut: 'Latest by 02:00 p.m.\non Sat, 21 Sept 2025',
@@ -89,7 +90,7 @@ const Index = () => {
       id: 'hdb',
       title: 'HDB',
       description: 'Global gathering of spiritual leaders and consciousness researchers',
-      backgroundImage: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
+      image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
       dates: 'Thu, 20 Apr to\nSun, 22 Apr 2025',
       checkIn: '03:00 p.m. to 08:00 p.m.\non Thu, 20 Apr 2025',
       checkOut: 'Latest by 01:00 p.m.\non Sun, 22 Apr 2025',
@@ -101,7 +102,7 @@ const Index = () => {
       id: 'msd',
       title: 'MSD',
       description: 'Silent meditation retreat for deep inner peace and clarity',
-      backgroundImage: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
+      image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
       dates: 'Sat, 10 May to\nSat, 17 May 2025',
       checkIn: '02:00 p.m. to 07:00 p.m.\non Sat, 10 May 2025',
       checkOut: 'Latest by 12:00 p.m.\non Sat, 17 May 2025',
@@ -113,7 +114,7 @@ const Index = () => {
       id: 'tat',
       title: 'TAT',
       description: 'Transformative awareness training for personal growth and mindfulness',
-      backgroundImage: '/lovable-uploads/9915522c-4120-403c-9834-f100e5676ef4.png',
+      image: '/lovable-uploads/9915522c-4120-403c-9834-f100e5676ef4.png',
       dates: 'Fri, 5 Jun to\nSun, 7 Jun 2025',
       checkIn: '05:00 p.m. to 10:00 p.m.\non Fri, 5 Jun 2025',
       checkOut: 'Latest by 03:00 p.m.\non Sun, 7 Jun 2025',
@@ -189,36 +190,46 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Programs Section */}
-      <div className="programmes-section py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Upcoming Programs
+      {/* Programmes Section */}
+      <div className="programmes-section py-16 bg-gray-50">
+        <div className="programmes-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="programmes-header text-center">
+            <h2 className="programmes-title text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              Upcoming Transformative Programmes
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Transform your life through our carefully curated spiritual and personal development programs
+            <p className="programmes-subtitle mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+              Discover programmes that will awaken your consciousness and transform your life
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+          <div className="programmes-list mt-12 space-y-12">
             {programmes.map((programme, index) => (
               <div
                 key={programme.id}
-                ref={(el) => {
-                  if (el) cardRefs.current[index] = el;
-                }}
+                ref={(el) => cardRefs.current[index] = el}
                 data-card-index={index}
-                className={`program-card transform transition-all duration-700 ${
+                className={`transform transition-all duration-700 ${
                   visibleCards.has(index) 
                     ? 'translate-y-0 opacity-100' 
                     : 'translate-y-8 opacity-0'
                 }`}
+                style={{
+                  transitionDelay: `${index * 200}ms`
+                }}
               >
                 <ProgramCard
-                  {...programme}
-                  onRegister={() => handleRegister(programme.id)}
-                  onClick={() => handleCardClick(programme.id)}
+                  id={programme.id}
+                  title={programme.title}
+                  description={programme.description}
+                  backgroundImage={programme.image}
+                  dates={programme.dates}
+                  checkIn={programme.checkIn}
+                  checkOut={programme.checkOut}
+                  investment={programme.investment}
+                  venue={programme.venue}
+                  note={programme.note}
+                  onRegister={handleRegister}
+                  onClick={handleCardClick}
                 />
               </div>
             ))}
