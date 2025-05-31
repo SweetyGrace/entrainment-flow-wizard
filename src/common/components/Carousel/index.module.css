@@ -1,0 +1,90 @@
+
+.carousel {
+  position: relative;
+}
+
+.carouselViewport {
+  overflow: hidden;
+}
+
+.carouselContainer {
+  display: flex;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.horizontal {
+  flex-direction: row;
+}
+
+.vertical {
+  flex-direction: column;
+  height: 200px;
+}
+
+.carouselItem {
+  min-width: 0;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.horizontalItem {
+  flex-basis: 100%;
+}
+
+.verticalItem {
+  flex-basis: 100%;
+}
+
+.carouselButton {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+}
+
+.carouselButton:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.carouselPrevious {
+  left: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.carouselNext {
+  right: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.horizontalPrevious {
+  left: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.horizontalNext {
+  right: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.verticalPrevious {
+  left: 50%;
+  top: -0.75rem;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.verticalNext {
+  left: 50%;
+  bottom: -0.75rem;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.carouselIcon {
+  width: 1rem;
+  height: 1rem;
+}
