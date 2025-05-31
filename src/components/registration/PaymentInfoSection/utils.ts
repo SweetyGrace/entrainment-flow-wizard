@@ -1,3 +1,4 @@
+
 import { format } from 'date-fns';
 import { PaymentInfo } from './types';
 
@@ -48,17 +49,4 @@ export const getInitialFieldCategories = (paymentInfo?: PaymentInfo) => {
     missingFields, 
     gstWasInitiallyRegistered: gstWasRegistered 
   };
-};
-
-export const getFieldConfig = (field: string) => {
-  const configs = {
-    invoiceName: { label: 'Name for invoice', type: 'text' },
-    invoiceEmail: { label: 'Email for invoice', type: 'email' },
-    gstin: { label: 'GSTIN', type: 'text' },
-    tdsPercent: { label: 'TDS %', type: 'text' },
-    address: { label: 'Address', type: 'textarea' },
-    gstNumber: { label: 'GST Number', type: 'text' },
-  };
-  
-  return configs[field as keyof typeof configs] || { label: field, type: 'text' };
 };

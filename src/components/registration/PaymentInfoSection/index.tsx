@@ -27,8 +27,8 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     getInitialFieldCategories(paymentInfo)
   );
 
-  const staticPreFilledFields = initialFieldCategories.preFilledFields;
-  const staticMissingFields = initialFieldCategories.missingFields;
+  const preFilledFields = initialFieldCategories.preFilledFields;
+  const missingFields = initialFieldCategories.missingFields;
   const gstWasInitiallyRegistered = initialFieldCategories.gstWasInitiallyRegistered;
 
   // If has data and not editing, show segregated sections
@@ -36,9 +36,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     return (
       <div className={styles.container}>
         {/* Pre-filled Fields Section */}
-        {staticPreFilledFields.length > 0 && (
+        {preFilledFields.length > 0 && (
           <PreFilledSection
-            staticPreFilledFields={staticPreFilledFields}
+            preFilledFields={preFilledFields}
             gstWasInitiallyRegistered={gstWasInitiallyRegistered}
             paymentInfo={paymentInfo}
             onPaymentInfoChange={onPaymentInfoChange}
@@ -49,9 +49,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         )}
 
         {/* Missing Fields Section */}
-        {staticMissingFields.length > 0 && (
+        {missingFields.length > 0 && (
           <MissingFieldsSection
-            staticMissingFields={staticMissingFields}
+            missingFields={missingFields}
             gstWasInitiallyRegistered={gstWasInitiallyRegistered}
             paymentInfo={paymentInfo}
             onPaymentInfoChange={onPaymentInfoChange}
@@ -64,11 +64,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
 
   return (
     <EditingForm
-      paymentInfo={paymentInfo}
-      onPaymentInfoChange={onPaymentInfoChange}
-      isEditing={isEditing}
-      setEditingSection={setEditingSection}
-      onSaveChanges={onSaveChanges}
+      paymentInfo={paymentInfo || {}}
+      onSave={onSaveChanges}
+      onCancel={() => setEditingSection(null)}
     />
   );
 };

@@ -1,16 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/common/components/Button';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/common/components/Carousel';
-import { useNavigate } from 'react-router-dom';
-import Autoplay from 'embla-carousel-autoplay';
-import ProgramCard from '@/components/ProgramCard';
+
+import { Button } from "@/common/components/Button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/common/components/Carousel";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import Autoplay from "embla-carousel-autoplay";
+import ProgramCard from "@/components/ProgramCard";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [visibleCards, setVisibleCards] = useState(new Set<number>());
+  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
   const [bannerVisible, setBannerVisible] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const plugin = useRef(Autoplay({ delay: 4000, stopOnInteraction: true }));
+
+  const plugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
 
   useEffect(() => {
     // Trigger banner animation on mount
@@ -18,17 +22,20 @@ const Index = () => {
       setBannerVisible(true);
     }, 100);
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const cardIndex = parseInt(entry.target.getAttribute('data-card-index') || '0');
-        if (entry.isIntersecting) {
-          setVisibleCards(prev => new Set([...prev, cardIndex]));
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const cardIndex = parseInt(entry.target.getAttribute('data-card-index') || '0');
+          if (entry.isIntersecting) {
+            setVisibleCards(prev => new Set([...prev, cardIndex]));
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
 
     cardRefs.current.forEach((ref) => {
       if (ref) observer.observe(ref);
@@ -119,11 +126,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Hero Banner Section */}
+      {/* Hero Section with Carousel */}
       <div className="hero-banner-container relative overflow-hidden">
         <div className="hero-carousel-wrapper relative h-[50vh]">
           <Carousel 
-            plugins={[plugin.current]} 
+            plugins={[plugin.current]}
             className="w-full h-full"
             onMouseEnter={plugin.current.stop}
             onMouseLeave={plugin.current.reset}
@@ -132,31 +139,44 @@ const Index = () => {
               {carouselImages.map((image, index) => (
                 <CarouselItem key={index} className="pl-0">
                   <div className="carousel-slide relative h-[50vh]">
-                    <img 
+                    <img
                       className={`hero-image absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
-                        bannerVisible ? 'scale-100 opacity-100' : 'scale-105 opacity-80'
+                        bannerVisible 
+                          ? 'scale-100 opacity-100' 
+                          : 'scale-105 opacity-80'
                       }`}
                       src={image.src}
                       alt={image.alt}
                     />
-                    <div className="hero-overlay absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+                    <div className="hero-overlay absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
                     <div className="hero-content relative z-10 flex items-center justify-start h-full pl-8 md:pl-16 lg:pl-24">
                       <div className="hero-text-container max-w-2xl">
-                        <div 
-                          className={`text-left transition-all duration-1000 ease-out ${
-                            bannerVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                          }`}
-                        >
+                        <div className={`text-left transition-all duration-1000 ease-out ${
+                          bannerVisible 
+                            ? 'translate-y-0 opacity-100' 
+                            : 'translate-y-8 opacity-0'
+                        }`}>
                           <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
                             <span className="block">{image.title}</span>
-                            <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                              {image.subtitle}
-                            </span>
+                            <span className="block text-blue-400">{image.subtitle}</span>
                           </h1>
-                          
-                          <p className="hero-description text-lg md:text-xl text-gray-200 mb-8 leading-relaxed">
+                          <p className="hero-description mt-3 text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
                             {image.description}
                           </p>
+                          <div className="hero-cta-container mt-8">
+                            <Button 
+                              onClick={() => handleRegister('featured')}
+                              className="hero-cta-button relative overflow-hidden px-12 py-6 text-lg md:text-xl font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                              style={{
+                                backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat'
+                              }}
+                            >
+                              <span className="relative z-10">explore programmes</span>
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -164,43 +184,56 @@ const Index = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-4" />
-            <CarouselNext className="right-4" />
+            <CarouselPrevious className="left-4 md:left-8 bg-white/20 hover:bg-white/30 border-white/30 text-white" />
+            <CarouselNext className="right-4 md:right-8 bg-white/20 hover:bg-white/30 border-white/30 text-white" />
           </Carousel>
         </div>
       </div>
 
-      {/* Programs Section */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Transformative Programs
-          </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Embark on a journey of self-discovery through our carefully curated spiritual and personal development programs.
-          </p>
-        </div>
+      {/* Programmes Section */}
+      <div className="programmes-section py-16 bg-gray-50">
+        <div className="programmes-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="programmes-header text-center">
+            <h2 className="programmes-title text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              Upcoming Transformative Programmes
+            </h2>
+            <p className="programmes-subtitle mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+              Discover programmes that will awaken your consciousness and transform your life
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-          {programmes.map((programme, index) => (
-            <div
-              key={programme.id}
-              ref={(el) => cardRefs.current[index] = el}
-              data-card-index={index}
-              className={`transform transition-all duration-700 ease-out ${
-                visibleCards.has(index) 
-                  ? 'translate-y-0 opacity-100 scale-100' 
-                  : 'translate-y-8 opacity-0 scale-95'
-              }`}
-              style={{ transitionDelay: `${index * 150}ms` }}
-            >
-              <ProgramCard
-                {...programme}
-                onRegister={() => handleRegister(programme.id)}
-                onCardClick={() => handleCardClick(programme.id)}
-              />
-            </div>
-          ))}
+          <div className="programmes-list mt-12 space-y-12">
+            {programmes.map((programme, index) => (
+              <div
+                key={programme.id}
+                ref={(el) => cardRefs.current[index] = el}
+                data-card-index={index}
+                className={`transform transition-all duration-700 ${
+                  visibleCards.has(index) 
+                    ? 'translate-y-0 opacity-100' 
+                    : 'translate-y-8 opacity-0'
+                }`}
+                style={{
+                  transitionDelay: `${index * 200}ms`
+                }}
+              >
+                <ProgramCard
+                  id={programme.id}
+                  title={programme.title}
+                  description={programme.description}
+                  backgroundImage={programme.image}
+                  dates={programme.dates}
+                  checkIn={programme.checkIn}
+                  checkOut={programme.checkOut}
+                  investment={programme.investment}
+                  venue={programme.venue}
+                  note={programme.note}
+                  onRegister={handleRegister}
+                  onClick={handleCardClick}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

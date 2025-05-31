@@ -11,7 +11,10 @@ export interface PaymentInfo {
   amount?: number;
   handoverDate?: Date;
   handoverTo?: string;
-  gstNumber?: string;
+  cardNumber?: string;
+  expiryDate?: string;
+  cvv?: string;
+  cardholderName?: string;
 }
 
 export interface PaymentInfoSectionProps {
@@ -26,4 +29,10 @@ export interface PaymentInfoSectionProps {
   columnLayout: 2 | 3;
   setColumnLayout: (layout: 2 | 3) => void;
   onSaveChanges: () => void;
+}
+
+export interface FieldCategories {
+  preFilledFields: string[];
+  missingFields: string[];
+  gstWasInitiallyRegistered: boolean;
 }
