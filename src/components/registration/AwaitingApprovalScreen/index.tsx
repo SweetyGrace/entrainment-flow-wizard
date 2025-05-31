@@ -1,7 +1,6 @@
-
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/common/components/Card';
+import { Button } from '@/common/components/Button';
 import { Clock, Edit, CheckCircle } from 'lucide-react';
 import RegistrationHeader from '../RegistrationHeader';
 import styles from './index.module.css';

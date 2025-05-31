@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/common/components/Button';
 import FieldInput from '../FieldInput';
@@ -6,46 +7,61 @@ import styles from './index.module.css';
 
 interface EditingFormProps {
   paymentInfo: PaymentInfo;
-  onSave: (updatedInfo: PaymentInfo) => void;
-  onCancel: () => void;
+  onPaymentInfoChange: (field: string, value: any) => void;
+  isEditing: boolean;
+  setEditingSection: (section: string | null) => void;
+  onSaveChanges: () => void;
 }
 
-const EditingForm: React.FC<EditingFormProps> = ({ paymentInfo, onSave, onCancel }) => {
-  const [editedInfo, setEditedInfo] = React.useState<PaymentInfo>(paymentInfo);
-
-  const handleChange = (field: keyof PaymentInfo, value: string) => {
-    setEditedInfo(prev => ({ ...prev, [field]: value }));
+const EditingForm: React.FC<EditingFormProps> = ({ 
+  paymentInfo, 
+  onPaymentInfoChange,
+  isEditing,
+  setEditingSection,
+  onSaveChanges 
+}) => {
+  const handleSave = () => {
+    onSaveChanges();
+    setEditingSection(null);
   };
 
-  const handleSave = () => {
-    onSave(editedInfo);
+  const handleCancel = () => {
+    setEditingSection(null);
   };
 
   return (
     <div className={styles.editingForm}>
       <FieldInput
-        label="Card Number"
-        value={editedInfo.cardNumber}
-        onChange={value => handleChange('cardNumber', value)}
+        id="invoiceName"
+        label="Invoice Name"
+        type="text"
+        value={paymentInfo.invoiceName || ''}
+        onChange={(id, value) => onPaymentInfoChange(id, value)}
       />
       <FieldInput
-        label="Expiry Date"
-        value={editedInfo.expiryDate}
-        onChange={value => handleChange('expiryDate', value)}
+        id="invoiceEmail"
+        label="Invoice Email"
+        type="email"
+        value={paymentInfo.invoiceEmail || ''}
+        onChange={(id, value) => onPaymentInfoChange(id, value)}
       />
       <FieldInput
-        label="CVV"
-        value={editedInfo.cvv}
-        onChange={value => handleChange('cvv', value)}
+        id="address"
+        label="Address"
+        type="text"
+        value={paymentInfo.address || ''}
+        onChange={(id, value) => onPaymentInfoChange(id, value)}
       />
       <FieldInput
-        label="Cardholder Name"
-        value={editedInfo.cardholderName}
-        onChange={value => handleChange('cardholderName', value)}
+        id="amount"
+        label="Amount"
+        type="number"
+        value={paymentInfo.amount || 0}
+        onChange={(id, value) => onPaymentInfoChange(id, value)}
       />
       <div className={styles.buttons}>
         <Button onClick={handleSave}>Save</Button>
-        <Button variant="secondary" onClick={onCancel}>Cancel</Button>
+        <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
       </div>
     </div>
   );
