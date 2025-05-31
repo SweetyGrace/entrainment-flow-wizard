@@ -1,57 +1,60 @@
-
 import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { formatFieldLabel } from '../utils';
-import { PaymentInfo } from '../types';
+import { Input } from '@/common/components/Input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/components/Select';
+import { Label } from '@/common/components/Label';
 import styles from './index.module.css';
 
 interface FieldInputProps {
-  field: string;
-  paymentInfo?: PaymentInfo;
-  onPaymentInfoChange: (field: string, value: any) => void;
+  id: string;
+  label: string;
+  type: string;
+  placeholder?: string;
+  value?: string | number;
+  onChange: (id: string, value: string | number) => void;
+  options?: { value: string; label: string }[];
+  error?: string;
 }
 
 const FieldInput: React.FC<FieldInputProps> = ({
-  field,
-  paymentInfo,
-  onPaymentInfoChange
+  id,
+  label,
+  type,
+  placeholder,
+  value,
+  onChange,
+  options,
+  error,
 }) => {
-  const fieldValue = paymentInfo?.[field as keyof PaymentInfo];
-  const stringValue = typeof fieldValue === 'string' ? fieldValue : '';
-
-  const containerClass = field === 'address' ? styles.fieldContainerFull : styles.fieldContainer;
-
-  if (field === 'address') {
-    return (
-      <div className={containerClass}>
-        <Label className={styles.label}>
-          {formatFieldLabel(field)}
-        </Label>
-        <Textarea
-          value={stringValue}
-          onChange={(e) => onPaymentInfoChange(field, e.target.value)}
-          className={styles.textarea}
-          rows={3}
-          placeholder="Enter your complete address..."
-        />
-      </div>
-    );
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    onChange(id, (e.target as HTMLInputElement).value);
+  };
 
   return (
-    <div className={containerClass}>
-      <Label className={styles.label}>
-        {formatFieldLabel(field)}
-      </Label>
-      <Input
-        type={field === 'invoiceEmail' ? 'email' : 'text'}
-        value={stringValue}
-        onChange={(e) => onPaymentInfoChange(field, e.target.value)}
-        className={styles.input}
-        placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
-      />
+    <div className={styles.fieldInput}>
+      <Label htmlFor={id}>{label}</Label>
+      {type === 'select' && options ? (
+        <Select value={String(value)} onValueChange={(val) => onChange(id, val)}>
+          <SelectTrigger className={styles.selectTrigger}>
+            <SelectValue placeholder={placeholder || "Select"} />
+          </SelectTrigger>
+          <SelectContent className={styles.selectContent}>
+            {options.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      ) : (
+        <Input
+          type={type}
+          id={id}
+          placeholder={placeholder}
+          value={String(value)}
+          onChange={handleChange}
+        />
+      )}
+      {error && <p className={styles.error}>{error}</p>}
     </div>
   );
 };
