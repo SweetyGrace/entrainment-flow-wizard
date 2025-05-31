@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Calendar, MapPin, Users, Clock, Star, ArrowLeft } from "lucide-react";
 import { Button } from "@/common/components/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/common/components/Card";
-import { TopNavigation } from "@/components/TopNavigation";
+import TopNavigation from "@/components/TopNavigation";
 
 const ProgrammeDetails = () => {
   const { id } = useParams();
@@ -49,7 +48,7 @@ const ProgrammeDetails = () => {
   };
 
   const handleRegister = () => {
-    navigate(`/register/${id}`);
+    navigate(`/registration?event=${id}`);
   };
 
   return (

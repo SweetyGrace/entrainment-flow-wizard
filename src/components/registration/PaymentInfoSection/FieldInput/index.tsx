@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/common/components/Input';
+import { Label } from '@/common/components/Label';
+import { Textarea } from '@/common/components/Textarea';
 import { formatFieldLabel } from '../utils';
 import { PaymentInfo } from '../types';
 import styles from './index.module.css';

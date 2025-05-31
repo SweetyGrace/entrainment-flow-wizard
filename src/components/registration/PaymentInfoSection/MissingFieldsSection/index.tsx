@@ -3,23 +3,22 @@ import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
 
-interface MissingField {
-  field: string;
-  label: string;
-  value: string | number | boolean | Date;
-  required: boolean;
-}
-
 interface MissingFieldsSectionProps {
-  missingFields: MissingField[];
-  onEditField: (field: string) => void;
+  staticMissingFields: string[];
+  gstWasInitiallyRegistered: boolean;
+  paymentInfo?: any;
+  onPaymentInfoChange: (field: string, value: any) => void;
+  columnLayout: 2 | 3;
 }
 
 const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
-  missingFields,
-  onEditField
+  staticMissingFields,
+  gstWasInitiallyRegistered,
+  paymentInfo,
+  onPaymentInfoChange,
+  columnLayout
 }) => {
-  if (missingFields.length === 0) {
+  if (staticMissingFields.length === 0) {
     return null;
   }
 
@@ -36,20 +35,18 @@ const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
           Please complete the following required fields:
         </p>
         <div className="space-y-2">
-          {missingFields.map((field) => (
-            <button
-              key={field.field}
-              onClick={() => onEditField(field.field)}
-              className="w-full text-left p-3 bg-white border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors"
+          {staticMissingFields.map((field) => (
+            <div
+              key={field}
+              className="w-full text-left p-3 bg-white border border-orange-200 rounded-lg"
             >
               <div className="flex justify-between items-center">
-                <span className="font-medium text-gray-900">{field.label}</span>
-                <span className="text-orange-600 text-sm">Complete →</span>
+                <span className="font-medium text-gray-900 capitalize">
+                  {field.replace(/([A-Z])/g, ' $1')}
+                </span>
+                <span className="text-orange-600 text-sm">Required</span>
               </div>
-              <div className="text-sm text-gray-600 mt-1">
-                {field.value ? String(field.value) : 'Not provided'}
-              </div>
-            </button>
+            </div>
           ))}
         </div>
       </CardContent>

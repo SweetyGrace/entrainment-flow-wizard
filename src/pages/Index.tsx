@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Button } from "@/common/components/Button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/common/components/Carousel";
 import { useNavigate } from "react-router-dom";
-import { TopNavigation } from "@/components/TopNavigation";
-import { ProgramCard } from "@/components/ProgramCard";
+import TopNavigation from "@/components/TopNavigation";
+import ProgramCard from "@/components/ProgramCard";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -16,46 +16,37 @@ const Index = () => {
       id: "1",
       title: "Summer Science Camp",
       description: "Explore the wonders of science through hands-on experiments and activities.",
-      image: "/lovable-uploads/science-camp.jpg",
-      duration: "2 weeks",
-      ageGroup: "12-16 years",
-      price: 299,
-      startDate: new Date("2024-07-15"),
-      endDate: new Date("2024-07-29"),
-      location: "London, UK",
-      category: "Science",
-      capacity: 30,
-      spotsLeft: 12
+      backgroundImage: "/lovable-uploads/science-camp.jpg",
+      dates: "July 15-29\n2024",
+      checkIn: "Saturday\n2:00 PM",
+      checkOut: "Sunday\n11:00 AM", 
+      investment: "₹299",
+      venue: "London, UK",
+      note: "All materials included"
     },
     {
       id: "2", 
       title: "Creative Arts Workshop",
       description: "Unleash your creativity through painting, sculpting, and digital art.",
-      image: "/lovable-uploads/arts-workshop.jpg",
-      duration: "1 week",
-      ageGroup: "14-18 years", 
-      price: 199,
-      startDate: new Date("2024-08-01"),
-      endDate: new Date("2024-08-08"),
-      location: "Manchester, UK",
-      category: "Arts",
-      capacity: 20,
-      spotsLeft: 8
+      backgroundImage: "/lovable-uploads/arts-workshop.jpg",
+      dates: "Aug 1-8\n2024",
+      checkIn: "Friday\n3:00 PM",
+      checkOut: "Sunday\n12:00 PM",
+      investment: "₹199",
+      venue: "Manchester, UK", 
+      note: "Art supplies provided"
     },
     {
       id: "3",
       title: "Adventure Outdoor Camp", 
       description: "Experience the great outdoors with hiking, camping, and team challenges.",
-      image: "/lovable-uploads/outdoor-camp.jpg",
-      duration: "10 days",
-      ageGroup: "13-17 years",
-      price: 449,
-      startDate: new Date("2024-07-20"),
-      endDate: new Date("2024-07-30"),
-      location: "Lake District, UK",
-      category: "Adventure",
-      capacity: 25,
-      spotsLeft: 5
+      backgroundImage: "/lovable-uploads/outdoor-camp.jpg",
+      dates: "July 20-30\n2024",
+      checkIn: "Saturday\n10:00 AM", 
+      checkOut: "Monday\n4:00 PM",
+      investment: "₹449",
+      venue: "Lake District, UK",
+      note: "Equipment included"
     }
   ];
 
@@ -66,46 +57,37 @@ const Index = () => {
       id: "4",
       title: "Tech Innovation Camp",
       description: "Learn coding, robotics, and AI in an interactive environment.",
-      image: "/lovable-uploads/tech-camp.jpg", 
-      duration: "2 weeks",
-      ageGroup: "15-18 years",
-      price: 399,
-      startDate: new Date("2024-08-15"),
-      endDate: new Date("2024-08-29"),
-      location: "Birmingham, UK",
-      category: "Technology",
-      capacity: 24,
-      spotsLeft: 15
+      backgroundImage: "/lovable-uploads/tech-camp.jpg", 
+      dates: "Aug 15-29\n2024",
+      checkIn: "Monday\n9:00 AM",
+      checkOut: "Friday\n5:00 PM",
+      investment: "₹399",
+      venue: "Birmingham, UK",
+      note: "Laptops provided"
     },
     {
       id: "5",
       title: "Music & Performance Week",
       description: "Develop your musical talents and stage presence.",
-      image: "/lovable-uploads/music-camp.jpg",
-      duration: "1 week", 
-      ageGroup: "12-17 years",
-      price: 249,
-      startDate: new Date("2024-08-05"),
-      endDate: new Date("2024-08-12"),
-      location: "Edinburgh, UK",
-      category: "Music",
-      capacity: 18,
-      spotsLeft: 10
+      backgroundImage: "/lovable-uploads/music-camp.jpg",
+      dates: "Aug 5-12\n2024",
+      checkIn: "Monday\n10:00 AM",
+      checkOut: "Sunday\n6:00 PM",
+      investment: "₹249",
+      venue: "Edinburgh, UK",
+      note: "Instruments available"
     },
     {
       id: "6",
       title: "Environmental Science Expedition",
       description: "Study ecosystems and conservation in natural settings.",
-      image: "/lovable-uploads/environmental-camp.jpg",
-      duration: "12 days",
-      ageGroup: "14-18 years", 
-      price: 379,
-      startDate: new Date("2024-07-25"),
-      endDate: new Date("2024-08-06"),
-      location: "Devon, UK",
-      category: "Science",
-      capacity: 22,
-      spotsLeft: 7
+      backgroundImage: "/lovable-uploads/environmental-camp.jpg",
+      dates: "July 25\nAug 6, 2024",
+      checkIn: "Thursday\n8:00 AM",
+      checkOut: "Tuesday\n3:00 PM",
+      investment: "₹379",
+      venue: "Devon, UK",
+      note: "Field equipment included"
     }
   ];
 
@@ -115,12 +97,15 @@ const Index = () => {
   const filteredPrograms = allPrograms.filter(program => {
     const matchesSearch = program.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          program.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || program.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    return matchesSearch;
   });
 
   const handleProgramSelect = (eventId: string) => {
     navigate(`/programme/${eventId}`);
+  };
+
+  const handleProgramRegister = (eventId: string) => {
+    navigate(`/registration?event=${eventId}`);
   };
 
   return (
@@ -161,8 +146,9 @@ const Index = () => {
                 <CarouselItem key={program.id} className="md:basis-1/2 lg:basis-1/3">
                   <div className="p-1">
                     <ProgramCard 
-                      program={program} 
-                      onSelect={() => handleProgramSelect(program.id)}
+                      {...program}
+                      onRegister={handleProgramRegister}
+                      onClick={handleProgramSelect}
                     />
                   </div>
                 </CarouselItem>
@@ -198,8 +184,9 @@ const Index = () => {
             {filteredPrograms.map((program) => (
               <ProgramCard 
                 key={program.id}
-                program={program} 
-                onSelect={() => handleProgramSelect(program.id)}
+                {...program}
+                onRegister={handleProgramRegister}
+                onClick={handleProgramSelect}
               />
             ))}
           </div>

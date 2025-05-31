@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
+import { Button } from "@/common/components/Button";
 import { Calendar, Clock, RotateCcw, IndianRupee } from "lucide-react";
 import styles from './index.module.css';
 

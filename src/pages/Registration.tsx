@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/common/components/Card';
+import { Button } from '@/common/components/Button';
 import RegistrationHeader from '@/components/registration/RegistrationHeader';
 import PersonalInfoSection from '@/components/registration/PersonalInfoSection';
 import EventDetailsSection from '@/components/registration/EventDetailsSection';
@@ -340,7 +340,7 @@ const Registration = () => {
   if (currentStep === 'invoice') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <RegistrationHeader />
+        <RegistrationHeader onBack={() => setCurrentStep('personal')} title="Invoice Details" />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Personalized Title - Smaller font size */}
@@ -412,7 +412,7 @@ const Registration = () => {
   if (currentStep === 'payment') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <RegistrationHeader />
+        <RegistrationHeader onBack={() => setCurrentStep('invoice')} title="Payment" />
 
         <div className="max-w-7xl mx-auto px-4 py-8">
           {/* Personalized Title - Always show unless coming from approved state */}
@@ -510,7 +510,7 @@ const Registration = () => {
   // Personal information step (initial step)
   return (
     <div className="min-h-screen bg-gray-50">
-      <RegistrationHeader />
+      <RegistrationHeader onBack={() => window.location.href = '/'} title="Personal Information" />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Personalized Title - Smaller font size */}
