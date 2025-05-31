@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -81,6 +80,14 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     };
     
     return titleCaseLabels[label] || label;
+  };
+
+  // Helper function to format field values for display
+  const formatFieldValue = (field: string, value: any): string => {
+    if (value instanceof Date) {
+      return value.toLocaleDateString();
+    }
+    return String(value || '');
   };
 
   const renderEmptyFieldInput = (field: string) => {
@@ -175,7 +182,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                       {formatFieldLabel(field)}
                     </Label>
                     <div className="text-sm text-gray-900 font-medium">
-                      {paymentInfo?.[field as keyof PaymentInfo]}
+                      {formatFieldValue(field, paymentInfo?.[field as keyof PaymentInfo])}
                     </div>
                   </div>
                 ))}
