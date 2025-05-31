@@ -1,0 +1,51 @@
+
+.container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  z-index: 40;
+  width: 5rem;
+}
+
+.nav {
+  background-color: white;
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding-top: 5rem;
+  height: 100%;
+}
+
+.iconButton {
+  padding: 0.75rem;
+  border-radius: 50%;
+  transition: all 0.3s;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.iconButtonHome {
+  background-color: #dbeafe;
+  color: #1e3a8a;
+}
+
+.iconButtonDefault {
+  color: #1e3a8a;
+}
+
+.iconButtonDefault:hover {
+  background-color: #f9fafb;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  stroke-width: 1.5;
+}
