@@ -1,50 +1,59 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../Button';
 import { Calendar } from '../Calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
+import { Popover } from '../Popover';
 import { Label } from '../Label';
 import styles from './index.module.css';
 
 interface BirthDatePickerProps {
   value?: Date;
   onChange: (date: Date | undefined) => void;
+  placeholder?: string;
+  label?: string;
 }
 
-const BirthDatePicker: React.FC<BirthDatePickerProps> = ({ value, onChange }) => {
+export function BirthDatePicker({ 
+  value, 
+  onChange, 
+  placeholder = "Pick a date",
+  label = "Date of birth"
+}: BirthDatePickerProps) {
+  const [open, setOpen] = React.useState(false);
+
   return (
     <div className={styles.container}>
-      <Label className={styles.label}>Date of birth</Label>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className={cn(
-              styles.trigger,
-              !value && styles.placeholder
-            )}
-          >
-            {value ? format(value, "PPP") : <span>Pick a date</span>}
-            <CalendarIcon className={styles.icon} />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className={styles.content} align="start">
+      <Label className={styles.label}>{label}</Label>
+      <Popover open={open} onOpenChange={setOpen}>
+        <Button
+          variant="outline"
+          className={cn(styles.trigger, !value && styles.placeholder)}
+        >
+          {value ? (
+            format(value, "PPP")
+          ) : (
+            <span>{placeholder}</span>
+          )}
+          <CalendarIcon className={styles.icon} />
+        </Button>
+        <div className={styles.content}>
           <Calendar
             mode="single"
             selected={value}
-            onSelect={onChange}
+            onSelect={(date) => {
+              onChange(date);
+              setOpen(false);
+            }}
             disabled={(date) =>
               date > new Date() || date < new Date("1900-01-01")
             }
             initialFocus
           />
-        </PopoverContent>
+        </div>
       </Popover>
     </div>
   );
-};
-
-export default BirthDatePicker;
+}
