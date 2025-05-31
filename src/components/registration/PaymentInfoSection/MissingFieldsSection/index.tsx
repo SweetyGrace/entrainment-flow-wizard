@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
-import { Label } from '@/common/components/Label';
-import { Checkbox } from '@/common/components/Checkbox';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import FieldInput from '../FieldInput';
 import { PaymentInfo } from '../types';
 import styles from './index.module.css';
@@ -51,29 +51,23 @@ const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
           {staticMissingFields.map((field) => (
             <FieldInput
               key={field}
-              id={field}
-              label={field.charAt(0).toUpperCase() + field.slice(1)}
-              type="text"
-              value={paymentInfo?.[field as keyof PaymentInfo] || ''}
-              onChange={(id, value) => onPaymentInfoChange(id, value)}
+              field={field}
+              paymentInfo={paymentInfo}
+              onPaymentInfoChange={onPaymentInfoChange}
             />
           ))}
 
           {!gstWasInitiallyRegistered && paymentInfo?.gstRegistered && (
             <>
               <FieldInput
-                id="gstin"
-                label="GSTIN"
-                type="text"
-                value={paymentInfo?.gstin || ''}
-                onChange={(id, value) => onPaymentInfoChange(id, value)}
+                field="gstin"
+                paymentInfo={paymentInfo}
+                onPaymentInfoChange={onPaymentInfoChange}
               />
               <FieldInput
-                id="tdsPercent"
-                label="TDS Percent"
-                type="text"
-                value={paymentInfo?.tdsPercent || ''}
-                onChange={(id, value) => onPaymentInfoChange(id, value)}
+                field="tdsPercent"
+                paymentInfo={paymentInfo}
+                onPaymentInfoChange={onPaymentInfoChange}
               />
             </>
           )}

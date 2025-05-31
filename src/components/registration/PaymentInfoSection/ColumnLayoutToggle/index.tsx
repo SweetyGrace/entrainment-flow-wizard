@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Button } from '@/common/components/Button';
+import { Button } from '@/components/ui/button';
 import styles from './index.module.css';
 
 interface ColumnLayoutToggleProps {

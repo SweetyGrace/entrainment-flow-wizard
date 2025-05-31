@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Card, CardContent } from '@/common/components/Card';
-import { Button } from '@/common/components/Button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import RegistrationHeader from '@/components/registration/RegistrationHeader';
 import PersonalInfoSection from '@/components/registration/PersonalInfoSection';
 import EventDetailsSection from '@/components/registration/EventDetailsSection';

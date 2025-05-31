@@ -1,41 +1,66 @@
+
 import React from 'react';
-import { Button } from '@/common/components/Button';
+import { CheckCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import styles from './index.module.css';
 
-interface RegistrationStepperProps {
-  currentStep: number;
-  totalSteps: number;
-  handleNext: () => void;
-  handleBack: () => void;
-  isNextDisabled: boolean;
-  isBackDisabled: boolean;
-  children: React.ReactNode;
+interface Step {
+  id: number;
+  title: string;
+  isCompleted: boolean;
+  isCurrent: boolean;
 }
 
-const RegistrationStepper: React.FC<RegistrationStepperProps> = ({
-  currentStep,
-  totalSteps,
-  handleNext,
-  handleBack,
-  isNextDisabled,
-  isBackDisabled,
-  children,
-}) => {
-  return (
-    <div className={styles.stepperContainer}>
-      <div className={styles.stepContent}>{children}</div>
+interface RegistrationStepperProps {
+  steps: Step[];
+  className?: string;
+}
 
-      <div className={styles.navigation}>
-        <Button variant="secondary" onClick={handleBack} disabled={isBackDisabled}>
-          Back
-        </Button>
-        <div className={styles.stepIndicator}>
-          Step {currentStep + 1} of {totalSteps}
+const RegistrationStepper: React.FC<RegistrationStepperProps> = ({ steps, className }) => {
+  return (
+    <div className={cn(styles.container, className)}>
+      {steps.map((step, index) => (
+        <div key={step.id} className={styles.step}>
+          <div className={styles.stepIndicator}>
+            <div
+              className={cn(
+                styles.stepCircle,
+                step.isCompleted
+                  ? styles.stepCircleCompleted
+                  : step.isCurrent
+                  ? styles.stepCircleCurrent
+                  : styles.stepCircleInactive
+              )}
+            >
+              {step.isCompleted ? (
+                <CheckCircle className={styles.stepIcon} />
+              ) : (
+                <span className={styles.stepNumber}>{step.id}</span>
+              )}
+            </div>
+            {index < steps.length - 1 && (
+              <div
+                className={cn(
+                  styles.stepConnector,
+                  step.isCompleted ? styles.stepConnectorCompleted : styles.stepConnectorInactive
+                )}
+              />
+            )}
+          </div>
+          <div className={styles.stepContent}>
+            <span
+              className={cn(
+                styles.stepTitle,
+                step.isCompleted || step.isCurrent
+                  ? styles.stepTitleActive
+                  : styles.stepTitleInactive
+              )}
+            >
+              {step.title}
+            </span>
+          </div>
         </div>
-        <Button onClick={handleNext} disabled={isNextDisabled}>
-          {currentStep === totalSteps - 1 ? 'Complete' : 'Next'}
-        </Button>
-      </div>
+      ))}
     </div>
   );
 };
