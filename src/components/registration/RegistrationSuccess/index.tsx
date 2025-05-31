@@ -1,73 +1,102 @@
 
 import React from 'react';
-import { CheckCircle, Download, Calendar } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
-import { Button } from '@/common/components/Button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Sparkles } from 'lucide-react';
+import styles from './index.module.css';
+
+interface PersonalInfo {
+  fullName?: string;
+  email?: string;
+  mobile?: string;
+}
+
+interface PaymentInfo {
+  invoiceName?: string;
+  amount?: number;
+}
+
+interface Event {
+  requiresApproval: boolean;
+  isPaid: boolean;
+  name: string;
+}
 
 interface RegistrationSuccessProps {
-  registrationId: string;
-  eventTitle: string;
-  onDownloadTicket: () => void;
-  onAddToCalendar: () => void;
-  onBackToEvents: () => void;
+  event: Event;
+  personalInfo?: PersonalInfo;
+  paymentInfo?: PaymentInfo;
+  setEditingSection: (section: string | null) => void;
 }
 
 const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
-  registrationId,
-  eventTitle,
-  onDownloadTicket,
-  onAddToCalendar,
-  onBackToEvents
+  event,
+  personalInfo,
+  paymentInfo,
+  setEditingSection
 }) => {
   return (
-    <div className="max-w-2xl mx-auto text-center space-y-8">
-      <div className="space-y-4">
-        <div className="flex justify-center">
-          <CheckCircle className="w-16 h-16 text-green-500" />
+    <div className={styles.container}>
+      {/* Banner */}
+      <div className={styles.banner}>
+        <img 
+          src="/lovable-uploads/24448433-14b3-4796-8f41-8ba4e87474b3.png" 
+          alt="Entrainment'25 Banner" 
+          className={styles.bannerImage}
+        />
+        <div className={styles.bannerContent}>
+          <div className={styles.bannerText}>
+            <h1 className={styles.bannerTitle}>Registration Complete</h1>
+            <p className={styles.bannerSubtitle}>Thank you for joining {event.name}</p>
+          </div>
         </div>
-        <h1 className="text-3xl font-bold text-gray-900">Registration Successful!</h1>
-        <p className="text-gray-600">
-          Thank you for registering for <strong>{eventTitle}</strong>
-        </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Registration Details</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="text-center">
-            <p className="text-sm text-gray-600">Registration ID</p>
-            <p className="font-mono text-lg font-semibold">{registrationId}</p>
-          </div>
-          
-          <div className="border-t pt-4">
-            <p className="text-sm text-gray-600 mb-4">
-              A confirmation email has been sent to your registered email address with all the details.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button onClick={onDownloadTicket} variant="outline">
-                <Download className="w-4 h-4 mr-2" />
-                Download Ticket
+      <div className={styles.content}>
+        <Card className={styles.card}>
+          <CardContent className={styles.cardContent}>
+            <div className={styles.successSection}>
+              <div className={styles.iconContainer}>
+                {/* Animated success icon */}
+                <div className={styles.iconBackground}></div>
+                <div className={styles.iconInner}>
+                  <Sparkles className={styles.successIcon} />
+                </div>
+                {/* Floating particles */}
+                <div className={styles.particle1}></div>
+                <div className={styles.particle2}></div>
+              </div>
+              <h2 className={styles.successTitle}>
+                {event.requiresApproval ? "Awaiting Mahatria's Approval" : "You're All Set!"}
+              </h2>
+              <p className={styles.successDescription}>
+                {event.requiresApproval 
+                  ? "Your registration has been submitted and is pending approval. We'll notify you once it's confirmed."
+                  : `Your registration for ${event.name} has been confirmed. We look forward to seeing you there!`
+                }
+              </p>
+            </div>
+
+            <div className={styles.buttonGroup}>
+              <Button className={styles.calendarButton}>
+                <span className={styles.calendarButtonText}>Add to Calendar</span>
               </Button>
-              <Button onClick={onAddToCalendar} variant="outline">
-                <Calendar className="w-4 h-4 mr-2" />
-                Add to Calendar
+              <Button 
+                variant="outline" 
+                className={styles.invoiceButton}
+              >
+                Download Invoice
+              </Button>
+              <Button 
+                variant="ghost"
+                onClick={() => window.location.href = '/'}
+                className={styles.homeButton}
+              >
+                Go to Homepage
               </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-4">
-        <p className="text-sm text-gray-600">
-          Need help? Contact us at support@events.com or call +44 123 456 7890
-        </p>
-        
-        <Button onClick={onBackToEvents} className="w-full sm:w-auto">
-          Browse More Events
-        </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

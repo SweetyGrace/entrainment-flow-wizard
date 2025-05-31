@@ -1,373 +1,392 @@
-
 import React, { useState } from 'react';
+import { Button } from '@/common/components/Button';
 import { Input } from '@/common/components/Input';
 import { Label } from '@/common/components/Label';
-import { Button } from '@/common/components/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/components/Select';
-import { BirthDatePicker } from '@/common/components/BirthDatePicker';
-import { format } from './utils';
+import BirthDatePicker from '@/components/ui/birth-date-picker';
+import { validateEmail, validatePhone, calculateAge } from './utils';
 import { PersonalInfo } from './types';
-import { Textarea } from '@/common/components/Textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
-import { Checkbox } from '@/common/components/Checkbox';
+import styles from './index.module.css';
+
+interface PersonalInfo {
+  fullName?: string;
+  gender?: string;
+  mobile?: string;
+  email?: string;
+  dateOfBirth?: Date;
+  infinitheismContact?: string;
+  city?: string;
+  preferredRoommate?: string;
+  additionalNotes?: string;
+  acceptedTerms?: boolean;
+}
 
 interface PersonalInfoSectionProps {
-  onSubmit: (data: PersonalInfo) => void;
-  onBack: () => void;
-  initialData?: Partial<PersonalInfo>;
+  personalInfo?: PersonalInfo;
+  onPersonalInfoChange: (field: string, value: any) => void;
+  editingSection: string | null;
+  setEditingSection: (section: string | null) => void;
+  showPersonalizedTitle?: boolean;
+  eventRequiresApproval?: boolean;
+  columnLayout: 2 | 3;
+  setColumnLayout: (layout: 2 | 3) => void;
+  onSaveChanges: () => void;
 }
 
 const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
-  onSubmit,
-  onBack,
-  initialData = {}
+  personalInfo,
+  onPersonalInfoChange,
+  editingSection,
+  setEditingSection,
+  showPersonalizedTitle = true,
+  eventRequiresApproval = false,
+  columnLayout,
+  setColumnLayout,
+  onSaveChanges
 }) => {
-  const [formData, setFormData] = useState<PersonalInfo>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    dateOfBirth: undefined,
-    gender: '',
-    nationality: '',
-    phoneNumber: '',
-    emergencyContact: {
-      name: '',
-      relationship: '',
-      phoneNumber: '',
-    },
-    medicalConditions: '',
-    dietaryRequirements: '',
-    terms: false,
-    marketing: false,
-    ...initialData
-  });
+  const isEditing = editingSection === 'personal';
+  
+  // Check if we have meaningful data (not just infinitheismContact)
+  const hasMeaningfulData = personalInfo && Object.keys(personalInfo).some(key => 
+    key !== 'infinitheismContact' && personalInfo[key as keyof PersonalInfo]
+  );
 
-  const [errors, setErrors] = useState<Partial<Record<keyof PersonalInfo, string>>>({});
+  // Static field definitions - fields are assigned based on initial data state
+  const staticPreFilledFields = React.useMemo(() => {
+    if (!personalInfo) return [];
+    
+    const allFields = [
+      'fullName', 'gender', 'mobile', 'email', 'dateOfBirth', 
+      'city', 'infinitheismContact', 'preferredRoommate', 'additionalNotes'
+    ];
+    
+    return allFields.filter(field => 
+      personalInfo[field as keyof PersonalInfo] && 
+      personalInfo[field as keyof PersonalInfo] !== ''
+    );
+  }, [personalInfo?.fullName, personalInfo?.gender, personalInfo?.mobile, personalInfo?.email, personalInfo?.dateOfBirth, personalInfo?.city, personalInfo?.infinitheismContact, personalInfo?.preferredRoommate, personalInfo?.additionalNotes]);
 
-  const validateForm = () => {
-    const newErrors: Partial<Record<keyof PersonalInfo, string>> = {};
+  const staticMissingFields = React.useMemo(() => {
+    const allFields = [
+      'fullName', 'gender', 'mobile', 'email', 'dateOfBirth', 
+      'city', 'infinitheismContact', 'preferredRoommate', 'additionalNotes'
+    ];
+    
+    return allFields.filter(field => !staticPreFilledFields.includes(field));
+  }, [staticPreFilledFields]);
 
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    if (!formData.email.includes('@')) newErrors.email = 'Valid email is required';
-    if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
-    if (!formData.gender) newErrors.gender = 'Gender is required';
-    if (!formData.nationality) newErrors.nationality = 'Nationality is required';
-    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
-    if (!formData.emergencyContact.name.trim()) newErrors.emergencyContact = 'Emergency contact name is required';
-    if (!formData.emergencyContact.relationship.trim()) newErrors.emergencyContact = 'Emergency contact relationship is required';
-    if (!formData.emergencyContact.phoneNumber.trim()) newErrors.emergencyContact = 'Emergency contact phone is required';
-    if (!formData.terms) newErrors.terms = 'You must accept the terms and conditions';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  // Convert field labels to proper title case for display
+  const formatFieldLabel = (label: string) => {
+    const titleCaseLabels = {
+      'fullName': 'Full name',
+      'gender': 'Gender',
+      'mobile': 'Mobile number',
+      'email': 'Email address',
+      'dateOfBirth': 'Date of birth',
+      'city': 'City',
+      'infinitheismContact': 'Infinitheism contact',
+      'preferredRoommate': 'Preferred roommate',
+      'additionalNotes': 'Note'
+    };
+    
+    return titleCaseLabels[label] || label;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      onSubmit(formData);
+  const renderFieldValue = (field: string, value: any) => {
+    if (field === 'dateOfBirth' && value) {
+      return format(value, "PPP");
+    }
+    return value;
+  };
+
+  const renderEmptyFieldInput = (field: string) => {
+    switch (field) {
+      case 'gender':
+        return (
+          <Select value="" onValueChange={(value) => onPersonalInfoChange(field, value)}>
+            <SelectTrigger className={styles.select}>
+              <SelectValue placeholder="Select gender" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Male">Male</SelectItem>
+              <SelectItem value="Female">Female</SelectItem>
+            </SelectContent>
+          </Select>
+        );
+      case 'dateOfBirth':
+        return (
+          <BirthDatePicker
+            value={undefined}
+            onChange={(date) => onPersonalInfoChange(field, date)}
+          />
+        );
+      case 'additionalNotes':
+        return (
+          <Textarea
+            value=""
+            onChange={(e) => onPersonalInfoChange(field, e.target.value)}
+            className={styles.textarea}
+            rows={3}
+            placeholder="Any special requirements or notes..."
+          />
+        );
+      default:
+        return (
+          <Input
+            type={field === 'email' ? 'email' : 'text'}
+            value=""
+            onChange={(e) => onPersonalInfoChange(field, e.target.value)}
+            className={styles.input}
+            placeholder={`Enter your ${formatFieldLabel(field).toLowerCase()}`}
+          />
+        );
     }
   };
 
-  const updateField = <K extends keyof PersonalInfo>(field: K, value: PersonalInfo[K]) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-    // Clear error when field is updated
-    if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: undefined
-      }));
-    }
-  };
+  // If has data and not editing, show segregated sections
+  if (hasMeaningfulData && !isEditing) {
+    return (
+      <div className={styles.container}>
+        {/* Pre-filled Fields Section */}
+        {staticPreFilledFields.length > 0 && (
+          <Card className={styles.card}>
+            <CardHeader className={styles.header}>
+              <div className={styles.headerContent}>
+                <div className={styles.headerLeft}>
+                  <CardTitle className={styles.title}>
+                    Review the details and update anything that needs realignment — <button 
+                      onClick={() => setEditingSection('personal')}
+                      className={styles.editButton}
+                    >
+                      click here to edit
+                    </button>
+                  </CardTitle>
+                  
+                  {/* Column Layout Toggle */}
+                  <div className={styles.layoutToggle}>
+                    <span className={styles.layoutLabel}>View:</span>
+                    <Button
+                      variant={columnLayout === 2 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(2)}
+                      className={styles.layoutButton}
+                    >
+                      2 Columns
+                    </Button>
+                    <Button
+                      variant={columnLayout === 3 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setColumnLayout(3)}
+                      className={styles.layoutButton}
+                    >
+                      3 Columns
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className={styles.contentEditing}>
+              <div className={columnLayout === 2 ? styles.grid2 : styles.grid3}>
+                {staticPreFilledFields.map((field) => (
+                  <div key={field} className={styles.field}>
+                    <Label className={styles.label}>
+                      {formatFieldLabel(field)}
+                    </Label>
+                    <div className={styles.fieldValue}>
+                      {renderFieldValue(field, personalInfo?.[field as keyof PersonalInfo])}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-  const updateEmergencyContact = <K extends keyof PersonalInfo['emergencyContact']>(
-    field: K, 
-    value: PersonalInfo['emergencyContact'][K]
-  ) => {
-    setFormData(prev => ({
-      ...prev,
-      emergencyContact: {
-        ...prev.emergencyContact,
-        [field]: value
-      }
-    }));
-    if (errors.emergencyContact) {
-      setErrors(prev => ({
-        ...prev,
-        emergencyContact: undefined
-      }));
-    }
-  };
+        {/* Missing Fields Section */}
+        {staticMissingFields.length > 0 && (
+          <Card className={styles.card}>
+            <CardHeader className={styles.header}>
+              <CardTitle className={styles.title}>
+                Please fill the missing fields
+              </CardTitle>
+            </CardHeader>
+            <CardContent className={styles.content}>
+              <div className={columnLayout === 2 ? styles.grid2 : styles.grid3}>
+                {staticMissingFields.map((field) => (
+                  <div key={field} className={styles.field}>
+                    <Label className={styles.labelEditing}>
+                      {formatFieldLabel(field)}
+                      {(field === 'preferredRoommate' || field === 'additionalNotes') && (
+                        <span className={styles.optionalText}> (Optional)</span>
+                      )}
+                    </Label>
+                    {renderEmptyFieldInput(field)}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-  const genderOptions = [
-    { value: 'male', label: 'Male' },
-    { value: 'female', label: 'Female' },
-    { value: 'other', label: 'Other' },
-    { value: 'prefer-not-to-say', label: 'Prefer not to say' }
-  ];
-
-  const relationshipOptions = [
-    'Parent', 'Guardian', 'Spouse', 'Partner', 'Sibling', 'Friend', 'Other'
-  ];
-
-  const nationalityOptions = [
-    'British', 'American', 'Canadian', 'Australian', 'German', 'French', 'Spanish', 'Italian', 'Other'
-  ];
+        {/* T&C Checkbox - Always show at bottom */}
+        <Card className={styles.termsCard}>
+          <CardContent className={styles.termsContent}>
+            <div className={styles.termsContainer}>
+              <Checkbox
+                id="terms"
+                checked={personalInfo?.acceptedTerms || false}
+                onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
+                className={styles.termsCheckbox}
+              />
+              <Label htmlFor="terms" className={styles.termsLabel}>
+                I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
+              </Label>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl mx-auto">
-      <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Personal Information</h2>
-        <p className="text-gray-600">Please provide your personal details</p>
-      </div>
-
-      {/* Basic Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="firstName">First Name *</Label>
-              <Input
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) => updateField('firstName', e.target.value)}
-                className={errors.firstName ? 'border-red-500' : ''}
-              />
-              {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
-            </div>
-            <div>
-              <Label htmlFor="lastName">Last Name *</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => updateField('lastName', e.target.value)}
-                className={errors.lastName ? 'border-red-500' : ''}
-              />
-              {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
-            </div>
-          </div>
-
+    <Card className={isEditing ? styles.cardEditing : styles.card}>
+      <CardHeader className={styles.header}>
+        {isEditing && (
           <div>
-            <Label htmlFor="email">Email Address *</Label>
+            <CardTitle className={styles.title}>
+              {personalInfo?.fullName ? `Edit ${personalInfo.fullName}'s information` : 'Edit Personal Information'}
+            </CardTitle>
+          </div>
+        )}
+      </CardHeader>
+
+      <CardContent className={styles.content}>
+        <div className={styles.grid2}>
+          <div className={styles.field}>
+            <Label htmlFor="fullName" className={styles.labelEditing}>Full name</Label>
+            <Input
+              id="fullName"
+              value={personalInfo?.fullName || ''}
+              onChange={(e) => onPersonalInfoChange('fullName', e.target.value)}
+              className={styles.input}
+              placeholder="Enter your full name"
+            />
+          </div>
+          <div className={styles.field}>
+            <Label htmlFor="gender" className={styles.labelEditing}>Gender</Label>
+            <Select value={personalInfo?.gender} onValueChange={(value) => onPersonalInfoChange('gender', value)}>
+              <SelectTrigger className={styles.select}>
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Male">Male</SelectItem>
+                <SelectItem value="Female">Female</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className={styles.grid2}>
+          <div className={styles.field}>
+            <Label htmlFor="mobile" className={styles.labelEditing}>Mobile number</Label>
+            <Input
+              id="mobile"
+              value={personalInfo?.mobile || ''}
+              onChange={(e) => onPersonalInfoChange('mobile', e.target.value)}
+              className={styles.input}
+              placeholder="Enter your mobile number"
+            />
+          </div>
+          <div className={styles.field}>
+            <Label htmlFor="email" className={styles.labelEditing}>Email address</Label>
             <Input
               id="email"
               type="email"
-              value={formData.email}
-              onChange={(e) => updateField('email', e.target.value)}
-              className={errors.email ? 'border-red-500' : ''}
+              value={personalInfo?.email || ''}
+              onChange={(e) => onPersonalInfoChange('email', e.target.value)}
+              className={styles.input}
+              placeholder="Enter your email address"
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
+        </div>
 
-          <div>
+        <div className={styles.grid2}>
+          <div className={styles.field}>
             <BirthDatePicker
-              value={formData.dateOfBirth}
-              onChange={(date) => updateField('dateOfBirth', date)}
-              error={errors.dateOfBirth}
+              value={personalInfo?.dateOfBirth}
+              onChange={(date) => onPersonalInfoChange('dateOfBirth', date)}
             />
           </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Gender *</Label>
-              <Select value={formData.gender} onValueChange={(value) => updateField('gender', value)}>
-                <SelectTrigger className={errors.gender ? 'border-red-500' : ''}>
-                  <SelectValue placeholder="Select gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  {genderOptions.map(option => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
-            </div>
-
-            <div>
-              <Label>Nationality *</Label>
-              <Select value={formData.nationality} onValueChange={(value) => updateField('nationality', value)}>
-                <SelectTrigger className={errors.nationality ? 'border-red-500' : ''}>
-                  <SelectValue placeholder="Select nationality" />
-                </SelectTrigger>
-                <SelectContent>
-                  {nationalityOptions.map(nationality => (
-                    <SelectItem key={nationality} value={nationality}>
-                      {nationality}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.nationality && <p className="text-red-500 text-sm mt-1">{errors.nationality}</p>}
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="phoneNumber">Phone Number *</Label>
+          <div className={styles.field}>
+            <Label htmlFor="city" className={styles.labelEditing}>City</Label>
             <Input
-              id="phoneNumber"
-              type="tel"
-              value={formData.phoneNumber}
-              onChange={(e) => updateField('phoneNumber', e.target.value)}
-              className={errors.phoneNumber ? 'border-red-500' : ''}
+              id="city"
+              value={personalInfo?.city || ''}
+              onChange={(e) => onPersonalInfoChange('city', e.target.value)}
+              className={styles.input}
+              placeholder="Enter your city"
             />
-            {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>}
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Emergency Contact */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Emergency Contact</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="emergencyContactName">Contact Name *</Label>
+        <div className={styles.grid2}>
+          <div className={styles.field}>
+            <Label htmlFor="infinitheismContact" className={styles.labelEditing}>Infinitheism contact</Label>
             <Input
-              id="emergencyContactName"
-              value={formData.emergencyContact.name}
-              onChange={(e) => updateEmergencyContact('name', e.target.value)}
-              className={errors.emergencyContact ? 'border-red-500' : ''}
+              id="infinitheismContact"
+              value={personalInfo?.infinitheismContact || ''}
+              onChange={(e) => onPersonalInfoChange('infinitheismContact', e.target.value)}
+              className={styles.input}
+              placeholder="Enter contact name"
             />
           </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Relationship *</Label>
-              <Select 
-                value={formData.emergencyContact.relationship} 
-                onValueChange={(value) => updateEmergencyContact('relationship', value)}
-              >
-                <SelectTrigger className={errors.emergencyContact ? 'border-red-500' : ''}>
-                  <SelectValue placeholder="Select relationship" />
-                </SelectTrigger>
-                <SelectContent>
-                  {relationshipOptions.map(relationship => (
-                    <SelectItem key={relationship} value={relationship}>
-                      {relationship}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="emergencyContactPhone">Phone Number *</Label>
-              <Input
-                id="emergencyContactPhone"
-                type="tel"
-                value={formData.emergencyContact.phoneNumber}
-                onChange={(e) => updateEmergencyContact('phoneNumber', e.target.value)}
-                className={errors.emergencyContact ? 'border-red-500' : ''}
-              />
-            </div>
-          </div>
-
-          {errors.emergencyContact && <p className="text-red-500 text-sm">{errors.emergencyContact}</p>}
-        </CardContent>
-      </Card>
-
-      {/* Additional Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Additional Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="medicalConditions">Medical Conditions</Label>
-            <p className="text-sm text-gray-600 mb-2">
-              Please list any medical conditions, allergies, or medications we should be aware of
-            </p>
-            <Textarea
-              id="medicalConditions"
-              value={formData.medicalConditions}
-              onChange={(e) => updateField('medicalConditions', e.target.value)}
-              placeholder="e.g., Asthma, food allergies, diabetes..."
-              rows={3}
+          <div className={styles.field}>
+            <Label htmlFor="preferredRoommate" className={styles.labelEditing}>
+              Preferred roommate <span className={styles.optionalText}>(Optional)</span>
+            </Label>
+            <Input
+              id="preferredRoommate"
+              value={personalInfo?.preferredRoommate || ''}
+              onChange={(e) => onPersonalInfoChange('preferredRoommate', e.target.value)}
+              className={styles.input}
+              placeholder="Enter roommate preference"
             />
           </div>
+        </div>
 
-          <div>
-            <Label htmlFor="dietaryRequirements">Dietary Requirements</Label>
-            <p className="text-sm text-gray-600 mb-2">
-              Please specify any dietary requirements or food allergies
-            </p>
-            <Textarea
-              id="dietaryRequirements"
-              value={formData.dietaryRequirements}
-              onChange={(e) => updateField('dietaryRequirements', e.target.value)}
-              placeholder="e.g., Vegetarian, vegan, gluten-free, nut allergy..."
-              rows={3}
-            />
+        <div className={styles.field}>
+          <Label htmlFor="additionalNotes" className={styles.labelEditing}>
+            Note <span className={styles.optionalText}>(Optional)</span>
+          </Label>
+          <Textarea
+            id="additionalNotes"
+            value={personalInfo?.additionalNotes || ''}
+            onChange={(e) => onPersonalInfoChange('additionalNotes', e.target.value)}
+            className={styles.textarea}
+            rows={3}
+            placeholder="Any special requirements or notes..."
+          />
+        </div>
+
+        {isEditing && (
+          <div className={styles.actionButtons}>
+            <Button 
+              variant="outline"
+              onClick={() => setEditingSection(null)}
+              className={styles.cancelButton}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={onSaveChanges}
+              className={styles.saveButton}
+            >
+              Save Changes
+            </Button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Terms and Conditions */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="space-y-4">
-            <div className="flex items-start space-x-3">
-              <Checkbox
-                id="terms"
-                checked={formData.terms}
-                onCheckedChange={(checked) => updateField('terms', !!checked)}
-                className={errors.terms ? 'border-red-500' : ''}
-              />
-              <div className="text-sm">
-                <label htmlFor="terms" className="cursor-pointer">
-                  I agree to the{' '}
-                  <button type="button" className="text-blue-600 hover:underline">
-                    Terms and Conditions
-                  </button>{' '}
-                  and{' '}
-                  <button type="button" className="text-blue-600 hover:underline">
-                    Privacy Policy
-                  </button>{' '}
-                  *
-                </label>
-                {errors.terms && <p className="text-red-500 mt-1">{errors.terms}</p>}
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-3">
-              <Checkbox
-                id="marketing"
-                checked={formData.marketing}
-                onCheckedChange={(checked) => updateField('marketing', !!checked)}
-              />
-              <label htmlFor="marketing" className="text-sm cursor-pointer">
-                I would like to receive email updates about future programmes and events
-              </label>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Navigation Buttons */}
-      <div className="flex justify-between pt-6">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onBack}
-        >
-          Back
-        </Button>
-        <Button type="submit">
-          Continue to Payment
-        </Button>
-      </div>
-    </form>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

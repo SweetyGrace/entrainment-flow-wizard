@@ -1,7 +1,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import styles from "./index.module.css"
+import styles from './index.module.css'
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -21,7 +21,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(styles.header, className)}
+    className={cn(styles.cardHeader, className)}
     {...props}
   />
 ))
@@ -33,7 +33,7 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn(styles.title, className)}
+    className={cn(styles.cardTitle, className)}
     {...props}
   />
 ))
@@ -45,7 +45,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn(styles.description, className)}
+    className={cn(styles.cardDescription, className)}
     {...props}
   />
 ))
@@ -55,7 +55,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn(styles.content, className)} {...props} />
+  <div ref={ref} className={cn(styles.cardContent, className)} {...props} />
 ))
 CardContent.displayName = "CardContent"
 
@@ -65,7 +65,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(styles.footer, className)}
+    className={cn(styles.cardFooter, className)}
     {...props}
   />
 ))

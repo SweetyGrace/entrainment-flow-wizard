@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Label } from '@/common/components/Label';
-import { Checkbox } from '@/common/components/Checkbox';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { formatFieldLabel, renderFieldValue } from '../utils';
 import { PaymentInfo } from '../types';
 import styles from './index.module.css';

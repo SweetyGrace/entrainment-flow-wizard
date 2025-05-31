@@ -1,247 +1,241 @@
 
-import { useState } from "react";
-import { Button } from "@/common/components/Button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/common/components/Carousel";
+import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
-import TopNavigation from "@/components/TopNavigation";
+import { useEffect, useRef, useState } from "react";
+import Autoplay from "embla-carousel-autoplay";
 import ProgramCard from "@/components/ProgramCard";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
+  const [bannerVisible, setBannerVisible] = useState(false);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Mock data for featured programs
-  const featuredPrograms = [
-    {
-      id: "1",
-      title: "Summer Science Camp",
-      description: "Explore the wonders of science through hands-on experiments and activities.",
-      backgroundImage: "/lovable-uploads/science-camp.jpg",
-      dates: "July 15-29\n2024",
-      checkIn: "Saturday\n2:00 PM",
-      checkOut: "Sunday\n11:00 AM", 
-      investment: "₹299",
-      venue: "London, UK",
-      note: "All materials included"
-    },
-    {
-      id: "2", 
-      title: "Creative Arts Workshop",
-      description: "Unleash your creativity through painting, sculpting, and digital art.",
-      backgroundImage: "/lovable-uploads/arts-workshop.jpg",
-      dates: "Aug 1-8\n2024",
-      checkIn: "Friday\n3:00 PM",
-      checkOut: "Sunday\n12:00 PM",
-      investment: "₹199",
-      venue: "Manchester, UK", 
-      note: "Art supplies provided"
-    },
-    {
-      id: "3",
-      title: "Adventure Outdoor Camp", 
-      description: "Experience the great outdoors with hiking, camping, and team challenges.",
-      backgroundImage: "/lovable-uploads/outdoor-camp.jpg",
-      dates: "July 20-30\n2024",
-      checkIn: "Saturday\n10:00 AM", 
-      checkOut: "Monday\n4:00 PM",
-      investment: "₹449",
-      venue: "Lake District, UK",
-      note: "Equipment included"
-    }
-  ];
+  const plugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true })
+  );
 
-  // Mock data for all programs
-  const allPrograms = [
-    ...featuredPrograms,
-    {
-      id: "4",
-      title: "Tech Innovation Camp",
-      description: "Learn coding, robotics, and AI in an interactive environment.",
-      backgroundImage: "/lovable-uploads/tech-camp.jpg", 
-      dates: "Aug 15-29\n2024",
-      checkIn: "Monday\n9:00 AM",
-      checkOut: "Friday\n5:00 PM",
-      investment: "₹399",
-      venue: "Birmingham, UK",
-      note: "Laptops provided"
-    },
-    {
-      id: "5",
-      title: "Music & Performance Week",
-      description: "Develop your musical talents and stage presence.",
-      backgroundImage: "/lovable-uploads/music-camp.jpg",
-      dates: "Aug 5-12\n2024",
-      checkIn: "Monday\n10:00 AM",
-      checkOut: "Sunday\n6:00 PM",
-      investment: "₹249",
-      venue: "Edinburgh, UK",
-      note: "Instruments available"
-    },
-    {
-      id: "6",
-      title: "Environmental Science Expedition",
-      description: "Study ecosystems and conservation in natural settings.",
-      backgroundImage: "/lovable-uploads/environmental-camp.jpg",
-      dates: "July 25\nAug 6, 2024",
-      checkIn: "Thursday\n8:00 AM",
-      checkOut: "Tuesday\n3:00 PM",
-      investment: "₹379",
-      venue: "Devon, UK",
-      note: "Field equipment included"
-    }
-  ];
+  useEffect(() => {
+    // Trigger banner animation on mount
+    const timer = setTimeout(() => {
+      setBannerVisible(true);
+    }, 100);
 
-  const categories = ["All", "Science", "Arts", "Adventure", "Technology", "Music"];
-  const [selectedCategory, setSelectedCategory] = useState("All");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const cardIndex = parseInt(entry.target.getAttribute('data-card-index') || '0');
+          if (entry.isIntersecting) {
+            setVisibleCards(prev => new Set([...prev, cardIndex]));
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
 
-  const filteredPrograms = allPrograms.filter(program => {
-    const matchesSearch = program.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         program.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
+    cardRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
 
-  const handleProgramSelect = (eventId: string) => {
-    navigate(`/programme/${eventId}`);
-  };
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
+  }, []);
 
-  const handleProgramRegister = (eventId: string) => {
+  const handleRegister = (eventId: string) => {
     navigate(`/registration?event=${eventId}`);
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <TopNavigation />
-      
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-700 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">
-            Discover Amazing Youth Programs
-          </h1>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join thousands of young people in life-changing experiences that inspire, educate, and empower.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-            <input
-              type="text"
-              placeholder="Search programs..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="px-4 py-3 rounded-lg text-gray-900 flex-1"
-            />
-            <Button size="lg" className="bg-orange-500 hover:bg-orange-600">
-              Search
-            </Button>
-          </div>
-        </div>
-      </section>
+  const handleCardClick = (eventId: string) => {
+    navigate(`/programme/${eventId}`);
+  };
 
-      {/* Featured Programs Carousel */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Featured Programs</h2>
-          <Carousel className="w-full max-w-5xl mx-auto">
-            <CarouselContent>
-              {featuredPrograms.map((program) => (
-                <CarouselItem key={program.id} className="md:basis-1/2 lg:basis-1/3">
-                  <div className="p-1">
-                    <ProgramCard 
-                      {...program}
-                      onRegister={handleProgramRegister}
-                      onClick={handleProgramSelect}
+  // Carousel images for the hero section
+  const carouselImages = [
+    {
+      src: "/lovable-uploads/0a61e8e7-a873-449f-a7a9-56e36cad109d.png",
+      alt: "Spiritual awakening",
+      title: "Awaken Your",
+      subtitle: "Inner Wisdom",
+      description: "Discover profound insights and transformative experiences through our carefully curated spiritual programmes."
+    },
+    {
+      src: "/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png",
+      alt: "Meditation retreat",
+      title: "Journey to",
+      subtitle: "Self Discovery",
+      description: "Embark on a life-changing journey of personal growth and spiritual enlightenment with expert guidance."
+    }
+  ];
+
+  const programmes = [
+    {
+      id: 'entrainment25',
+      title: 'Entrainment\'25',
+      description: 'A transformative 3-day journey of consciousness awakening with Mahatria Ra',
+      image: '/lovable-uploads/f0247085-e8e2-4308-840f-99073530b0b0.png',
+      dates: 'Wed, 18 Sept to\nSat, 21 Sept 2025',
+      checkIn: '04:00 p.m. to 09:00 p.m.\non Wed, 18 Sept 2025',
+      checkOut: 'Latest by 02:00 p.m.\non Sat, 21 Sept 2025',
+      investment: 'INR 49,000/-\n(plus GST 18%)',
+      venue: 'Leonia Holistic Destination, Bommaraspet, shameerpet, Ranga Reddy District, Hyderabad 500078.',
+      note: '*Early check-in and Late check-out not available'
+    },
+    {
+      id: 'hdb',
+      title: 'HDB',
+      description: 'Global gathering of spiritual leaders and consciousness researchers',
+      image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
+      dates: 'Thu, 20 Apr to\nSun, 22 Apr 2025',
+      checkIn: '03:00 p.m. to 08:00 p.m.\non Thu, 20 Apr 2025',
+      checkOut: 'Latest by 01:00 p.m.\non Sun, 22 Apr 2025',
+      investment: 'INR 35,000/-\n(plus GST 18%)',
+      venue: 'Rishikesh Retreat Center, Rishikesh, Uttarakhand 249304.',
+      note: '*Approval required for participation'
+    },
+    {
+      id: 'msd',
+      title: 'MSD',
+      description: 'Silent meditation retreat for deep inner peace and clarity',
+      image: '/lovable-uploads/8e8f875a-1c7f-4a5f-aa81-19c5e1789d30.png',
+      dates: 'Sat, 10 May to\nSat, 17 May 2025',
+      checkIn: '02:00 p.m. to 07:00 p.m.\non Sat, 10 May 2025',
+      checkOut: 'Latest by 12:00 p.m.\non Sat, 17 May 2025',
+      investment: 'No Waiting List',
+      venue: 'Dharamshala Meditation Center, Dharamshala, Himachal Pradesh 176215.',
+      note: '*Limited to 50 participants'
+    },
+    {
+      id: 'tat',
+      title: 'TAT',
+      description: 'Transformative awareness training for personal growth and mindfulness',
+      image: '/lovable-uploads/9915522c-4120-403c-9834-f100e5676ef4.png',
+      dates: 'Fri, 5 Jun to\nSun, 7 Jun 2025',
+      checkIn: '05:00 p.m. to 10:00 p.m.\non Fri, 5 Jun 2025',
+      checkOut: 'Latest by 03:00 p.m.\non Sun, 7 Jun 2025',
+      investment: 'Free Program',
+      venue: 'Pune Convention Center, Pune, Maharashtra 411028.',
+      note: '*Open for 200 participants'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Hero Section with Carousel */}
+      <div className="hero-banner-container relative overflow-hidden">
+        <div className="hero-carousel-wrapper relative h-[50vh]">
+          <Carousel 
+            plugins={[plugin.current]}
+            className="w-full h-full"
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+          >
+            <CarouselContent className="-ml-0">
+              {carouselImages.map((image, index) => (
+                <CarouselItem key={index} className="pl-0">
+                  <div className="carousel-slide relative h-[50vh]">
+                    <img
+                      className={`hero-image absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-out ${
+                        bannerVisible 
+                          ? 'scale-100 opacity-100' 
+                          : 'scale-105 opacity-80'
+                      }`}
+                      src={image.src}
+                      alt={image.alt}
                     />
+                    <div className="hero-overlay absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+                    <div className="hero-content relative z-10 flex items-center justify-start h-full pl-8 md:pl-16 lg:pl-24">
+                      <div className="hero-text-container max-w-2xl">
+                        <div className={`text-left transition-all duration-1000 ease-out ${
+                          bannerVisible 
+                            ? 'translate-y-0 opacity-100' 
+                            : 'translate-y-8 opacity-0'
+                        }`}>
+                          <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white mb-6">
+                            <span className="block">{image.title}</span>
+                            <span className="block text-blue-400">{image.subtitle}</span>
+                          </h1>
+                          <p className="hero-description mt-3 text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
+                            {image.description}
+                          </p>
+                          <div className="hero-cta-container mt-8">
+                            <Button 
+                              onClick={() => handleRegister('featured')}
+                              className="hero-cta-button relative overflow-hidden px-12 py-6 text-lg md:text-xl font-medium rounded-full text-white border-0 transition-all duration-300 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                              style={{
+                                backgroundImage: `url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png')`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat'
+                              }}
+                            >
+                              <span className="relative z-10">explore programmes</span>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="left-4 md:left-8 bg-white/20 hover:bg-white/30 border-white/30 text-white" />
+            <CarouselNext className="right-4 md:right-8 bg-white/20 hover:bg-white/30 border-white/30 text-white" />
           </Carousel>
         </div>
-      </section>
+      </div>
 
-      {/* Program Categories */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Browse by Category</h2>
-          
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className="mb-2"
+      {/* Programmes Section */}
+      <div className="programmes-section py-16 bg-gray-50">
+        <div className="programmes-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="programmes-header text-center">
+            <h2 className="programmes-title text-3xl font-extrabold text-gray-900 sm:text-4xl">
+              Upcoming Transformative Programmes
+            </h2>
+            <p className="programmes-subtitle mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+              Discover programmes that will awaken your consciousness and transform your life
+            </p>
+          </div>
+
+          <div className="programmes-list mt-12 space-y-12">
+            {programmes.map((programme, index) => (
+              <div
+                key={programme.id}
+                ref={(el) => cardRefs.current[index] = el}
+                data-card-index={index}
+                className={`transform transition-all duration-700 ${
+                  visibleCards.has(index) 
+                    ? 'translate-y-0 opacity-100' 
+                    : 'translate-y-8 opacity-0'
+                }`}
+                style={{
+                  transitionDelay: `${index * 200}ms`
+                }}
               >
-                {category}
-              </Button>
+                <ProgramCard
+                  id={programme.id}
+                  title={programme.title}
+                  description={programme.description}
+                  backgroundImage={programme.image}
+                  dates={programme.dates}
+                  checkIn={programme.checkIn}
+                  checkOut={programme.checkOut}
+                  investment={programme.investment}
+                  venue={programme.venue}
+                  note={programme.note}
+                  onRegister={handleRegister}
+                  onClick={handleCardClick}
+                />
+              </div>
             ))}
           </div>
-
-          {/* Programs Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPrograms.map((program) => (
-              <ProgramCard 
-                key={program.id}
-                {...program}
-                onRegister={handleProgramRegister}
-                onClick={handleProgramSelect}
-              />
-            ))}
-          </div>
-
-          {filteredPrograms.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-600 text-lg">
-                No programs found matching your criteria. Try adjusting your search or category filter.
-              </p>
-            </div>
-          )}
         </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-blue-600 text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold mb-2">10,000+</div>
-              <div className="text-lg">Young People Served</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">50+</div>
-              <div className="text-lg">Programs Available</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">95%</div>
-              <div className="text-lg">Satisfaction Rate</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">15</div>
-              <div className="text-lg">Years of Experience</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Start Your Journey?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join our community of young achievers and discover what you're truly capable of.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-orange-500 hover:bg-orange-600">
-              Browse Programs
-            </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
-              Learn More
-            </Button>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 };

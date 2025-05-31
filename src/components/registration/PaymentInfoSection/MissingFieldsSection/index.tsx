@@ -1,12 +1,16 @@
 
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import FieldInput from '../FieldInput';
+import { PaymentInfo } from '../types';
+import styles from './index.module.css';
 
 interface MissingFieldsSectionProps {
   staticMissingFields: string[];
   gstWasInitiallyRegistered: boolean;
-  paymentInfo?: any;
+  paymentInfo?: PaymentInfo;
   onPaymentInfoChange: (field: string, value: any) => void;
   columnLayout: 2 | 3;
 }
@@ -18,36 +22,55 @@ const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
   onPaymentInfoChange,
   columnLayout
 }) => {
-  if (staticMissingFields.length === 0) {
-    return null;
-  }
+  const gridClass = columnLayout === 2 ? styles.grid2 : styles.grid3;
 
   return (
-    <Card className="border-orange-200 bg-orange-50">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-orange-800">
-          <AlertTriangle className="w-5 h-5" />
-          Missing Information
+    <Card className={styles.card}>
+      <CardHeader className={styles.header}>
+        <CardTitle className={styles.title}>
+          Please fill the missing fields
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <p className="text-orange-700 mb-4">
-          Please complete the following required fields:
-        </p>
-        <div className="space-y-2">
-          {staticMissingFields.map((field) => (
-            <div
-              key={field}
-              className="w-full text-left p-3 bg-white border border-orange-200 rounded-lg"
-            >
-              <div className="flex justify-between items-center">
-                <span className="font-medium text-gray-900 capitalize">
-                  {field.replace(/([A-Z])/g, ' $1')}
+      <CardContent className={styles.content}>
+        <div className={gridClass}>
+          {!gstWasInitiallyRegistered && (
+            <div className={styles.gstContainer}>
+              <Label className={styles.gstLabel}>GST registered?</Label>
+              <div className={styles.checkboxContainer}>
+                <Checkbox
+                  checked={paymentInfo?.gstRegistered || false}
+                  onCheckedChange={(checked) => onPaymentInfoChange('gstRegistered', checked)}
+                />
+                <span className={styles.checkboxLabel}>
+                  {paymentInfo?.gstRegistered ? 'Yes' : 'No'}
                 </span>
-                <span className="text-orange-600 text-sm">Required</span>
               </div>
             </div>
+          )}
+
+          {staticMissingFields.map((field) => (
+            <FieldInput
+              key={field}
+              field={field}
+              paymentInfo={paymentInfo}
+              onPaymentInfoChange={onPaymentInfoChange}
+            />
           ))}
+
+          {!gstWasInitiallyRegistered && paymentInfo?.gstRegistered && (
+            <>
+              <FieldInput
+                field="gstin"
+                paymentInfo={paymentInfo}
+                onPaymentInfoChange={onPaymentInfoChange}
+              />
+              <FieldInput
+                field="tdsPercent"
+                paymentInfo={paymentInfo}
+                onPaymentInfoChange={onPaymentInfoChange}
+              />
+            </>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/common/components/Card';
-import { Button } from '@/common/components/Button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Clock, Edit, CheckCircle } from 'lucide-react';
 import RegistrationHeader from '../RegistrationHeader';
 import styles from './index.module.css';
@@ -37,7 +37,7 @@ const AwaitingApprovalScreen: React.FC<AwaitingApprovalScreenProps> = ({
 }) => {
   return (
     <div className={styles.container}>
-      <RegistrationHeader onBack={() => {}} title="Registration Status" />
+      <RegistrationHeader />
 
       <div className={styles.content}>
         <Card className={styles.card}>
