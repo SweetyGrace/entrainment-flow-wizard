@@ -1,14 +1,13 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
+import { Button } from '@/common/components/Button';
+import { Input } from '@/common/components/Input';
+import { Label } from '@/common/components/Label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/components/Select';
+import { Textarea } from '@/common/components/Textarea';
+import { Checkbox } from '@/common/components/Checkbox';
 import { format } from 'date-fns';
-import BirthDatePicker from '@/components/ui/birth-date-picker';
+import BirthDatePicker from '@/common/components/BirthDatePicker';
 import styles from './index.module.css';
 
 interface PersonalInfo {

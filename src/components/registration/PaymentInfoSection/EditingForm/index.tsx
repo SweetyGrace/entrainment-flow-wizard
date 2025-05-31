@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
+import { Button } from '@/common/components/Button';
+import { Input } from '@/common/components/Input';
+import { Label } from '@/common/components/Label';
+import { Textarea } from '@/common/components/Textarea';
+import { Checkbox } from '@/common/components/Checkbox';
 import { PaymentInfo } from '../types';
 import styles from './index.module.css';
 
