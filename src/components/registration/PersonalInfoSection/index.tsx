@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/common/components/Textarea';
 import { Checkbox } from '@/common/components/Checkbox';
 import { format } from 'date-fns';
-import { BirthDatePicker } from '@/common/components/BirthDatePicker';
+import BirthDatePicker from '@/common/components/BirthDatePicker';
 import styles from './index.module.css';
 
 interface PersonalInfo {
