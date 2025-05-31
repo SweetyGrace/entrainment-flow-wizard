@@ -1,16 +1,16 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
 import { Label } from '@/common/components/Label';
 import { Checkbox } from '@/common/components/Checkbox';
 import FieldInput from '../FieldInput';
 import { PaymentInfo } from '../types';
+import { getFieldConfig } from '../utils';
 import styles from './index.module.css';
 
-interface MissingFieldsSectionProps {
+export interface MissingFieldsSectionProps {
   missingFields: string[];
   gstWasInitiallyRegistered: boolean;
-  paymentInfo?: PaymentInfo;
+  paymentInfo: PaymentInfo;
   onPaymentInfoChange: (field: string, value: any) => void;
   columnLayout: 2 | 3;
 }
@@ -22,63 +22,70 @@ const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
   onPaymentInfoChange,
   columnLayout
 }) => {
-  const gridClass = columnLayout === 2 ? styles.grid2 : styles.grid3;
+  if (!missingFields || missingFields.length === 0) {
+    return null;
+  }
+
+  if (missingFields.length === 1 && missingFields[0] === 'gstNumber' && !gstWasInitiallyRegistered) {
+    return null;
+  }
+
+  const displayFields = missingFields.filter(field => {
+    if (field === 'gstNumber' && !paymentInfo.gstRegistered) {
+      return false;
+    }
+    return true;
+  });
+
+  const gridCols = columnLayout === 3 ? styles.threeColumns : styles.twoColumns;
 
   return (
     <Card className={styles.card}>
       <CardHeader className={styles.header}>
-        <CardTitle className={styles.title}>
-          Please fill the missing fields
-        </CardTitle>
+        <CardTitle className={styles.title}>Missing Information</CardTitle>
       </CardHeader>
       <CardContent className={styles.content}>
-        <div className={gridClass}>
-          {!gstWasInitiallyRegistered && (
-            <div className={styles.gstContainer}>
-              <Label className={styles.gstLabel}>GST registered?</Label>
-              <div className={styles.checkboxContainer}>
+        <div className={`${styles.grid} ${gridCols}`}>
+          {displayFields.map((field) => {
+            const config = getFieldConfig(field);
+            
+            return (
+              <FieldInput
+                key={field}
+                id={field}
+                field={field}
+                label={config.label}
+                type={config.type}
+                value={paymentInfo[field as keyof PaymentInfo]}
+                onChange={(value: string) => onPaymentInfoChange(field, value)}
+              />
+            );
+          })}
+
+          {missingFields.includes('gstRegistered') && (
+            <div className={styles.checkboxContainer}>
+              <div className={styles.checkboxWrapper}>
                 <Checkbox
-                  checked={paymentInfo?.gstRegistered || false}
+                  id="gstRegistered"
+                  checked={paymentInfo.gstRegistered}
                   onCheckedChange={(checked) => onPaymentInfoChange('gstRegistered', checked)}
                 />
-                <span className={styles.checkboxLabel}>
-                  {paymentInfo?.gstRegistered ? 'Yes' : 'No'}
-                </span>
+                <Label htmlFor="gstRegistered" className={styles.checkboxLabel}>
+                  GST Registered
+                </Label>
               </div>
             </div>
           )}
 
-          {missingFields.map((field) => (
+          {missingFields.includes('gstNumber') && paymentInfo.gstRegistered && (
             <FieldInput
-              key={field}
-              id={field}
-              field={field}
-              label={field}
+              id="gstNumber"
+              field="gstNumber"
+              label="GST Number"
               type="text"
-              paymentInfo={paymentInfo}
-              onPaymentInfoChange={onPaymentInfoChange}
+              value={paymentInfo.gstNumber}
+              onChange={(value: string) => onPaymentInfoChange('gstNumber', value)}
             />
-          ))}
-
-          {!gstWasInitiallyRegistered && paymentInfo?.gstRegistered && (
-            <>
-              <FieldInput
-                id="gstin"
-                field="gstin"
-                label="GSTIN"
-                type="text"
-                paymentInfo={paymentInfo}
-                onPaymentInfoChange={onPaymentInfoChange}
-              />
-              <FieldInput
-                id="tdsPercent"
-                field="tdsPercent"
-                label="TDS Percent"
-                type="text"
-                paymentInfo={paymentInfo}
-                onPaymentInfoChange={onPaymentInfoChange}
-              />
-            </>
           )}
         </div>
       </CardContent>

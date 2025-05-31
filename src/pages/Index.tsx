@@ -1,6 +1,6 @@
 
-import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Button } from "@/common/components/Button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/common/components/Carousel";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
