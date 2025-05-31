@@ -1,61 +1,57 @@
 
 import React from 'react';
-import { Input } from '@/common/components/Input';
-import { Label } from '@/common/components/Label';
-import { Textarea } from '@/common/components/Textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { formatFieldLabel } from '../utils';
 import { PaymentInfo } from '../types';
 import styles from './index.module.css';
 
-export interface FieldInputProps {
-  id: string;
-  type: string;
-  label: string;
-  value: any;
-  onChange: (value: string) => void;
-}
-
-interface Props extends FieldInputProps {
-  field?: string;
+interface FieldInputProps {
+  field: string;
   paymentInfo?: PaymentInfo;
-  onPaymentInfoChange?: (field: string, value: any) => void;
+  onPaymentInfoChange: (field: string, value: any) => void;
 }
 
-const FieldInput: React.FC<Props> = ({ 
-  id, 
-  type, 
-  label, 
-  value, 
-  onChange 
+const FieldInput: React.FC<FieldInputProps> = ({
+  field,
+  paymentInfo,
+  onPaymentInfoChange
 }) => {
-  const renderField = () => {
-    if (type === 'textarea') {
-      return (
-        <Textarea
-          id={id}
-          value={value || ''}
-          onChange={(e) => onChange(e.target.value)}
-          className={styles.textarea}
-        />
-      );
-    }
-    
+  const fieldValue = paymentInfo?.[field as keyof PaymentInfo];
+  const stringValue = typeof fieldValue === 'string' ? fieldValue : '';
+
+  const containerClass = field === 'address' ? styles.fieldContainerFull : styles.fieldContainer;
+
+  if (field === 'address') {
     return (
-      <Input
-        id={id}
-        type={type}
-        value={value || ''}
-        onChange={(e) => onChange(e.target.value)}
-        className={styles.input}
-      />
+      <div className={containerClass}>
+        <Label className={styles.label}>
+          {formatFieldLabel(field)}
+        </Label>
+        <Textarea
+          value={stringValue}
+          onChange={(e) => onPaymentInfoChange(field, e.target.value)}
+          className={styles.textarea}
+          rows={3}
+          placeholder="Enter your complete address..."
+        />
+      </div>
     );
-  };
+  }
 
   return (
-    <div className={styles.fieldContainer}>
-      <Label htmlFor={id} className={styles.label}>
-        {label}
+    <div className={containerClass}>
+      <Label className={styles.label}>
+        {formatFieldLabel(field)}
       </Label>
-      {renderField()}
+      <Input
+        type={field === 'invoiceEmail' ? 'email' : 'text'}
+        value={stringValue}
+        onChange={(e) => onPaymentInfoChange(field, e.target.value)}
+        className={styles.input}
+        placeholder={`Enter ${formatFieldLabel(field).toLowerCase()}`}
+      />
     </div>
   );
 };

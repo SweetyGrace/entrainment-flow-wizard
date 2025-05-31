@@ -1,91 +1,75 @@
+
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
-import { Label } from '@/common/components/Label';
-import { Checkbox } from '@/common/components/Checkbox';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import FieldInput from '../FieldInput';
 import { PaymentInfo } from '../types';
-import { getFieldConfig } from '../utils';
 import styles from './index.module.css';
 
-export interface MissingFieldsSectionProps {
-  missingFields: string[];
+interface MissingFieldsSectionProps {
+  staticMissingFields: string[];
   gstWasInitiallyRegistered: boolean;
-  paymentInfo: PaymentInfo;
+  paymentInfo?: PaymentInfo;
   onPaymentInfoChange: (field: string, value: any) => void;
   columnLayout: 2 | 3;
 }
 
 const MissingFieldsSection: React.FC<MissingFieldsSectionProps> = ({
-  missingFields,
+  staticMissingFields,
   gstWasInitiallyRegistered,
   paymentInfo,
   onPaymentInfoChange,
   columnLayout
 }) => {
-  if (!missingFields || missingFields.length === 0) {
-    return null;
-  }
-
-  if (missingFields.length === 1 && missingFields[0] === 'gstNumber' && !gstWasInitiallyRegistered) {
-    return null;
-  }
-
-  const displayFields = missingFields.filter(field => {
-    if (field === 'gstNumber' && !paymentInfo.gstRegistered) {
-      return false;
-    }
-    return true;
-  });
-
-  const gridCols = columnLayout === 3 ? styles.threeColumns : styles.twoColumns;
+  const gridClass = columnLayout === 2 ? styles.grid2 : styles.grid3;
 
   return (
     <Card className={styles.card}>
       <CardHeader className={styles.header}>
-        <CardTitle className={styles.title}>Missing Information</CardTitle>
+        <CardTitle className={styles.title}>
+          Please fill the missing fields
+        </CardTitle>
       </CardHeader>
       <CardContent className={styles.content}>
-        <div className={`${styles.grid} ${gridCols}`}>
-          {displayFields.map((field) => {
-            const config = getFieldConfig(field);
-            
-            return (
-              <FieldInput
-                key={field}
-                id={field}
-                field={field}
-                label={config.label}
-                type={config.type}
-                value={paymentInfo[field as keyof PaymentInfo]}
-                onChange={(value: string) => onPaymentInfoChange(field, value)}
-              />
-            );
-          })}
-
-          {missingFields.includes('gstRegistered') && (
-            <div className={styles.checkboxContainer}>
-              <div className={styles.checkboxWrapper}>
+        <div className={gridClass}>
+          {!gstWasInitiallyRegistered && (
+            <div className={styles.gstContainer}>
+              <Label className={styles.gstLabel}>GST registered?</Label>
+              <div className={styles.checkboxContainer}>
                 <Checkbox
-                  id="gstRegistered"
-                  checked={paymentInfo.gstRegistered}
+                  checked={paymentInfo?.gstRegistered || false}
                   onCheckedChange={(checked) => onPaymentInfoChange('gstRegistered', checked)}
                 />
-                <Label htmlFor="gstRegistered" className={styles.checkboxLabel}>
-                  GST Registered
-                </Label>
+                <span className={styles.checkboxLabel}>
+                  {paymentInfo?.gstRegistered ? 'Yes' : 'No'}
+                </span>
               </div>
             </div>
           )}
 
-          {missingFields.includes('gstNumber') && paymentInfo.gstRegistered && (
+          {staticMissingFields.map((field) => (
             <FieldInput
-              id="gstNumber"
-              field="gstNumber"
-              label="GST Number"
-              type="text"
-              value={paymentInfo.gstNumber}
-              onChange={(value: string) => onPaymentInfoChange('gstNumber', value)}
+              key={field}
+              field={field}
+              paymentInfo={paymentInfo}
+              onPaymentInfoChange={onPaymentInfoChange}
             />
+          ))}
+
+          {!gstWasInitiallyRegistered && paymentInfo?.gstRegistered && (
+            <>
+              <FieldInput
+                field="gstin"
+                paymentInfo={paymentInfo}
+                onPaymentInfoChange={onPaymentInfoChange}
+              />
+              <FieldInput
+                field="tdsPercent"
+                paymentInfo={paymentInfo}
+                onPaymentInfoChange={onPaymentInfoChange}
+              />
+            </>
           )}
         </div>
       </CardContent>

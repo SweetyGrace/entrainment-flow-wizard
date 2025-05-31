@@ -27,8 +27,8 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     getInitialFieldCategories(paymentInfo)
   );
 
-  const preFilledFields = initialFieldCategories.preFilledFields;
-  const missingFields = initialFieldCategories.missingFields;
+  const staticPreFilledFields = initialFieldCategories.preFilledFields;
+  const staticMissingFields = initialFieldCategories.missingFields;
   const gstWasInitiallyRegistered = initialFieldCategories.gstWasInitiallyRegistered;
 
   // If has data and not editing, show segregated sections
@@ -36,9 +36,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     return (
       <div className={styles.container}>
         {/* Pre-filled Fields Section */}
-        {preFilledFields.length > 0 && (
+        {staticPreFilledFields.length > 0 && (
           <PreFilledSection
-            preFilledFields={preFilledFields}
+            staticPreFilledFields={staticPreFilledFields}
             gstWasInitiallyRegistered={gstWasInitiallyRegistered}
             paymentInfo={paymentInfo}
             onPaymentInfoChange={onPaymentInfoChange}
@@ -49,9 +49,9 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         )}
 
         {/* Missing Fields Section */}
-        {missingFields.length > 0 && (
+        {staticMissingFields.length > 0 && (
           <MissingFieldsSection
-            missingFields={missingFields}
+            staticMissingFields={staticMissingFields}
             gstWasInitiallyRegistered={gstWasInitiallyRegistered}
             paymentInfo={paymentInfo}
             onPaymentInfoChange={onPaymentInfoChange}
@@ -64,9 +64,11 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
 
   return (
     <EditingForm
-      paymentInfo={paymentInfo || {}}
-      onSave={onSaveChanges}
-      onCancel={() => setEditingSection(null)}
+      paymentInfo={paymentInfo}
+      onPaymentInfoChange={onPaymentInfoChange}
+      isEditing={isEditing}
+      setEditingSection={setEditingSection}
+      onSaveChanges={onSaveChanges}
     />
   );
 };

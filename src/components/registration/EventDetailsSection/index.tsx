@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarIcon, Clock, MapPin, IndianRupee } from 'lucide-react';
 import styles from './index.module.css';
 

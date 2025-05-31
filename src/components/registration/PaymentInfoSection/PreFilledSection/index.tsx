@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ColumnLayoutToggle from '../ColumnLayoutToggle';
 import FieldDisplay from '../FieldDisplay';
 import { PaymentInfo } from '../types';
 import styles from './index.module.css';
 
 interface PreFilledSectionProps {
-  preFilledFields: string[];
+  staticPreFilledFields: string[];
   gstWasInitiallyRegistered: boolean;
   paymentInfo?: PaymentInfo;
   onPaymentInfoChange: (field: string, value: any) => void;
@@ -17,7 +17,7 @@ interface PreFilledSectionProps {
 }
 
 const PreFilledSection: React.FC<PreFilledSectionProps> = ({
-  preFilledFields,
+  staticPreFilledFields,
   gstWasInitiallyRegistered,
   paymentInfo,
   onPaymentInfoChange,
@@ -58,7 +58,7 @@ const PreFilledSection: React.FC<PreFilledSectionProps> = ({
             />
           )}
 
-          {preFilledFields.map((field) => (
+          {staticPreFilledFields.map((field) => (
             <FieldDisplay
               key={field}
               field={field}

@@ -11,10 +11,6 @@ export interface PaymentInfo {
   amount?: number;
   handoverDate?: Date;
   handoverTo?: string;
-  cardNumber?: string;
-  expiryDate?: string;
-  cvv?: string;
-  cardholderName?: string;
 }
 
 export interface PaymentInfoSectionProps {
