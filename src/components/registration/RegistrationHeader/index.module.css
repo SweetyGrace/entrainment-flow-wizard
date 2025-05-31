@@ -1,0 +1,86 @@
+
+.banner {
+  position: relative;
+  height: 16rem;
+  background: linear-gradient(to bottom right, #111827, #1e3a8a, #3730a3);
+  overflow: hidden;
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+.bannerContent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bannerText {
+  text-align: center;
+  color: white;
+}
+
+.bannerTitle {
+  font-size: 2.25rem;
+  font-weight: 300;
+  margin-bottom: 0.75rem;
+}
+
+.bannerSubtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.navigation {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.navContent {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.navItems {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backButton {
+  color: #4b5563;
+  padding: 0.5rem;
+}
+
+.backButton:hover {
+  color: #111827;
+  background-color: #f3f4f6;
+}
+
+.backIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.25rem;
+}
+
+.backText {
+  color: #4b5563;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.pageTitle {
+  color: #111827;
+  font-weight: 500;
+  font-size: 1.125rem;
+  margin-left: 0.5rem;
+}

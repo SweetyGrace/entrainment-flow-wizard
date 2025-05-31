@@ -1,0 +1,213 @@
+
+.cardWrapper {
+  cursor: pointer;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.cardWrapper:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.backgroundImage {
+  position: relative;
+  height: 16rem;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  transition: all 0.5s;
+}
+
+.cardWrapper:hover .image {
+  transform: scale(1.05);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.6));
+}
+
+.mainContent {
+  position: relative;
+  margin-top: -5rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.contentCard {
+  background-color: white;
+  border-radius: 0.75rem 0.75rem 0 0;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f3f4f6;
+  padding: 2rem;
+}
+
+.titleSection {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.infoGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.infoColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.icon {
+  margin-bottom: 0.75rem;
+}
+
+.iconDefault {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #475569;
+  stroke-width: 1;
+}
+
+.iconCustom {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconDot {
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: #475569;
+  border-radius: 50%;
+}
+
+.iconRupee {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid #475569;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconRupeeSymbol {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: #475569;
+  stroke-width: 1;
+}
+
+.infoTitle {
+  font-weight: 700;
+  color: #334155;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.infoText {
+  color: #475569;
+  font-size: 0.75rem;
+  line-height: 1.625;
+}
+
+.divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #e5e7eb;
+}
+
+.divider1 {
+  left: 25%;
+}
+
+.divider2 {
+  left: 50%;
+}
+
+.divider3 {
+  left: 75%;
+}
+
+.venueBar {
+  background-color: #f1f5f9;
+  border-radius: 0 0 0.75rem 0.75rem;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  margin-top: -1px;
+}
+
+.venueText {
+  color: #475569;
+}
+
+.venueLabel {
+  font-weight: 500;
+}
+
+.noteText {
+  color: #64748b;
+  font-style: italic;
+}
+
+.registerContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.registerButton {
+  position: relative;
+  overflow: hidden;
+  padding: 0.75rem 3rem;
+  color: white;
+  font-weight: 500;
+  border-radius: 9999px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: none;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  transition: all 0.3s;
+  background-image: url('/lovable-uploads/203da045-4558-4833-92ac-07479a336dfb.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.registerButton:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.registerButtonText {
+  position: relative;
+  z-index: 10;
+}

@@ -1,0 +1,93 @@
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 18rem;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.stepIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stepCircle {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid;
+  transition: all 0.3s;
+}
+
+.stepCircleCompleted {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.stepCircleCurrent {
+  background-color: white;
+  border-color: #2563eb;
+  color: #2563eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.stepCircleInactive {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+.stepIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.stepNumber {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.stepConnector {
+  width: 0.125rem;
+  height: 2rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.stepConnectorCompleted {
+  background-color: #2563eb;
+}
+
+.stepConnectorInactive {
+  background-color: #d1d5db;
+}
+
+.stepContent {
+  flex: 1;
+  padding-top: 0.5rem;
+}
+
+.stepTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stepTitleActive {
+  color: #111827;
+}
+
+.stepTitleInactive {
+  color: #6b7280;
+}

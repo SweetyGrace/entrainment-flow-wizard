@@ -2,6 +2,7 @@
 import React from 'react';
 import { CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import styles from './index.module.css';
 
 interface Step {
   id: number;
@@ -17,42 +18,42 @@ interface RegistrationStepperProps {
 
 const RegistrationStepper: React.FC<RegistrationStepperProps> = ({ steps, className }) => {
   return (
-    <div className={cn("flex flex-col space-y-6 max-w-xs", className)}>
+    <div className={cn(styles.container, className)}>
       {steps.map((step, index) => (
-        <div key={step.id} className="flex items-start space-x-4">
-          <div className="flex flex-col items-center">
+        <div key={step.id} className={styles.step}>
+          <div className={styles.stepIndicator}>
             <div
               className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
+                styles.stepCircle,
                 step.isCompleted
-                  ? "bg-blue-600 border-blue-600 text-white shadow-md"
+                  ? styles.stepCircleCompleted
                   : step.isCurrent
-                  ? "bg-white border-blue-600 text-blue-600 shadow-md"
-                  : "bg-gray-100 border-gray-300 text-gray-500"
+                  ? styles.stepCircleCurrent
+                  : styles.stepCircleInactive
               )}
             >
               {step.isCompleted ? (
-                <CheckCircle className="w-5 h-5" />
+                <CheckCircle className={styles.stepIcon} />
               ) : (
-                <span className="text-sm font-semibold">{step.id}</span>
+                <span className={styles.stepNumber}>{step.id}</span>
               )}
             </div>
             {index < steps.length - 1 && (
               <div
                 className={cn(
-                  "w-0.5 h-8 mt-2 transition-colors duration-300",
-                  step.isCompleted ? "bg-blue-600" : "bg-gray-300"
+                  styles.stepConnector,
+                  step.isCompleted ? styles.stepConnectorCompleted : styles.stepConnectorInactive
                 )}
               />
             )}
           </div>
-          <div className="flex-1 pt-2">
+          <div className={styles.stepContent}>
             <span
               className={cn(
-                "text-sm font-medium",
+                styles.stepTitle,
                 step.isCompleted || step.isCurrent
-                  ? "text-gray-900"
-                  : "text-gray-500"
+                  ? styles.stepTitleActive
+                  : styles.stepTitleInactive
               )}
             >
               {step.title}

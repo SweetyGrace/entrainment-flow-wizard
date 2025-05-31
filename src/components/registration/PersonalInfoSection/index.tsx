@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { format } from 'date-fns';
 import BirthDatePicker from '@/components/ui/birth-date-picker';
+import styles from './index.module.css';
 
 interface PersonalInfo {
   fullName?: string;
@@ -106,7 +107,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
       case 'gender':
         return (
           <Select value="" onValueChange={(value) => onPersonalInfoChange(field, value)}>
-            <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+            <SelectTrigger className={styles.select}>
               <SelectValue placeholder="Select gender" />
             </SelectTrigger>
             <SelectContent>
@@ -127,7 +128,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           <Textarea
             value=""
             onChange={(e) => onPersonalInfoChange(field, e.target.value)}
-            className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+            className={styles.textarea}
             rows={3}
             placeholder="Any special requirements or notes..."
           />
@@ -138,7 +139,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             type={field === 'email' ? 'email' : 'text'}
             value=""
             onChange={(e) => onPersonalInfoChange(field, e.target.value)}
-            className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className={styles.input}
             placeholder={`Enter your ${formatFieldLabel(field).toLowerCase()}`}
           />
         );
@@ -148,30 +149,30 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   // If has data and not editing, show segregated sections
   if (hasMeaningfulData && !isEditing) {
     return (
-      <div className="space-y-6">
+      <div className={styles.container}>
         {/* Pre-filled Fields Section */}
         {staticPreFilledFields.length > 0 && (
-          <Card className="border-0 shadow-sm bg-white">
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <CardTitle className="text-lg font-medium text-gray-900 mb-3">
+          <Card className={styles.card}>
+            <CardHeader className={styles.header}>
+              <div className={styles.headerContent}>
+                <div className={styles.headerLeft}>
+                  <CardTitle className={styles.title}>
                     Review the details and update anything that needs realignment — <button 
                       onClick={() => setEditingSection('personal')}
-                      className="text-blue-600 hover:text-blue-700 underline"
+                      className={styles.editButton}
                     >
                       click here to edit
                     </button>
                   </CardTitle>
                   
                   {/* Column Layout Toggle */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">View:</span>
+                  <div className={styles.layoutToggle}>
+                    <span className={styles.layoutLabel}>View:</span>
                     <Button
                       variant={columnLayout === 2 ? "default" : "outline"}
                       size="sm"
                       onClick={() => setColumnLayout(2)}
-                      className="h-7 px-3 text-xs rounded-full"
+                      className={styles.layoutButton}
                     >
                       2 Columns
                     </Button>
@@ -179,7 +180,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       variant={columnLayout === 3 ? "default" : "outline"}
                       size="sm"
                       onClick={() => setColumnLayout(3)}
-                      className="h-7 px-3 text-xs rounded-full"
+                      className={styles.layoutButton}
                     >
                       3 Columns
                     </Button>
@@ -187,14 +188,14 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-0">
-              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+            <CardContent className={styles.contentEditing}>
+              <div className={columnLayout === 2 ? styles.grid2 : styles.grid3}>
                 {staticPreFilledFields.map((field) => (
-                  <div key={field} className="space-y-3">
-                    <Label className="text-sm font-medium text-gray-600">
+                  <div key={field} className={styles.field}>
+                    <Label className={styles.label}>
                       {formatFieldLabel(field)}
                     </Label>
-                    <div className="text-sm text-gray-900 font-medium">
+                    <div className={styles.fieldValue}>
                       {renderFieldValue(field, personalInfo?.[field as keyof PersonalInfo])}
                     </div>
                   </div>
@@ -206,20 +207,20 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
         {/* Missing Fields Section */}
         {staticMissingFields.length > 0 && (
-          <Card className="border-0 shadow-sm bg-white">
-            <CardHeader className="pb-6">
-              <CardTitle className="text-lg font-medium text-gray-900">
+          <Card className={styles.card}>
+            <CardHeader className={styles.header}>
+              <CardTitle className={styles.title}>
                 Please fill the missing fields
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className={`grid grid-cols-1 ${columnLayout === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+            <CardContent className={styles.content}>
+              <div className={columnLayout === 2 ? styles.grid2 : styles.grid3}>
                 {staticMissingFields.map((field) => (
-                  <div key={field} className="space-y-3">
-                    <Label className="text-sm font-medium text-gray-700">
+                  <div key={field} className={styles.field}>
+                    <Label className={styles.labelEditing}>
                       {formatFieldLabel(field)}
                       {(field === 'preferredRoommate' || field === 'additionalNotes') && (
-                        <span className="text-gray-400 text-xs"> (Optional)</span>
+                        <span className={styles.optionalText}> (Optional)</span>
                       )}
                     </Label>
                     {renderEmptyFieldInput(field)}
@@ -231,16 +232,16 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         )}
 
         {/* T&C Checkbox - Always show at bottom */}
-        <Card className="border-0 shadow-sm bg-white">
-          <CardContent className="p-4">
-            <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-100">
+        <Card className={styles.termsCard}>
+          <CardContent className={styles.termsContent}>
+            <div className={styles.termsContainer}>
               <Checkbox
                 id="terms"
                 checked={personalInfo?.acceptedTerms || false}
                 onCheckedChange={(checked) => onPersonalInfoChange('acceptedTerms', checked)}
-                className="mt-1"
+                className={styles.termsCheckbox}
               />
-              <Label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
+              <Label htmlFor="terms" className={styles.termsLabel}>
                 I accept the terms and conditions{eventRequiresApproval ? ' and understand that this registration is subject to approval' : ''}
               </Label>
             </div>
@@ -251,33 +252,33 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   }
 
   return (
-    <Card className={`mb-6 border-0 shadow-sm ${isEditing ? 'bg-blue-50 border-blue-200' : 'bg-white'}`}>
-      <CardHeader className="pb-6">
+    <Card className={isEditing ? styles.cardEditing : styles.card}>
+      <CardHeader className={styles.header}>
         {isEditing && (
           <div>
-            <CardTitle className="text-lg font-medium text-gray-900">
+            <CardTitle className={styles.title}>
               {personalInfo?.fullName ? `Edit ${personalInfo.fullName}'s information` : 'Edit Personal Information'}
             </CardTitle>
           </div>
         )}
       </CardHeader>
 
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">Full name</Label>
+      <CardContent className={styles.content}>
+        <div className={styles.grid2}>
+          <div className={styles.field}>
+            <Label htmlFor="fullName" className={styles.labelEditing}>Full name</Label>
             <Input
               id="fullName"
               value={personalInfo?.fullName || ''}
               onChange={(e) => onPersonalInfoChange('fullName', e.target.value)}
-              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className={styles.input}
               placeholder="Enter your full name"
             />
           </div>
-          <div className="space-y-3">
-            <Label htmlFor="gender" className="text-sm font-medium text-gray-700">Gender</Label>
+          <div className={styles.field}>
+            <Label htmlFor="gender" className={styles.labelEditing}>Gender</Label>
             <Select value={personalInfo?.gender} onValueChange={(value) => onPersonalInfoChange('gender', value)}>
-              <SelectTrigger className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+              <SelectTrigger className={styles.select}>
                 <SelectValue placeholder="Select gender" />
               </SelectTrigger>
               <SelectContent>
@@ -288,100 +289,100 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <Label htmlFor="mobile" className="text-sm font-medium text-gray-700">Mobile number</Label>
+        <div className={styles.grid2}>
+          <div className={styles.field}>
+            <Label htmlFor="mobile" className={styles.labelEditing}>Mobile number</Label>
             <Input
               id="mobile"
               value={personalInfo?.mobile || ''}
               onChange={(e) => onPersonalInfoChange('mobile', e.target.value)}
-              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className={styles.input}
               placeholder="Enter your mobile number"
             />
           </div>
-          <div className="space-y-3">
-            <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email address</Label>
+          <div className={styles.field}>
+            <Label htmlFor="email" className={styles.labelEditing}>Email address</Label>
             <Input
               id="email"
               type="email"
               value={personalInfo?.email || ''}
               onChange={(e) => onPersonalInfoChange('email', e.target.value)}
-              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className={styles.input}
               placeholder="Enter your email address"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
+        <div className={styles.grid2}>
+          <div className={styles.field}>
             <BirthDatePicker
               value={personalInfo?.dateOfBirth}
               onChange={(date) => onPersonalInfoChange('dateOfBirth', date)}
             />
           </div>
-          <div className="space-y-3">
-            <Label htmlFor="city" className="text-sm font-medium text-gray-700">City</Label>
+          <div className={styles.field}>
+            <Label htmlFor="city" className={styles.labelEditing}>City</Label>
             <Input
               id="city"
               value={personalInfo?.city || ''}
               onChange={(e) => onPersonalInfoChange('city', e.target.value)}
-              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className={styles.input}
               placeholder="Enter your city"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <Label htmlFor="infinitheismContact" className="text-sm font-medium text-gray-700">Infinitheism contact</Label>
+        <div className={styles.grid2}>
+          <div className={styles.field}>
+            <Label htmlFor="infinitheismContact" className={styles.labelEditing}>Infinitheism contact</Label>
             <Input
               id="infinitheismContact"
               value={personalInfo?.infinitheismContact || ''}
               onChange={(e) => onPersonalInfoChange('infinitheismContact', e.target.value)}
-              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className={styles.input}
               placeholder="Enter contact name"
             />
           </div>
-          <div className="space-y-3">
-            <Label htmlFor="preferredRoommate" className="text-sm font-medium text-gray-700">
-              Preferred roommate <span className="text-gray-400 text-xs">(Optional)</span>
+          <div className={styles.field}>
+            <Label htmlFor="preferredRoommate" className={styles.labelEditing}>
+              Preferred roommate <span className={styles.optionalText}>(Optional)</span>
             </Label>
             <Input
               id="preferredRoommate"
               value={personalInfo?.preferredRoommate || ''}
               onChange={(e) => onPersonalInfoChange('preferredRoommate', e.target.value)}
-              className="h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className={styles.input}
               placeholder="Enter roommate preference"
             />
           </div>
         </div>
 
-        <div className="space-y-3">
-          <Label htmlFor="additionalNotes" className="text-sm font-medium text-gray-700">
-            Note <span className="text-gray-400 text-xs">(Optional)</span>
+        <div className={styles.field}>
+          <Label htmlFor="additionalNotes" className={styles.labelEditing}>
+            Note <span className={styles.optionalText}>(Optional)</span>
           </Label>
           <Textarea
             id="additionalNotes"
             value={personalInfo?.additionalNotes || ''}
             onChange={(e) => onPersonalInfoChange('additionalNotes', e.target.value)}
-            className="border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+            className={styles.textarea}
             rows={3}
             placeholder="Any special requirements or notes..."
           />
         </div>
 
         {isEditing && (
-          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-100">
+          <div className={styles.actionButtons}>
             <Button 
               variant="outline"
               onClick={() => setEditingSection(null)}
-              className="px-6 rounded-full"
+              className={styles.cancelButton}
             >
               Cancel
             </Button>
             <Button 
               onClick={onSaveChanges}
-              className="px-6 rounded-full"
+              className={styles.saveButton}
             >
               Save Changes
             </Button>
