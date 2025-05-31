@@ -15,7 +15,9 @@ interface UserData {
     gender?: string;
     mobile?: string;
     email?: string;
-    dateOfBirth?: Date;
+    birthDay?: string;
+    birthMonth?: string;
+    birthYear?: string;
     infinitheismContact?: string;
     city?: string;
     preferredRoommate?: string;
@@ -159,7 +161,9 @@ const Registration = () => {
           email: 'aravind@example.com',
           mobile: '+91 9876543210',
           gender: 'Male',
-          dateOfBirth: new Date('1990-01-01'),
+          birthDay: '01',
+          birthMonth: '01',
+          birthYear: '1990',
           city: 'Chennai',
           infinitheismContact: 'Admin Sarah',
           preferredRoommate: 'John Doe',
@@ -180,7 +184,9 @@ const Registration = () => {
           email: 'raj@example.com',
           mobile: '+91 9876543212',
           gender: 'Male',
-          dateOfBirth: new Date('1985-05-15'),
+          birthDay: '15',
+          birthMonth: '05',
+          birthYear: '1985',
           city: 'Mumbai',
           infinitheismContact: 'Admin Maya',
           acceptedTerms: true
@@ -216,7 +222,9 @@ const Registration = () => {
             email: 'raj@example.com',
             mobile: '+91 9876543212',
             gender: 'Male',
-            dateOfBirth: new Date('1985-05-15'),
+            birthDay: '15',
+            birthMonth: '05',
+            birthYear: '1985',
             city: 'Mumbai',
             infinitheismContact: 'Admin Maya',
             preferredRoommate: 'Best friend',

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,19 +6,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import BirthDateInputs from './BirthDateInputs';
 
 interface PersonalInfo {
   fullName?: string;
   gender?: string;
   mobile?: string;
   email?: string;
-  dateOfBirth?: Date;
+  birthDay?: string;
+  birthMonth?: string;
+  birthYear?: string;
   infinitheismContact?: string;
   city?: string;
   preferredRoommate?: string;
@@ -62,15 +61,21 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   ];
 
   // Separate filled and empty fields
-  const filledFields = allFields.filter(field => 
-    personalInfo?.[field as keyof PersonalInfo] && 
-    personalInfo[field as keyof PersonalInfo] !== ''
-  );
+  const filledFields = allFields.filter(field => {
+    if (field === 'dateOfBirth') {
+      return personalInfo?.birthDay && personalInfo?.birthMonth && personalInfo?.birthYear;
+    }
+    return personalInfo?.[field as keyof PersonalInfo] && 
+           personalInfo[field as keyof PersonalInfo] !== '';
+  });
 
-  const emptyFields = allFields.filter(field => 
-    !personalInfo?.[field as keyof PersonalInfo] || 
-    personalInfo[field as keyof PersonalInfo] === ''
-  );
+  const emptyFields = allFields.filter(field => {
+    if (field === 'dateOfBirth') {
+      return !personalInfo?.birthDay || !personalInfo?.birthMonth || !personalInfo?.birthYear;
+    }
+    return !personalInfo?.[field as keyof PersonalInfo] || 
+           personalInfo[field as keyof PersonalInfo] === '';
+  });
 
   // Convert field labels to proper title case for display
   const formatFieldLabel = (label: string) => {
@@ -90,8 +95,17 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   };
 
   const renderFieldValue = (field: string, value: any) => {
-    if (field === 'dateOfBirth' && value) {
-      return format(value, "PPP");
+    if (field === 'dateOfBirth') {
+      const { birthDay, birthMonth, birthYear } = personalInfo || {};
+      if (birthDay && birthMonth && birthYear) {
+        const months = [
+          'January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        const monthName = months[parseInt(birthMonth) - 1];
+        return `${birthDay} ${monthName} ${birthYear}`;
+      }
+      return '';
     }
     return value;
   };
@@ -112,26 +126,14 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         );
       case 'dateOfBirth':
         return (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50 text-gray-400"
-              >
-                <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
-                Pick a date
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={undefined}
-                onSelect={(date) => onPersonalInfoChange(field, date)}
-                initialFocus
-                className="pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
+          <BirthDateInputs
+            birthDay={personalInfo?.birthDay}
+            birthMonth={personalInfo?.birthMonth}
+            birthYear={personalInfo?.birthYear}
+            onDayChange={(day) => onPersonalInfoChange('birthDay', day)}
+            onMonthChange={(month) => onPersonalInfoChange('birthMonth', month)}
+            onYearChange={(year) => onPersonalInfoChange('birthYear', year)}
+          />
         );
       case 'additionalNotes':
         return (
@@ -326,29 +328,14 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
             <Label className="text-sm font-medium text-gray-700">Date of birth</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal h-10 border-gray-200 hover:bg-gray-50 rounded-md",
-                    !personalInfo?.dateOfBirth && "text-gray-400"
-                  )}
-                >
-                  <CalendarIcon className="mr-3 h-4 w-4 text-gray-400" />
-                  {personalInfo?.dateOfBirth ? format(personalInfo.dateOfBirth, "PPP") : "Pick a date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={personalInfo?.dateOfBirth}
-                  onSelect={(date) => onPersonalInfoChange('dateOfBirth', date)}
-                  initialFocus
-                  className="pointer-events-auto"
-                />
-              </PopoverContent>
-            </Popover>
+            <BirthDateInputs
+              birthDay={personalInfo?.birthDay}
+              birthMonth={personalInfo?.birthMonth}
+              birthYear={personalInfo?.birthYear}
+              onDayChange={(day) => onPersonalInfoChange('birthDay', day)}
+              onMonthChange={(month) => onPersonalInfoChange('birthMonth', month)}
+              onYearChange={(year) => onPersonalInfoChange('birthYear', year)}
+            />
           </div>
           <div className="space-y-3">
             <Label htmlFor="city" className="text-sm font-medium text-gray-700">City</Label>
