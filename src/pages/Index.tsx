@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
@@ -190,46 +189,36 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Programmes Section */}
-      <div className="programmes-section py-16 bg-gray-50">
-        <div className="programmes-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="programmes-header text-center">
-            <h2 className="programmes-title text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Upcoming Transformative Programmes
+      {/* Programs Section */}
+      <div className="programmes-section py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Upcoming Programs
             </h2>
-            <p className="programmes-subtitle mt-4 max-w-2xl mx-auto text-xl text-gray-500">
-              Discover programmes that will awaken your consciousness and transform your life
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Transform your life through our carefully curated spiritual and personal development programs
             </p>
           </div>
 
-          <div className="programmes-list mt-12 space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
             {programmes.map((programme, index) => (
               <div
                 key={programme.id}
-                ref={(el) => cardRefs.current[index] = el}
+                ref={(el) => {
+                  if (el) cardRefs.current[index] = el;
+                }}
                 data-card-index={index}
-                className={`transform transition-all duration-700 ${
+                className={`program-card transform transition-all duration-700 ${
                   visibleCards.has(index) 
                     ? 'translate-y-0 opacity-100' 
                     : 'translate-y-8 opacity-0'
                 }`}
-                style={{
-                  transitionDelay: `${index * 200}ms`
-                }}
               >
                 <ProgramCard
-                  id={programme.id}
-                  title={programme.title}
-                  description={programme.description}
-                  backgroundImage={programme.image}
-                  dates={programme.dates}
-                  checkIn={programme.checkIn}
-                  checkOut={programme.checkOut}
-                  investment={programme.investment}
-                  venue={programme.venue}
-                  note={programme.note}
-                  onRegister={handleRegister}
-                  onClick={handleCardClick}
+                  {...programme}
+                  onRegister={() => handleRegister(programme.id)}
+                  onClick={() => handleCardClick(programme.id)}
                 />
               </div>
             ))}
